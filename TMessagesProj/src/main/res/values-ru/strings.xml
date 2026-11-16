@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="CalamusIntroDescription">Неофициальный клиент Telegram на основе Cherrygram. Использует Telegram API.</string>
     <string name="AppName">Calamus</string>
     <string name="AppNameBeta">Telegram Beta</string>
     <string name="LanguageName">Русский</string>

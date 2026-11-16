@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="CalamusIntroDescription">An unofficial Telegram client using the Telegram API, based on Cherrygram.</string>
     <string name="AppName">Calamus</string>
     <string name="AppNameBeta">Telegram Beta</string>
     <string name="LanguageName">English</string>
