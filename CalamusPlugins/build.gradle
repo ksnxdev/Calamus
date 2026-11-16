@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'ksnxdev.calamus.plugins'
+    compileSdk 36
+    ndkVersion '27.2.12479018'
+    defaultConfig {
+        minSdk 24
+        ndk { abiFilters.addAll(rootProject.ext.calamusEmulator ? ['x86_64'] : ['armeabi-v7a', 'arm64-v8a']) }
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+    externalNativeBuild { cmake { path 'src/main/cpp/CMakeLists.txt'; version '3.22.1' } }
+    sourceSets.main.jniLibs.srcDirs = ['vendor/python311/jniLibs']
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+
+
+def pythonAssets = layout.buildDirectory.dir('generated/pythonAssets')
+android.sourceSets.main.assets.srcDir(pythonAssets)
+def unpackPythonStdlib = tasks.register('unpackPythonStdlib', Copy) {
+    from(zipTree(file('vendor/python311/stdlib.zip')))
+    into(pythonAssets.map { it.dir('isolated/python') })
+}
+tasks.configureEach { task ->
+    if (task.name.startsWith('merge') && task.name.endsWith('Assets')) task.dependsOn(unpackPythonStdlib)
+}

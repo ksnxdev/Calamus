@@ -1,0 +1,5 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="ksnxdev.calamus.filetest">
+    <uses-sdk android:minSdkVersion="29" android:targetSdkVersion="36" />
+    <application android:label="Calamus file control checks" android:debuggable="true" />
+    <instrumentation android:name="ksnxdev.calamus.filetest.FileInstrumentation" android:targetPackage="ksnxdev.calamus" />
+</manifest>

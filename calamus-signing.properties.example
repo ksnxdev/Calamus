@@ -1,0 +1,4 @@
+CALAMUS_KEYSTORE_PATH=/absolute/path/to/your/calamus-release.p12
+CALAMUS_KEYSTORE_PASSWORD=replace_with_your_private_password
+CALAMUS_KEY_ALIAS=calamus
+CALAMUS_KEY_PASSWORD=replace_with_your_private_password
