@@ -17,5 +17,3 @@ Android-клиент на базе [Cherrygram](https://github.com/arslan4k1390/
 
 APK: `TMessagesProj_App/build/outputs/apk/afat/standalone/Calamus-0.1.0-beta.1-standalone-universal.apk`.
 Для отладочного APK: `./tools/build-debug.sh`.
-
-Реквизиты API, пароли и закрытый ключ подписи хранятся локально и не добавляются в Git. Нативные зависимости и Python runtime находятся в соответствующих каталогах вместе с их лицензиями.
