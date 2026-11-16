@@ -1484,6 +1484,12 @@ public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.T
             useOnlineColor = true;
             setTypingAnimation(true);
         }
+        if (parentFragment != null && parentFragment.getChatMode() == 0 && ksnxdev.calamus.plugins.PluginRetainedChats.getInstance(currentAccount).isDeleted(parentFragment.getDialogId())) {
+            newSubtitle = LocaleController.getString(R.string.CalamusDeletedChat);
+            lastSubtitle = null;
+            useOnlineColor = false;
+            setTypingAnimation(false);
+        }
         lastSubtitleColorKey = useOnlineColor ? Theme.key_chat_status : Theme.key_actionBarDefaultSubtitle;
         if (lastSubtitle == null) {
             if (subtitleTextView != null) {
@@ -1782,6 +1788,10 @@ public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.T
     }
 
     private void updateCurrentConnectionState() {
+        if (parentFragment != null && ksnxdev.calamus.plugins.PluginRetainedChats.getInstance(currentAccount).isDeleted(parentFragment.getDialogId())) {
+            updateSubtitle();
+            return;
+        }
         String title = null;
         if (currentConnectionState == ConnectionsManager.ConnectionStateWaitingForNetwork) {
             title = getString(R.string.WaitingForNetwork);

@@ -20968,7 +20968,10 @@ public class ChatActivity extends BaseFragment implements
     @Override
     public void didReceivedNotification(int id, int account, final Object... args) {
         if (id == NotificationCenter.calamusArchiveChanged) {
-            if (args.length == 0 || ((Number) args[0]).longValue() == 0 || ((Number) args[0]).longValue() == dialog_id) refreshDeletedArchive();
+            if (args.length == 0 || ((Number) args[0]).longValue() == 0 || ((Number) args[0]).longValue() == dialog_id) {
+                refreshDeletedArchive();
+                if (avatarContainer != null) avatarContainer.updateSubtitle();
+            }
             return;
         }
         if (id == NotificationCenter.messagesDidLoad) {

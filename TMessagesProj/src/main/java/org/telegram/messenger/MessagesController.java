@@ -10018,6 +10018,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void deleteDialog(final long did, int onlyHistory, boolean revoke) {
+        if (onlyHistory == 0 || onlyHistory == 1) ksnxdev.calamus.plugins.PluginRetainedChats.getInstance(currentAccount).forget(did);
         deleteDialog(did, 1, onlyHistory, 0, revoke, null, 0);
     }
 
@@ -10070,6 +10071,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     protected void deleteDialog(long did, int first, int onlyHistory, int max_id, boolean revoke, TLRPC.InputPeer peer, long taskId) {
+        if (onlyHistory == 3 && ksnxdev.calamus.plugins.PluginRetainedChats.getInstance(currentAccount).isDeleted(did)) return;
         if (onlyHistory == 2) {
             if (did == getUserConfig().getClientUserId()) {
                 getSavedMessagesController().deleteAllDialogs();
@@ -14006,6 +14008,10 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     protected void checkLastDialogMessage(TLRPC.Dialog dialog, TLRPC.InputPeer peer, long taskId) {
+        if (ksnxdev.calamus.plugins.PluginRetainedChats.getInstance(currentAccount).isDeleted(dialog.id)) {
+            if (taskId != 0) getMessagesStorage().removePendingTask(taskId);
+            return;
+        }
         if (DialogObject.isEncryptedDialog(dialog.id) || checkingLastMessagesDialogs.indexOfKey(dialog.id) >= 0) {
             return;
         }
@@ -14098,7 +14104,7 @@ public class MessagesController extends BaseController implements NotificationCe
                                 if (BuildVars.LOGS_ENABLED) {
                                     FileLog.d("checkLastDialogMessage for " + dialog.id + " current dialog top message " + currentDialog.top_message);
                                 }
-                                if (currentDialog.top_message == 0) {
+                                if (currentDialog.top_message == 0 && !ksnxdev.calamus.plugins.PluginRetainedChats.getInstance(currentAccount).isDeleted(dialog.id)) {
                                     deleteDialog(dialog.id, 3);
                                 }
                             }
@@ -21297,6 +21303,7 @@ public class MessagesController extends BaseController implements NotificationCe
             for (int a = 0, size = deletedMessages.size(); a < size; a++) {
                 long key = deletedMessages.keyAt(a);
                 ArrayList<Integer> arrayList = deletedMessages.valueAt(a);
+                if (key == 0) AndroidUtilities.runOnUIThread(() -> ksnxdev.calamus.plugins.PluginRetainedChats.getInstance(currentAccount).remoteDeleted(arrayList));
                 getMessagesStorage().getStorageQueue().postRunnable(() -> {
                     ArrayList<Long> dialogIds = getMessagesStorage().markMessagesAsDeleted(key, arrayList, false, true, 0, 0);
                     getMessagesStorage().updateDialogsWithDeletedMessages(key, -key, arrayList, dialogIds);
@@ -22387,6 +22394,7 @@ public class MessagesController extends BaseController implements NotificationCe
     
     
     public void sortDialogs(LongSparseArray<TLRPC.Chat> chatsDict) {
+        ksnxdev.calamus.plugins.PluginRetainedChats.getInstance(currentAccount).apply(this, deletingDialogs);
         if (chatsDict == null && ApplicationLoader.mainInterfacePaused) {
             return;
         }

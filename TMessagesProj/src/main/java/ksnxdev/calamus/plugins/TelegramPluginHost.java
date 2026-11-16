@@ -94,8 +94,13 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
 
     @Override public void revoked(String pluginId, String session) { PluginPresenceController.revoke(pluginId, session); }
     @Override public void archiveChanged(int account, long dialog) {
-        if (account >= 0 && account < UserConfig.MAX_ACCOUNT_COUNT) NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.calamusArchiveChanged, dialog);
-        else for (int i = 0; i < UserConfig.MAX_ACCOUNT_COUNT; i++) NotificationCenter.getInstance(i).postNotificationName(NotificationCenter.calamusArchiveChanged, 0L);
+        if (account >= 0 && account < UserConfig.MAX_ACCOUNT_COUNT) {
+            PluginRetainedChats.getInstance(account).refresh();
+            NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.calamusArchiveChanged, dialog);
+        } else for (int i = 0; i < UserConfig.MAX_ACCOUNT_COUNT; i++) {
+            PluginRetainedChats.getInstance(i).refresh();
+            NotificationCenter.getInstance(i).postNotificationName(NotificationCenter.calamusArchiveChanged, 0L);
+        }
     }
 
     private static PluginManager plugins() { return PluginManager.getInstance(ApplicationLoader.applicationContext); }
@@ -150,18 +155,26 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
             if (UserConfig.getInstance(account).getClientUserId() != user || !UserConfig.getInstance(account).isClientActivated()) { callback.accept(objects); return; }
             JSONArray rows = result.optJSONArray("rows");
             if (rows != null) for (int i = 0; i < rows.length(); i++) try {
-                JSONObject row = rows.getJSONObject(i); TLRPC.TL_message message = new TLRPC.TL_message();
-                message.id = row.getInt("message_id"); message.dialog_id = dialog; message.date = row.optInt("date"); message.edit_date = row.optInt("edit_date");
-                message.out = row.optInt("outgoing") != 0; message.peer_id = MessagesController.getInstance(account).getPeer(dialog);
-                long sender = row.optLong("sender_id"); if (sender == 0) sender = message.out ? user : dialog;
-                message.from_id = MessagesController.getInstance(account).getPeer(sender); message.flags |= 256;
-                message.message = row.optString("text"); if (message.message.isEmpty()) message.message = "[" + row.optString("media_type", "media") + "]";
-                if (message.edit_date > 0) message.flags |= TLRPC.MESSAGE_FLAG_EDITED;
-                MessageObject object = new MessageObject(account, message, true, false); object.calamusDeleted = true;
-                object.calamusArchivePlugin = row.getString("_plugin"); object.calamusArchiveSession = row.getString("_session"); objects.add(object);
+                MessageObject object = archivedMessage(account, dialog, user, rows.getJSONObject(i));
+                if (object != null) objects.add(object);
             } catch (Exception ignored) { }
             callback.accept(objects);
         });
+    }
+
+    static MessageObject archivedMessage(int account, long dialog, long user, JSONObject row) {
+        try {
+            TLRPC.TL_message message = new TLRPC.TL_message();
+            message.id = row.getInt("message_id"); message.dialog_id = dialog; message.date = row.optInt("date"); message.edit_date = row.optInt("edit_date");
+            message.out = row.optInt("outgoing") != 0; message.peer_id = MessagesController.getInstance(account).getPeer(dialog);
+            long sender = row.optLong("sender_id"); if (sender == 0) sender = message.out ? user : dialog;
+            message.from_id = MessagesController.getInstance(account).getPeer(sender); message.flags |= 256;
+            message.message = row.optString("text"); if (message.message.isEmpty()) message.message = "[" + row.optString("media_type", "media") + "]";
+            if (message.edit_date > 0) message.flags |= TLRPC.MESSAGE_FLAG_EDITED;
+            MessageObject object = new MessageObject(account, message, true, false); object.calamusDeleted = true;
+            object.calamusArchivePlugin = row.getString("_plugin"); object.calamusArchiveSession = row.getString("_session");
+            return object;
+        } catch (Exception ignored) { return null; }
     }
 
     public static JSONObject message(TLRPC.Message message) throws Exception {
@@ -179,6 +192,7 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
         try {
             if (id == NotificationCenter.appDidLogout) {
                 PluginPresenceController.logout(account);
+                PluginRetainedChats.getInstance(account).refresh();
                 manager.event("account.changed", new JSONObject().put("account_id", account).put("user_id", identities[account]).put("logged_in", false));
                 identities[account] = 0;
                 return;
@@ -205,6 +219,7 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
             if (id == NotificationCenter.messageReceivedByServer) {
                 PluginPresenceController.endSend(account, ((Number) args[0]).intValue());
                 if (DialogObject.isEncryptedDialog(((Number) args[3]).longValue())) return;
+                if (args.length < 7 || !Boolean.TRUE.equals(args[6])) PluginRetainedChats.getInstance(account).newMessage(((Number) args[3]).longValue(), ((Number) args[1]).intValue());
                 value = chatContext(account, ((Number) args[3]).longValue()).put("old_id", args[0]).put("id", args[1]);
                 if (args[2] instanceof TLRPC.Message && archivable((TLRPC.Message) args[2])) value.put("message", message((TLRPC.Message) args[2]));
                 manager.event("message.sent", value);
@@ -216,6 +231,7 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
                 for (Object item : (ArrayList<?>) args[1]) {
                     if (item instanceof MessageObject) {
                         MessageObject object = (MessageObject) item;
+                        if (id == NotificationCenter.didReceiveNewMessages && !object.calamusDeleted && (args.length < 3 || !Boolean.TRUE.equals(args[2])) && (args.length < 4 || ((Number) args[3]).intValue() == ChatActivity.MODE_DEFAULT) && (object.messageOwner.action == null || object.messageOwner.action instanceof TLRPC.TL_messageActionEmpty)) PluginRetainedChats.getInstance(account).newMessage(dialogId, object.getId());
                         if (!archivable(object.messageOwner) || id == NotificationCenter.didReceiveNewMessages && object.messageOwner.out) continue;
                         JSONObject snapshot = message(object.messageOwner); int bytes = snapshot.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
                         if (eventBytes + bytes > 20000 && messages.length() > 0) {

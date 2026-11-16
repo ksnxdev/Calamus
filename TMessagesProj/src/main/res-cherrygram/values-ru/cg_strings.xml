@@ -656,4 +656,5 @@
     <string name="CalamusGhostAllContacts">Для всех собеседников доступных плагину аккаунтов.</string>
     <string name="CalamusGhostRequiresAccess">Включите плагин и разрешите доступ к аккаунту и онлайн-статусу.</string>
     <string name="CalamusArchiveNeedsAccess">Включите Private View и разрешите ему доступ к сообщениям и локальному архиву этого чата в настройках доступа плагина.</string>
+    <string name="CalamusDeletedChat">Удаленный чат</string>
 </resources>

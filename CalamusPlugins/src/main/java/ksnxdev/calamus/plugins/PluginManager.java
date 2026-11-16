@@ -157,6 +157,83 @@ public final class PluginManager implements PluginTransport.Listener {
             });
         } catch (Exception error) { main.post(() -> callback.complete(wrapRows(new JSONArray()))); }
     }
+    public boolean retainedAllowed(String id, String session, JSONObject scope) {
+        try { return capturing(id) && authorizeApiNow(id, session, "archive.query", scope) && PluginAccessPolicy.has(store().record(id), "ui"); }
+        catch (Exception ignored) { return false; }
+    }
+    public void remoteDeletedChats(JSONObject account, JSONArray ids, Callback callback) {
+        try {
+            JSONObject identity = new JSONObject(account.toString()); JSONArray deleted = new JSONArray(ids.toString());
+            worker.execute(() -> {
+                JSONArray candidates = new JSONArray();
+                for (String id : new ArrayList<>(sessions.keySet())) try {
+                    if (!capturing(id)) continue;
+                    String session = sessions.get(id); JSONObject record = store().record(id);
+                    if (!PluginAccessPolicy.has(record, "messages.archive") || !PluginAccessPolicy.has(record, "messages.read") || !PluginAccessPolicy.has(record, "ui")) continue;
+                    JSONArray scopes = PluginArchiveStore.deleted(context, id, identity.getLong("user_id"), 0, deleted, record.optJSONArray("scopes"));
+                    for (int i = 0; i < scopes.length(); i++) {
+                        JSONObject scope = scopes.getJSONObject(i);
+                        if (scope.optInt("account_id", -1) != identity.optInt("account_id", -2) || scope.optLong("dialog_id") <= 0 || scope.optLong("dialog_id") == identity.optLong("user_id") || !authorizeApiNow(id, session, "archive.query", scope)) continue;
+                        candidates.put(new JSONObject(scope.toString()).put("_plugin", id).put("_session", session).put("_through_id", PluginArchiveStore.latestMessageId(context, id, identity.getLong("user_id"), scope.getLong("dialog_id"))));
+                    }
+                } catch (Exception ignored) { }
+                main.post(() -> callback.complete(wrapRows(candidates)));
+            });
+        } catch (Exception ignored) { main.post(() -> callback.complete(wrapRows(new JSONArray()))); }
+    }
+    public void confirmDeletedChat(JSONObject candidate) {
+        try {
+            JSONObject scope = new JSONObject(candidate.toString());
+            worker.execute(() -> {
+                try {
+                    String id = scope.getString("_plugin"), session = scope.getString("_session");
+                    synchronized (PluginArchiveStore.class) {
+                        if (!retainedAllowed(id, session, scope)) return;
+                        if (PluginArchiveStore.latestMessageId(context, id, scope.getLong("user_id"), scope.getLong("dialog_id")) > scope.optInt("_through_id")) return;
+                        if (!PluginArchiveStore.retainedState(context, id, scope.getLong("user_id"), scope.getLong("dialog_id"), "deleted", 0)) return;
+                    }
+                    PluginBridge.archiveChanged(scope.getInt("account_id"), scope.getLong("dialog_id"));
+                } catch (Exception ignored) { }
+            });
+        } catch (Exception ignored) { }
+    }
+    public void retainedChats(JSONObject account, Callback callback) {
+        try {
+            JSONObject identity = new JSONObject(account.toString());
+            archiveWorker.execute(() -> {
+                JSONArray found = new JSONArray();
+                for (String id : new ArrayList<>(sessions.keySet())) try {
+                    if (!capturing(id)) continue;
+                    String session = sessions.get(id);
+                    JSONArray rows = PluginArchiveStore.retainedChats(context, id, identity.getLong("user_id"));
+                    for (int i = 0; i < rows.length(); i++) {
+                        JSONObject row = rows.getJSONObject(i), scope = new JSONObject(identity.toString()).put("dialog_id", row.getLong("dialog_id"));
+                        if (retainedAllowed(id, session, scope)) found.put(row.put("_plugin", id).put("_session", session));
+                    }
+                } catch (Exception ignored) { }
+                main.post(() -> {
+                    JSONArray allowed = new JSONArray();
+                    for (int i = 0; i < found.length(); i++) try {
+                        JSONObject row = found.getJSONObject(i), scope = new JSONObject(identity.toString()).put("dialog_id", row.getLong("dialog_id"));
+                        if (retainedAllowed(row.optString("_plugin"), row.optString("_session"), scope)) allowed.put(row);
+                    } catch (Exception ignored) { }
+                    callback.complete(wrapRows(allowed));
+                });
+            });
+        } catch (Exception ignored) { main.post(() -> callback.complete(wrapRows(new JSONArray()))); }
+    }
+    public void retainedChatActivity(JSONObject chat, int messageId, boolean hidden) {
+        try {
+            JSONObject scope = new JSONObject(chat.toString());
+            worker.execute(() -> {
+                boolean changed = false;
+                try {
+                    for (String id : ids()) changed |= PluginArchiveStore.retainedState(context, id, scope.getLong("user_id"), scope.getLong("dialog_id"), hidden ? "hidden" : "active", messageId);
+                    if (changed) PluginBridge.archiveChanged(scope.getInt("account_id"), scope.getLong("dialog_id"));
+                } catch (Exception ignored) { }
+            });
+        } catch (Exception ignored) { }
+    }
     private static JSONObject wrapRows(JSONArray rows) { JSONObject value = new JSONObject(); try { value.put("rows", rows); } catch (Exception ignored) { } return value; }
     public void event(String name) { event(name, new JSONObject()); }
     public void event(String name, JSONObject payload) {
@@ -226,6 +303,7 @@ public final class PluginManager implements PluginTransport.Listener {
             case "setting": {
                 JSONObject value = new JSONObject(argument); String id = value.getString("plugin_id"); String key = value.getString("key");
                 storage.setting(id, key, value.get("value"));
+                if (key.equals("capture")) PluginBridge.archiveChanged(-1, 0);
                 if (sessions.containsKey(id)) invoke(id, "event", new JSONObject().put("name", "settings.changed").put("payload", new JSONObject().put("key", key).put("value", value.get("value"))));
                 break;
             }

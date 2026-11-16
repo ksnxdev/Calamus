@@ -32,6 +32,7 @@ public final class PluginArchiveStore {
                 db.setVersion(1); db.setTransactionSuccessful();
             } finally { db.endTransaction(); }
         }
+        db.execSQL("CREATE TABLE IF NOT EXISTS retained_chats (user_id INTEGER NOT NULL, dialog_id INTEGER NOT NULL, hidden INTEGER NOT NULL DEFAULT 0, last_id INTEGER NOT NULL, PRIMARY KEY(user_id,dialog_id))");
         return db;
     }
     private static String searchable(String text) {
@@ -155,9 +156,46 @@ public final class PluginArchiveStore {
         }
         return affected;
     }
+    static synchronized int latestMessageId(Context context, String plugin, long user, long dialog) {
+        if (!file(context, plugin).exists()) return 0;
+        try (SQLiteDatabase db = open(context, plugin)) {
+            return (int) DatabaseUtils.longForQuery(db, "SELECT COALESCE(MAX(message_id),0) FROM journal WHERE user_id=? AND dialog_id=?", new String[]{Long.toString(user), Long.toString(dialog)});
+        }
+    }
+    static synchronized boolean retainedState(Context context, String plugin, long user, long dialog, String state, int messageId) {
+        if (user <= 0 || dialog <= 0 || user == dialog || !file(context, plugin).exists()) return false;
+        try (SQLiteDatabase db = open(context, plugin)) {
+            String[] key = {Long.toString(user), Long.toString(dialog)};
+            if (state.equals("active")) return db.delete("retained_chats", "user_id=? AND dialog_id=? AND last_id<?", new String[]{key[0], key[1], Integer.toString(messageId)}) > 0;
+            long maximum = DatabaseUtils.longForQuery(db, "SELECT COALESCE(MAX(message_id),0) FROM journal WHERE user_id=? AND dialog_id=?", key);
+            if (state.equals("deleted")) {
+                if (maximum <= 0 || DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM journal WHERE user_id=? AND dialog_id=? AND deleted=1", key) == 0) return false;
+                try (Cursor previous = db.rawQuery("SELECT hidden FROM retained_chats WHERE user_id=? AND dialog_id=?", key)) {
+                    if (previous.moveToFirst() && previous.getInt(0) != 0) return false;
+                }
+            } else if (!state.equals("hidden")) throw new IllegalArgumentException("Unknown retained chat state");
+            ContentValues values = new ContentValues(); values.put("user_id", user); values.put("dialog_id", dialog);
+            values.put("hidden", state.equals("hidden") ? 1 : 0); values.put("last_id", maximum);
+            db.insertWithOnConflict("retained_chats", null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            return true;
+        }
+    }
+    static synchronized JSONArray retainedChats(Context context, String plugin, long user) throws Exception {
+        JSONArray rows = new JSONArray();
+        if (!file(context, plugin).exists()) return rows;
+        try (SQLiteDatabase db = open(context, plugin); Cursor cursor = db.rawQuery("SELECT r.dialog_id,r.last_id,j.* FROM retained_chats r JOIN journal j ON j.id=(SELECT id FROM journal WHERE user_id=r.user_id AND dialog_id=r.dialog_id AND deleted=1 ORDER BY message_id DESC,id DESC LIMIT 1) WHERE r.user_id=? AND r.hidden=0 ORDER BY j.date DESC LIMIT 2000", new String[]{Long.toString(user)})) {
+            while (cursor.moveToNext()) {
+                JSONObject row = new JSONObject();
+                for (String name : new String[]{"dialog_id","last_id","message_id","date","edit_date","sender_id","outgoing"}) row.put(name, cursor.getLong(cursor.getColumnIndexOrThrow(name)));
+                row.put("text", cursor.getString(cursor.getColumnIndexOrThrow("text"))).put("media_type", cursor.getString(cursor.getColumnIndexOrThrow("media")));
+                rows.put(row);
+            }
+        }
+        return rows;
+    }
     static synchronized void clearUser(Context context, String plugin, long user) {
         if (!file(context, plugin).exists()) return;
-        try (SQLiteDatabase db = open(context, plugin)) { db.delete("journal", "user_id=?", new String[]{Long.toString(user)}); }
+        try (SQLiteDatabase db = open(context, plugin)) { db.delete("journal", "user_id=?", new String[]{Long.toString(user)}); db.delete("retained_chats", "user_id=?", new String[]{Long.toString(user)}); }
     }
     static synchronized void remove(Context context, String plugin) { SQLiteDatabase.deleteDatabase(file(context, plugin)); }
 }
