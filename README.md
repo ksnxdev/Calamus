@@ -1,15 +1,21 @@
 # Calamus
 
-Calamus — неофициальный Android-клиент Telegram с интерфейсом Material 3, основанный на [Cherrygram](https://github.com/arslan4k1390/Cherrygram) и [Telegram for Android](https://github.com/DrKLO/Telegram).
+Android-клиент на базе [Cherrygram](https://github.com/arslan4k1390/Cherrygram) и [Telegram](https://github.com/DrKLO/Telegram). Лицензия — [GNU GPL](LICENSE); уведомления об авторстве сохранены в исходниках.
 
-Текущий публичный выпуск: **0.1.0-beta.1**, `versionCode 1`, пакет `ksnxdev.calamus`.
+## Сборка
 
-Исходники и выпуски: [ksnxdev/Calamus](https://github.com/ksnxdev/Calamus). Обновления: [@CalamusGram](https://t.me/CalamusGram). APK и архив соответствующих исходников распространяются вместе. Код находится в стадии публичного тестирования; список проверок и ограничений — в [PUBLIC_BETA.md](PUBLIC_BETA.md).
+Нужны JDK 21, Android SDK 36, Build Tools 36.0.0, NDK 27.2.12479018 и CMake 3.22.1.
 
-В клиенте сохранены дополнительные функции Cherrygram, добавлены оформление Calamus, настройки цвета и размытия, меню сообщений в стиле iOS и изолированные Python-плагины формата `.plug`. Плагины требуют Android 10+, меню iOS — Android 11+. Минимальная версия клиента — Android 7. Private View распространяется отдельно.
+1. После клонирования загрузите зависимости: `git submodule update --init --recursive`. Полный архив исходников содержит подмодули.
+2. Скопируйте `local.properties.example` в `local.properties`, укажите `sdk.dir` и собственные `TELEGRAM_API_ID` / `TELEGRAM_API_HASH`.
+3. Для релизной подписи заполните отдельный файл по образцу `calamus-signing.properties.example` и задайте `CALAMUS_SIGNING_PROPERTIES` — путь к этому файлу.
+4. Укажите `JAVA_HOME` для JDK 21 и выполните:
 
-Инструкции сборки и подписи: [PUBLIC_BETA.md](PUBLIC_BETA.md). Релизная команда — `./tools/build-beta.sh`. Свои Telegram API ID/Hash и ключ подписи нужно указать локально; в архив исходников они не включены.
+```bash
+./tools/build-beta.sh --console=plain
+```
 
-Для сборки из Git требуется загрузить подмодули. Архив исходников включает их текущее содержимое, исходный commit и список ревизий. Внешние зависимости и версии указаны в Gradle; происхождение Python runtime и контрольные суммы — в `CalamusPlugins/vendor/python-runtime-verification.json`.
+APK: `TMessagesProj_App/build/outputs/apk/afat/standalone/Calamus-0.1.0-beta.1-standalone-universal.apk`.
+Для отладочного APK: `./tools/build-debug.sh`.
 
-Исходные лицензии и авторство сохранены: [LICENSE](LICENSE), [оригинальный README Cherrygram](UPSTREAM_README.md). Лицензии сторонних компонентов находятся рядом с соответствующими исходниками, лицензия Python — в `CalamusPlugins/vendor/LICENSE.python`.
+Реквизиты API, пароли и закрытый ключ подписи хранятся локально и не добавляются в Git. Нативные зависимости и Python runtime находятся в соответствующих каталогах вместе с их лицензиями.
