@@ -17,7 +17,6 @@ buildscript {
     }
 }
 
-// A fork needs its own Firebase registration. Do not reuse Cherrygram's client.
 def calamusFirebaseFile = file('TMessagesProj_App/google-services.json')
 ext.calamusFirebaseEnabled = false
 if (calamusFirebaseFile.exists()) {

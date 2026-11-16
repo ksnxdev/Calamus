@@ -6,7 +6,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'org.telegram.build-plugin'
 apply plugin: 'idea'
 
-// Local credentials are intentionally excluded from version control.
 def calamusLocal = new Properties()
 def calamusLocalFile = rootProject.file('local.properties')
 if (calamusLocalFile.exists()) calamusLocalFile.withInputStream { calamusLocal.load(it) }
@@ -343,7 +342,6 @@ def getProps(String propName) {
         return ""
     }
 }
-// Google services resources belong to the application module, not this library.
 
 task checkVisibility {
     doFirst {

@@ -163,8 +163,6 @@ public class CameraXController {
 
     }
 
-    // Public Cherrygram does not ship the CameraX backend (isInitiated is false).
-    // Keep the zoom slider contract consistent with this unavailable backend.
     public boolean isCameraReady() { return isInitiated(); }
     public float getZoomRatio() { return 1f; }
     public float getMinZoomRatio() { return 1f; }

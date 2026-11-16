@@ -57,7 +57,6 @@ public class HintEditText extends EditTextBoldCursor {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // The mask uses a separate paint, so it must follow TextView's current hint color.
         hintPaint.setColor(getCurrentHintTextColor());
         if (hintText != null && length() < hintText.length()) {
             float offsetX = 0;

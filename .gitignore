@@ -20,7 +20,6 @@ Keytool.zip
 Cherrygram.jks
 mykey.jks
 actions-runner
-# Calamus local credentials and release signing
 secrets_for_ci.env
 *.jks
 *.keystore
@@ -29,7 +28,6 @@ calamus-signing.properties
 
 .kotlin/
 
-# Local Telegram API credentials supplied for Calamus
 calamusapi.txt
 
 tools/__pycache__/
