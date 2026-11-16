@@ -1130,7 +1130,7 @@
   "TMessagesProj/emoji/verification.json": "a665a90c92af7a743825c92180bd8e3a12dc83944b582f9fba015b216875f598",
   "TMessagesProj/emoji/verify_emoji_pack.py": "a22a0edce06a96616d1c23b20243f4dc9fae409f20f4800f56378f4749f0b7d8",
   "TMessagesProj/jni/Application.mk": "58f8d9f3e00251dc3c3b7a4ea970cfde4a379aeba90429f9a69d4fd3e5d68915",
-  "TMessagesProj/jni/CMakeLists.txt": "f2c87717e40dce284f3f513ca9866ddadaf0a31d1102180cea58560a82ab4deb",
+  "TMessagesProj/jni/CMakeLists.txt": "191c4965b3541d3a5c201790192bef74f9f501f656b0523c67fd124e32ec6a36",
   "TMessagesProj/jni/SqliteWrapper.cpp": "a9a67f6bf1ce4df805bf64450dfa40bf9b59f10dfb91c8fc5f7fb164d3e3f31f",
   "TMessagesProj/jni/TgNetWrapper.cpp": "c2eee62ad6e474024014adb10207b9b1f5dccca41c85536743e2ef0086697100",
   "TMessagesProj/jni/audio.c": "9829a714ff5a3813360adcd5f3be3d9aea5c1d9d6c113d4ddd60de55d0d6bcde",
@@ -48796,6 +48796,6 @@
   "tools/test-selection-emulator.sh": "f0ef52d3170c47b6b90015f7509f0af6ef4629b94f3b166ce61a18a2cdbbb194",
   "tools/test-settings-emulator.sh": "b831ef49987627f4d10d26d3aea146250d99edabd0a8540ded2e7d13401e513e",
   "tools/test-startup-emulator.sh": "1efeeba77b4f5221c4c7ccc742b46ab9858ba0cb4101eafc95ee890978e84742",
-  "tools/verify-beta-apk.py": "922b6a30a707acf45cd9aacd5d018b47ea332046f2ce4e603642d2d8bb02c8bf",
+  "tools/verify-beta-apk.py": "b78ee61fc43c606df1609bcad090844f79b493d821dba50686b8d57fad9f7404",
   "tools/verify-isolation-apk.py": "43b595f15c99a0880791a4ffbd97e903a47e73f5bb743bcc680ad52b7d98c6ce"
 }

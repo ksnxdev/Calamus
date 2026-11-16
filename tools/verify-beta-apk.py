@@ -57,6 +57,7 @@ with zipfile.ZipFile(args.apk) as bundle:
     assert 'Calamus' in bundle.read('assets/calamus_privacy.txt').decode()
     assert any(hashlib.sha256(bundle.read(name)).hexdigest() == icon_sha for name in names if name.lower().endswith(('.jpg', '.jpeg')))
     for name in names:
+        assert str(Path.home()).encode() not in bundle.read(name), 'Local build path: ' + name
         if name.startswith('lib/arm64-v8a/') and name.endswith('.so'):
             assert aligned_elf(bundle.read(name)), 'ELF alignment: ' + name
             libraries += 1
