@@ -658,10 +658,8 @@
     <string name="CalamusArchiveNeedsAccess">Включите Private View и разрешите ему доступ к сообщениям и локальному архиву этого чата в настройках доступа плагина.</string>
     <string name="CalamusDeletedChat">Удаленный чат</string>
     <string name="CalamusAccessRestricted">Доступ к Calamus ограничен</string>
-    <string name="CalamusAccessRestrictedInfo">Этот аккаунт не может использовать Calamus. Ограничение действует только в Calamus и не блокирует ваш аккаунт Telegram.</string>
+    <string name="CalamusAccessRestrictedInfo">Этот аккаунт не может использовать Calamus.</string>
     <string name="CalamusAccessRetry">Проверить ещё раз</string>
     <string name="CalamusAccessChecking">Проверяем доступ…</string>
-    <string name="CalamusAccessChooseAccount">Выбрать другой аккаунт</string>
     <string name="CalamusAccessRefreshFailed">Не удалось обновить список. Пока действует последнее сохранённое ограничение. Повторите позже.</string>
-    <string name="CalamusAccessNoOtherAccounts">Нет других доступных аккаунтов. Добавьте аккаунт с главного экрана Calamus.</string>
 </resources>
