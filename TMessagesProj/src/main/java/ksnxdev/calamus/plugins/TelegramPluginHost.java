@@ -92,6 +92,9 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
         return message != null && !DialogObject.isEncryptedDialog(MessageObject.getDialogId(message)) && message.ttl_period == 0 && (message.media == null || message.media.ttl_seconds == 0);
     }
 
+    @Override public void checkAccountAccess(JSONObject args) {
+        if (args.has("account_id") && ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(args.optInt("account_id", -1))) throw new SecurityException("Calamus access is restricted for this account");
+    }
     @Override public void revoked(String pluginId, String session) { PluginPresenceController.revoke(pluginId, session); }
     @Override public void archiveChanged(int account, long dialog) {
         if (account >= 0 && account < UserConfig.MAX_ACCOUNT_COUNT) {
@@ -254,7 +257,7 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
         int account = arguments.getInt("account_id");
         if (account < 0 || account >= UserConfig.MAX_ACCOUNT_COUNT) throw new IllegalArgumentException("Invalid account slot");
         UserConfig config = UserConfig.getInstance(account);
-        if (!config.isClientActivated() || config.getClientUserId() != arguments.getLong("user_id")) {
+        if (!config.isClientActivated() || config.getClientUserId() != arguments.getLong("user_id") || ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(account)) {
             throw new IllegalStateException("Account session changed or logged out");
         }
         return account;
@@ -267,7 +270,7 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
                 JSONArray accounts = new JSONArray();
                 for (int i = 0; i < UserConfig.MAX_ACCOUNT_COUNT; i++) {
                     UserConfig config = UserConfig.getInstance(i);
-                    if (config.isClientActivated()) accounts.put(new JSONObject().put("account_id", i).put("user_id", config.getClientUserId())
+                    if (config.isClientActivated() && !ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(i)) accounts.put(new JSONObject().put("account_id", i).put("user_id", config.getClientUserId())
                             .put("name", org.telegram.messenger.UserObject.getUserName(config.getCurrentUser())));
                 }
                 callback.complete(accounts, "");

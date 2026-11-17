@@ -667,4 +667,11 @@
     <string name="CalamusGhostRequiresAccess">Enable the plugin and allow account and online-status access.</string>
     <string name="CalamusArchiveNeedsAccess">Enable Private View and allow it to access messages and the local archive for this chat in its access settings.</string>
     <string name="CalamusDeletedChat">Deleted chat</string>
+    <string name="CalamusAccessRestricted">Calamus access restricted</string>
+    <string name="CalamusAccessRestrictedInfo">This account cannot use Calamus. This restriction applies only to Calamus and does not ban your Telegram account.</string>
+    <string name="CalamusAccessRetry">Check again</string>
+    <string name="CalamusAccessChecking">Checking access…</string>
+    <string name="CalamusAccessChooseAccount">Choose another account</string>
+    <string name="CalamusAccessRefreshFailed">The list could not be updated. The last saved restriction still applies. Try again later.</string>
+    <string name="CalamusAccessNoOtherAccounts">There are no other available accounts. Add an account from the Calamus main screen.</string>
 </resources>

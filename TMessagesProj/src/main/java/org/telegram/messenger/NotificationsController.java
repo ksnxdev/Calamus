@@ -1038,6 +1038,11 @@ public class NotificationsController extends BaseController implements Notificat
     }
 
     public void processNewMessages(ArrayList<MessageObject> messageObjects, boolean isLast, boolean isFcm, CountDownLatch countDownLatch) {
+        if (ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(currentAccount)) {
+            refreshAccountAccess();
+            if (countDownLatch != null) countDownLatch.countDown();
+            return;
+        }
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("NotificationsController: processNewMessages msgs.size()=" + (messageObjects == null ? "null" : messageObjects.size()) + " isLast=" + isLast + " isFcm=" + isFcm + ")");
         }
@@ -4146,7 +4151,10 @@ public class NotificationsController extends BaseController implements Notificat
         return channelId;
     }
 
+    public void refreshAccountAccess() { notificationsQueue.postRunnable(() -> showOrUpdateNotification(false)); }
+
     private void showOrUpdateNotification(boolean notifyAboutLast) {
+        if (ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(currentAccount)) { dismissNotification(); return; }
         if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
             dismissNotification();
             return;

@@ -390,6 +390,16 @@ public class ConnectionsManager extends BaseController {
     }
 
     private void sendRequestInternal(TLObject object, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
+        if (ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(currentAccount) && !(object instanceof TLRPC.TL_auth_logOut)) {
+            TLRPC.TL_error error = new TLRPC.TL_error(); error.code = 403; error.text = "CALAMUS_ACCESS_RESTRICTED";
+            try {
+                if (onComplete != null) onComplete.run(null, error);
+                if (onCompleteTimestamp != null) onCompleteTimestamp.run(null, error, 0L);
+            } catch (Exception failure) { FileLog.e(failure); }
+            finally { object.freeResources(); }
+            ksnxdev.calamus.access.CalamusAccountAccess.accountChanged();
+            return;
+        }
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("send request " + object + " with token = " + requestToken);
         }

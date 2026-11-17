@@ -204,6 +204,7 @@ public class ApplicationLoader extends Application {
         }
         applicationInited = true;
         NativeLoader.initNativeLibs(ApplicationLoader.applicationContext);
+        ksnxdev.calamus.access.CalamusAccountAccess.install(applicationContext);
 
         Utilities.globalQueue.postRunnable(() -> {
             try {

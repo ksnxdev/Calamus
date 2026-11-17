@@ -13,6 +13,12 @@ def calamusApiId = calamusLocal.getProperty('TELEGRAM_API_ID', System.getenv('TE
 def calamusApiHash = calamusLocal.getProperty('TELEGRAM_API_HASH', System.getenv('TELEGRAM_API_HASH') ?: '').trim()
 if (!(calamusApiId ==~ /[0-9]{1,9}/)) throw new GradleException('TELEGRAM_API_ID must be a positive integer')
 def calamusApiConfigured = calamusApiId.toInteger() > 0 && calamusApiHash ==~ /[a-fA-F0-9]{32}/
+def calamusBlocklistUrl = (gradle.startParameter.projectProperties.containsKey('CALAMUS_BLOCKLIST_URL') ? gradle.startParameter.projectProperties.get('CALAMUS_BLOCKLIST_URL') : (calamusLocal.getProperty('CALAMUS_BLOCKLIST_URL', '').trim() ?: project.findProperty('CALAMUS_BLOCKLIST_URL') ?: '')).trim()
+if (calamusBlocklistUrl) {
+    def address = new URI(calamusBlocklistUrl)
+    if (address.scheme != 'https' || !address.host || address.userInfo || address.fragment || !address.path.contains('/-/raw/')) throw new GradleException('CALAMUS_BLOCKLIST_URL must be a public HTTPS GitLab raw URL')
+    if (address.rawQuery && !(address.rawQuery in ['inline=false', 'ref_type=heads'])) throw new GradleException('CALAMUS_BLOCKLIST_URL must not include credentials or access tokens')
+}
 
 
 idea {
@@ -214,6 +220,7 @@ android {
 
 
     defaultConfig {
+        buildConfigField "String", "CALAMUS_BLOCKLIST_URL", groovy.json.JsonOutput.toJson(calamusBlocklistUrl)
         buildConfigField "String", "CALAMUS_VERSION_NAME", groovy.json.JsonOutput.toJson(project.findProperty('CALAMUS_VERSION_NAME') ?: APP_VERSION_NAME)
         buildConfigField "boolean", "CALAMUS_FIREBASE_ENABLED", rootProject.ext.calamusFirebaseEnabled.toString()
         buildConfigField "int", "CALAMUS_API_ID", calamusApiConfigured ? calamusApiId : '0'

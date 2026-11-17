@@ -398,7 +398,7 @@ public final class PluginManager implements PluginTransport.Listener {
     }
     public String pluginName(String id) { try { return store().info(id).getString("name"); } catch (Exception error) { return id; } }
     public boolean authorizeApiNow(String id, String session, String operation, JSONObject args) {
-        try { if (!session.equals(sessions.get(id))) return false; PluginAccessPolicy.authorize(store().record(id), operation, args); return true; } catch (Exception error) { return false; }
+        try { if (!session.equals(sessions.get(id))) return false; PluginAccessPolicy.authorize(store().record(id), operation, args); PluginBridge.checkAccountAccess(args); return true; } catch (Exception error) { return false; }
     }
     @Override public void api(String session, String request, PluginBridge.Result callback) {
         String id = null; for (Map.Entry<String, String> item : sessions.entrySet()) if (item.getValue().equals(session)) { id = item.getKey(); break; }
@@ -407,7 +407,7 @@ public final class PluginManager implements PluginTransport.Listener {
         try {
             PluginJson.validate(request, 65536);
             JSONObject packet = new JSONObject(request); String operation = packet.getString("operation"); JSONObject args = packet.getJSONObject("arguments");
-            JSONObject record = store().record(id); PluginAccessPolicy.authorize(record, operation, args);
+            JSONObject record = store().record(id); PluginAccessPolicy.authorize(record, operation, args); PluginBridge.checkAccountAccess(args);
             Object local = null; boolean handled = true;
             switch (operation) {
                 case "store.get": local = store().get(id, args.getString("key"), args.opt("default")); break;

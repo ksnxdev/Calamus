@@ -562,6 +562,7 @@ public abstract class BaseFragment {
 
     @CallSuper
     public void onResume() {
+        ksnxdev.calamus.access.CalamusAccountAccess.checkAccess();
         isPaused = false;
         if (actionBar != null) {
             actionBar.onResume();

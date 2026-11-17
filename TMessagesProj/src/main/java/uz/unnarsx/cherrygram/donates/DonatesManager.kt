@@ -288,22 +288,16 @@ object DonatesManager {
     /** Stars finish */
 
     /** Blocked start */
-    private val FILE_NAME_BLOCKED = decodeBase64Array(Extra.FILE_NAME_BLOCKED_HASH)
-    private val GITLAB_RAW_URL_BLOCKED = decodeBase64Array(Extra.GITLAB_RAW_URL_BLOCKED_HASH)
-
-    private val blockedUserIds = mutableSetOf<Long>()
-
-    private suspend fun updateBlockedList(context: Context) =
-        updateList(context, GITLAB_RAW_URL_BLOCKED, FILE_NAME_BLOCKED, blockedUserIds, ::loadLocalBlockedList)
-
-    private suspend fun loadLocalBlockedList(context: Context) =
-        loadLocalList(context, FILE_NAME_BLOCKED, blockedUserIds)
-
-    fun isUserBlocked(userId: Long): Boolean {
-        synchronized(blockedUserIds) {
-            return blockedUserIds.contains(userId)
-        }
+    private suspend fun updateBlockedList(context: Context) = withContext(Dispatchers.IO) {
+        ksnxdev.calamus.access.CalamusAccountAccess.initialize(context)
+        ksnxdev.calamus.access.CalamusAccountAccess.refresh(false)
     }
+
+    private suspend fun loadLocalBlockedList(context: Context) = withContext(Dispatchers.IO) {
+        ksnxdev.calamus.access.CalamusAccountAccess.initialize(context)
+    }
+
+    fun isUserBlocked(userId: Long): Boolean = ksnxdev.calamus.access.CalamusAccountAccess.isUserBlocked(userId)
     /** Blocked finish */
 
     /** Badge colors start */

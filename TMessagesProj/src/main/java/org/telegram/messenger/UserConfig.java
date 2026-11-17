@@ -265,6 +265,7 @@ public class UserConfig extends BaseController {
             clientUserId = user.id;
             checkPremiumSelf(oldUser, user);
         }
+        ksnxdev.calamus.access.CalamusAccountAccess.accountChanged();
     }
 
     private void checkPremiumSelf(TLRPC.User oldUser, TLRPC.User newUser) {

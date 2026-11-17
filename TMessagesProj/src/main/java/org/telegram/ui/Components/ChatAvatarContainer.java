@@ -185,6 +185,7 @@ public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.T
 
     public ChatAvatarContainer(Context context, BaseFragment baseFragment, boolean needTime, Theme.ResourcesProvider resourcesProvider) {
         super(context);
+        currentAccount = baseFragment != null ? baseFragment.getCurrentAccount() : UserConfig.selectedAccount;
         this.resourcesProvider = resourcesProvider;
         if (baseFragment instanceof ChatActivity) {
             parentFragment = (ChatActivity) baseFragment;
