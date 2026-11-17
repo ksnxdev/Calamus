@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle">訂閱官方頻道</string>
-    <string name="CG_FollowChannelInfo">加入頻道，隨時掌握 Cherrygram 的最新資訊和功能！</string>
+    <string name="CG_FollowChannelInfo">加入頻道，隨時掌握 Calamus 的最新資訊和功能！</string>
     <string name="CG_DoNotRemindAgain">下次不要顯示</string>
     <!--Telegram screens-->
     <string name="CG_SwitchedToAccount">已切換至 **%1$s**</string>
@@ -410,7 +410,7 @@
     <string name="SP_LockedChats_Lock_Destination">更新鎖定清單</string>
     <string name="SP_LockedChats_Lock_Destination_Sure">將被鎖定</string>
     <string name="SP_HideArchive">從對話清單中隱藏已封存記錄</string>
-    <string name="SP_HideArchive_Desc">已封存記錄將偽裝為 Cherrygram 頻道。 \n您可以從側邊欄或長按搜尋按鈕以開啟已封存記錄。</string>
+    <string name="SP_HideArchive_Desc">已封存記錄將偽裝為 Calamus 頻道。 \n您可以從側邊欄或長按搜尋按鈕以開啟已封存記錄。</string>
     <string name="SP_AskPin">需要密碼</string>
     <string name="SP_DoNotAskPin">無需密碼</string>
     <string name="SP_AskPinBeforeDelete">需要生物辨識才能刪除對話</string>
@@ -440,7 +440,7 @@
     <!--Donations-->
     <string name="DP_EnjoyingUs">喜歡使用 Cherrygram 嗎？</string>
     <string name="DP_RateUs">評價 Cherrygram</string>
-    <string name="DP_DonatesMoreInfo">想協助 Cherrygram 發展嗎？歡迎加入 **Cherrygram Support** 聊天室。</string>
+    <string name="DP_DonatesMoreInfo">想協助 Cherrygram 發展嗎？歡迎加入 **CalamusGram** 聊天室。</string>
     <string name="DP_DonatesThanks">感謝您的支持！正是您讓 Cherrygram 茁壯成長❤️</string>
     <string name="DP_DonateBadge">捐款並解鎖額外功能</string>
     <string name="DP_Donate_Desc">當您捐款達2美元或以上時，您還將獲得額外贈品：</string>

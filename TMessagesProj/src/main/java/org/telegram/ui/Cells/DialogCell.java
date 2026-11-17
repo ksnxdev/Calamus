@@ -3254,7 +3254,8 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             }
 
             if (customDialog.id == 1390) {
-                chat = MessagesController.getInstance(currentAccount).getChat(Constants.Cherrygram_Channel);
+                TLObject channel = MessagesController.getInstance(currentAccount).getUserOrChat(Constants.CALAMUS_CHANNEL_USERNAME);
+                chat = channel instanceof TLRPC.Chat ? (TLRPC.Chat) channel : null;
                 avatarImage.setForUserOrChat(chat, avatarDrawable);
             }
             if (customDialog.id == 2003) {
@@ -3538,7 +3539,8 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                 if (CherrygramPrivacyConfig.INSTANCE.getHideArchiveFromChatsList()) {
                     dialogMuted = true;
                     drawUnmute = false;
-                    dialogId = Constants.Cherrygram_Channel;
+                    TLObject channel = MessagesController.getInstance(currentAccount).getUserOrChat(Constants.CALAMUS_CHANNEL_USERNAME);
+                    dialogId = channel instanceof TLRPC.Chat ? -((TLRPC.Chat) channel).id : 0;
                 } else {
                     dialogMuted = false;
                     drawUnmute = false;

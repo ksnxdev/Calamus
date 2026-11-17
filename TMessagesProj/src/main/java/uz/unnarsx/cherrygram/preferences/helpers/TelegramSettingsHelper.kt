@@ -247,6 +247,7 @@ class TelegramSettingsHelper(
                 putLong("last_follow_suggestion", System.currentTimeMillis())
             }
 
+        val channel = cachedCherryChannel
         isCheckingChannel = false
         cachedCherryChannel = null
 
@@ -255,15 +256,17 @@ class TelegramSettingsHelper(
         }
 
         if (follow) {
-            fragment.messagesController.addUserToChat(
-                Constants.Cherrygram_Channel,
-                fragment.userConfig.currentUser,
-                0,
-                null,
-                null,
-                null
-            )
-            Browser.openUrl(fragment.context, "https://t.me/" + Constants.CG_CHANNEL_USERNAME)
+            if (channel != null) {
+                fragment.messagesController.addUserToChat(
+                    channel.id,
+                    fragment.userConfig.currentUser,
+                    0,
+                    null,
+                    null,
+                    null
+                )
+            }
+            Browser.openUrl(fragment.context, "https://t.me/" + Constants.CALAMUS_CHANNEL_USERNAME)
         }
     }
     /** Cherrygram channel finish */

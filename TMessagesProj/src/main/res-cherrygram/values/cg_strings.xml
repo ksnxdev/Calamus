@@ -3,7 +3,7 @@
     <!-- by t.me/arsLan-->
     <string name="CG_AppName" translatable="false">Calamus</string>
     <string name="CG_FollowChannelTitle">Subscribe to the official channel</string>
-    <string name="CG_FollowChannelInfo">Join the channel to stay up to date with all the news and features of Cherrygram!</string>
+    <string name="CG_FollowChannelInfo">Join the channel to stay up to date with all the news and features of Calamus!</string>
     <string name="CG_DoNotRemindAgain">Don\'t remind again</string>
 
     <!--Telegram screens-->
@@ -506,7 +506,7 @@
     <string name="SP_LockedChats_Lock_Destination">to update the locked list</string>
     <string name="SP_LockedChats_Lock_Destination_Sure">will be locked</string>
     <string name="SP_HideArchive">Hide archive from chats list</string>
-    <string name="SP_HideArchive_Desc">The archive will be masked as Cherrygram channel. \nYou will be able to open archive from drawer or by long tap on search button.</string>
+    <string name="SP_HideArchive_Desc">The archive will be masked as Calamus channel. \nYou will be able to open archive from drawer or by long tap on search button.</string>
 
     <string name="SP_AskPin">Require password</string>
     <string name="SP_DoNotAskPin">Don\'t require password</string>
@@ -543,7 +543,7 @@
     <string name="DP_EnjoyingUs">Enjoying Cherrygram?</string>
     <string name="DP_RateUs">Rate us on Google Play!</string>
 
-    <string name="DP_DonatesMoreInfo">Want to help Cherrygram grow? Check out **Cherrygram Support** chat.</string>
+    <string name="DP_DonatesMoreInfo">Want to help Cherrygram grow? Check out **CalamusGram** chat.</string>
     <string name="DP_DonatesThanks">Thanks for your support! You made Cherry happy ❤️</string>
 
     <string name="DP_DonateBadge">Donate and unlock bonuses</string>

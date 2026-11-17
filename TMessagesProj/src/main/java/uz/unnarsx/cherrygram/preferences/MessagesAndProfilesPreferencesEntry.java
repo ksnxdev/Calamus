@@ -504,7 +504,7 @@ public class MessagesAndProfilesPreferencesEntry extends BaseFragment {
 
                     updateMessages();
                 } else if (position == channelPreviewRow) {
-                    Browser.openUrl(getParentActivity(), Constants.CG_CHANNEL_URL);
+                    Browser.openUrl(getParentActivity(), Constants.CALAMUS_CHANNEL_URL);
                 } else if (position == hidePhoneSwitchRow) {
                     CherrygramAppearanceConfig.INSTANCE.setProfileHidePhoneNumber(!CherrygramAppearanceConfig.INSTANCE.getProfileHidePhoneNumber());
                     if (view instanceof TextCheckCell) {

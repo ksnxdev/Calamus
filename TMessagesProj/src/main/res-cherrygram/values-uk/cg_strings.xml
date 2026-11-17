@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle">Підписатися на офіційний канал</string>
-    <string name="CG_FollowChannelInfo">Долучайтеся до нашого каналу, щоб бути в курсі всіх новин та можливостей Cherrygram!</string>
+    <string name="CG_FollowChannelInfo">Долучайтеся до нашого каналу, щоб бути в курсі всіх новин та можливостей Calamus!</string>
     <string name="CG_DoNotRemindAgain">Не нагадувати</string>
     <!--Telegram screens-->
     <string name="CG_SwitchedToAccount">Переключився на %1$s</string>
@@ -432,7 +432,7 @@
     <string name="SP_LockedChats_Lock_Destination">для оновлення списку заблокованих</string>
     <string name="SP_LockedChats_Lock_Destination_Sure">буде заблоковано</string>
     <string name="SP_HideArchive">Приховати архів зі списку чатів</string>
-    <string name="SP_HideArchive_Desc">Архів буде замасковано під канал Cherrygram. \nВи зможете відкрити архів з бічного меню або довгим натисканням на кнопку пошуку.</string>
+    <string name="SP_HideArchive_Desc">Архів буде замасковано під канал Calamus. \nВи зможете відкрити архів з бічного меню або довгим натисканням на кнопку пошуку.</string>
     <string name="SP_AskPin">Запит пароля</string>
     <string name="SP_DoNotAskPin">Не запитувати пароль</string>
     <string name="SP_AskPinBeforeDelete">Запит біометричного підтвердження для видалення чатів</string>
@@ -462,7 +462,7 @@
     <!--Donations-->
     <string name="DP_EnjoyingUs">Подобається Cherrygram?</string>
     <string name="DP_RateUs">Оцініть нас на Google Play!</string>
-    <string name="DP_DonatesMoreInfo">Хочете допомогти Cherrygram розвиватися? Перейдіть до **Cherrygram Support** чату.</string>
+    <string name="DP_DonatesMoreInfo">Хочете допомогти Cherrygram розвиватися? Перейдіть до **CalamusGram** чату.</string>
     <string name="DP_DonatesThanks">Дякую за вашу підтримку! Ви зробили Вишню щасливою ❤️</string>
     <string name="DP_DonateBadge">Пожертвуйте і розблоковуйте бонуси</string>
     <string name="DP_Donate_Desc">При пожертвуванні від $2 ви також отримаєте бонусні подарунки:</string>

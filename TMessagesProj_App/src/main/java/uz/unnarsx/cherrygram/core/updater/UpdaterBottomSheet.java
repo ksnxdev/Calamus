@@ -785,7 +785,7 @@ public class UpdaterBottomSheet extends BottomSheet {
 
     private void openApkChannel() {
         dismiss();
-        fragment.getMessagesController().openByUserName(Constants.CG_APKS_CHANNEL_USERNAME, fragment, 1);
+        fragment.getMessagesController().openByUserName(Constants.CALAMUS_CHANNEL_USERNAME, fragment, 1);
     }
 
     // ----------------------------------------------------------------------------------------

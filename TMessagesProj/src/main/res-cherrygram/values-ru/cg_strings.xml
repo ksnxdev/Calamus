@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle">Подписаться на официальный канал</string>
-    <string name="CG_FollowChannelInfo">Присоединяйтесь к каналу, чтобы быть в курсе всех новостей и возможностей Cherrygram!</string>
+    <string name="CG_FollowChannelInfo">Присоединяйтесь к каналу, чтобы быть в курсе всех новостей и возможностей Calamus!</string>
     <string name="CG_DoNotRemindAgain">Не напоминать</string>
 
     <!--Telegram screens-->
@@ -497,7 +497,7 @@
     <string name="SP_LockedChats_Lock_Destination">для добавления в список заблокированных</string>
     <string name="SP_LockedChats_Lock_Destination_Sure">будет заблокирован(о)</string>
     <string name="SP_HideArchive">Скрыть архив из списка чатов</string>
-    <string name="SP_HideArchive_Desc">Архив будет замаскирован под канал Cherrygram. \nВы сможете открыть архив из бокового меню или долгим нажатием на кнопку поиска.</string>
+    <string name="SP_HideArchive_Desc">Архив будет замаскирован под канал Calamus. \nВы сможете открыть архив из бокового меню или долгим нажатием на кнопку поиска.</string>
 
     <string name="SP_AskPin">Запрашивать пароль</string>
     <string name="SP_DoNotAskPin">Не запрашивать пароль</string>
@@ -534,7 +534,7 @@
     <string name="DP_EnjoyingUs">Нравится Cherrygram?</string>
     <string name="DP_RateUs">Оставьте отзыв в Google Play!</string>
 
-    <string name="DP_DonatesMoreInfo">Хотите помочь развитию Cherrygram? Загляните в чат **Cherrygram Support**.</string>
+    <string name="DP_DonatesMoreInfo">Хотите помочь развитию Cherrygram? Загляните в чат **CalamusGram**.</string>
     <string name="DP_DonatesThanks">Спасибо за поддержку! Вишенка счастлива благодаря вам ❤️️</string>
 
     <string name="DP_DonateBadge">Поддержите проект и получите бонусы</string>

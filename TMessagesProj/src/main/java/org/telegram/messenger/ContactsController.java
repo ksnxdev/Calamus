@@ -376,7 +376,7 @@ public class ContactsController extends BaseController {
     }
 
     public String getInviteText(int contacts) {
-        String link = Constants.CG_CHANNEL_URL;
+        String link = Constants.CALAMUS_CHANNEL_URL;
         if (contacts <= 1) {
             return LocaleController.formatString(R.string.InviteText2, link);
         } else {

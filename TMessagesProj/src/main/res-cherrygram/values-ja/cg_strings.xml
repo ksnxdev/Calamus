@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle">公式チャンネルを購読する</string>
-    <string name="CG_FollowChannelInfo">チャンネルに参加して、Cherrygramのニュースや機能の最新情報を入手!</string>
+    <string name="CG_FollowChannelInfo">チャンネルに参加して、Calamusのニュースや機能の最新情報を入手!</string>
     <string name="CG_DoNotRemindAgain">今後は表示しない</string>
     <!--Telegram screens-->
     <string name="CG_JoinedDate">You joined **%1$s** **%2$s**</string>
@@ -343,7 +343,7 @@
     <string name="SP_LockedChats_Lock_Destination">ロックされた一覧を更新する</string>
     <string name="SP_LockedChats_Lock_Destination_Sure">ロックされます</string>
     <string name="SP_HideArchive">チャット一覧からアーカイブを非表示</string>
-    <string name="SP_HideArchive_Desc">アーカイブはCherrygramチャンネルとしてマスクされます。\nドロワーからまたは検索ボタンを長押しでアーカイブを開くことができます。</string>
+    <string name="SP_HideArchive_Desc">アーカイブはCalamusチャンネルとしてマスクされます。\nドロワーからまたは検索ボタンを長押しでアーカイブを開くことができます。</string>
     <string name="SP_AskPin">パスワードを要求</string>
     <string name="SP_DoNotAskPin">パスワードを要求しない</string>
     <string name="SP_AskPinBeforeDelete">チャットを削除時に生体認証を要求</string>
@@ -373,7 +373,7 @@
     <!--Donations-->
     <string name="DP_EnjoyingUs">Cherrygram にご満足いただけていますか?</string>
     <string name="DP_RateUs">Google Play で評価してください!</string>
-    <string name="DP_DonatesMoreInfo">Want to help Cherrygram grow? Check out **Cherrygram Support** chat.</string>
+    <string name="DP_DonatesMoreInfo">Want to help Cherrygram grow? Check out **CalamusGram** chat.</string>
     <string name="DP_DonatesThanks">Thanks for your support! You made Cherry happy ❤️</string>
     <string name="DP_DonateBadge">寄付をしてボーナスを獲得</string>
     <string name="DP_Donate_Desc">When you donate $2 or more, you\'ll also get some bonus gifts:</string>

@@ -9,7 +9,6 @@
 
 package uz.unnarsx.cherrygram.misc
 
-import uz.unnarsx.cherrygram.core.configs.CherrygramCoreConfig
 
 object Constants {
 
@@ -17,31 +16,12 @@ object Constants {
     var CG_AUTHOR = "Calamus (based on Cherrygram)"
 
     /** CG Links start */
-    @JvmField
-    var CG_CHANNEL_USERNAME = "cherrygram"
-    @JvmField
-    var CG_CHANNEL_URL = "https://t.me/cherrygram"
+    const val CALAMUS_CHANNEL_USERNAME = "CalamusGram"
+    const val CALAMUS_CHANNEL_URL = "https://t.me/CalamusGram"
+    const val CALAMUS_PRIVACY_URL = "https://github.com/ksnxdev/Calamus/blob/main/PRIVACY.md"
 
     @JvmField
-    var CG_APKS_CHANNEL_USERNAME = "CherrygramAPKs"
-    @JvmField
-    var CG_APKS_CHANNEL_URL = "https://t.me/CherrygramAPKs"
-
-    @JvmField
-    var CG_BETA_APKS_CHANNEL_USERNAME = "CherrygramBetaAPKs"
-    @JvmField
-    var CG_BETA_APKS_CHANNEL_URL = "https://t.me/CherrygramBetaAPKs"
-
-    @JvmField
-    var CG_CHAT_USERNAME = "CherrygramSupport"
-    @JvmField
-    var CG_CHAT_URL = "https://t.me/CherrygramSupport"
-
-    @JvmField
-    var CG_OFFTOPIC_CHAT_USERNAME = "CherrygramOfftopic"
-
-    @JvmField
-    var UPDATE_APP_URL = if (CherrygramCoreConfig.isPlayStoreBuild()) "https://play.google.com/store/apps/details?id=uz.unnarsx.cherrygram" else CG_CHANNEL_URL
+    var UPDATE_APP_URL = CALAMUS_CHANNEL_URL
 
     @JvmField
     var CG_PRIVACY_URL = "https://arslan4k1390.github.io/cherrygram/privacy"

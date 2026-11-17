@@ -8059,7 +8059,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 folderId = dialog.folder_id;
                 if (dialog instanceof TLRPC.TL_dialogFolder) {
                     if (CherrygramPrivacyConfig.INSTANCE.getHideArchiveFromChatsList()) {
-                        getMessagesController().openByUserName(Constants.CG_CHANNEL_USERNAME, this, 1);
+                        getMessagesController().openByUserName(Constants.CALAMUS_CHANNEL_USERNAME, this, 1);
                     } else {
                         if (actionBar.isActionModeShowed(null)) {
                             return;

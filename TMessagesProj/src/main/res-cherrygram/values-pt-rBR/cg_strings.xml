@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle">Subscrever o canal oficial</string>
-    <string name="CG_FollowChannelInfo">Entre no canal para ficar por dentro de todas as novidades e recursos do Cherrygram!</string>
+    <string name="CG_FollowChannelInfo">Entre no canal para ficar por dentro de todas as novidades e recursos do Calamus!</string>
     <string name="CG_DoNotRemindAgain">Não voltar a lembrar</string>
     <!--Telegram screens-->
     <string name="CG_SwitchedToAccount">Mudou para **%1$s**</string>
@@ -408,7 +408,7 @@ Se uma correspondência for encontrada dentro do link, toda a mensagem será aut
     <string name="SP_LockedChats_Lock_Destination">para atualizar a lista de bloqueados</string>
     <string name="SP_LockedChats_Lock_Destination_Sure">será bloqueado</string>
     <string name="SP_HideArchive">Ocultar arquivos da lista de chats</string>
-    <string name="SP_HideArchive_Desc">O arquivo será mascarado como canal Cherrygram. \nVocê poderá abrir o arquivo da gaveta ou tocar longamente no botão de pesquisa.</string>
+    <string name="SP_HideArchive_Desc">O arquivo será mascarado como canal Calamus. \nVocê poderá abrir o arquivo da gaveta ou tocar longamente no botão de pesquisa.</string>
     <string name="SP_AskPin">Exigir senha</string>
     <string name="SP_DoNotAskPin">Não exigir senha</string>
     <string name="SP_AskPinBeforeDelete">Exigir a biometria para excluir chats</string>

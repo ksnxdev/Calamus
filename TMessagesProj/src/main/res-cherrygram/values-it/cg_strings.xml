@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle">Iscriviti al canale ufficiale</string>
-    <string name="CG_FollowChannelInfo">Unisciti al nostro canale per essere aggiornato su tutte le novità e funzionalità di Cherrygram!</string>
+    <string name="CG_FollowChannelInfo">Unisciti al nostro canale per essere aggiornato su tutte le novità e funzionalità di Calamus!</string>
     <string name="CG_DoNotRemindAgain">Non ricordarmelo</string>
     <!--Telegram screens-->
     <string name="CG_SwitchedToAccount">Account attivo: **%1$s**</string>
@@ -410,7 +410,7 @@
     <string name="SP_LockedChats_Lock_Destination">per aggiornare la lista dei bloccati</string>
     <string name="SP_LockedChats_Lock_Destination_Sure">sarà bloccato</string>
     <string name="SP_HideArchive">Nascondi l\'archivio</string>
-    <string name="SP_HideArchive_Desc">L\'archivio non sarà visibile (apparirà come canale Cherrygram). \nPotrai raggiungerlo dalla voce di menu del cassetto di sinistra (☰) o toccando a lungo il pulsante di ricerca.</string>
+    <string name="SP_HideArchive_Desc">L\'archivio non sarà visibile (apparirà come canale Calamus). \nPotrai raggiungerlo dalla voce di menu del cassetto di sinistra (☰) o toccando a lungo il pulsante di ricerca.</string>
     <string name="SP_AskPin">Richiedi la password</string>
     <string name="SP_DoNotAskPin">Non richiedere la password</string>
     <string name="SP_AskPinBeforeDelete">Autenticazione biometrica per eliminare le chat</string>
@@ -440,7 +440,7 @@
     <!--Donations-->
     <string name="DP_EnjoyingUs">Ti piace Cherrygram?</string>
     <string name="DP_RateUs">Lascia una (ottima) valutazione su Google Play!</string>
-    <string name="DP_DonatesMoreInfo">Vuoi aiutare Cherrygram a migliorare? Partecipa alla chat **Cherrygram Support** e contribuisci con le tue segnalazioni.</string>
+    <string name="DP_DonatesMoreInfo">Vuoi aiutare Cherrygram a migliorare? Partecipa alla chat **CalamusGram** e contribuisci con le tue segnalazioni.</string>
     <string name="DP_DonatesThanks">Grazie per il tuo supporto! Hai reso Cherry felice ❤️</string>
     <string name="DP_DonateBadge">Fai una donazione per sbloccare le funzionalità extra</string>
     <string name="DP_Donate_Desc">Se doni $2 $ o più, otterrai anche alcuni bonus:</string>

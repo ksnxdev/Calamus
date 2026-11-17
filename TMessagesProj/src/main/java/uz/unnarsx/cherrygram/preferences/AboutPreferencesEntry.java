@@ -145,7 +145,7 @@ public class AboutPreferencesEntry extends BaseCGPreferencesEntry {
             AndroidUtilities.addToClipboard(Constants.CG_CROWDIN_URL);
             return true;
         } else if (item.id == policyRow) {
-            AndroidUtilities.addToClipboard(Constants.CG_PRIVACY_URL);
+            AndroidUtilities.addToClipboard(Constants.CALAMUS_PRIVACY_URL);
             return true;
         }
         return false;

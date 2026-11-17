@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle">Падпісацца на афіцыйны канал</string>
-    <string name="CG_FollowChannelInfo">Падключыцеся да нашага канала, каб быць у курсе ўсіх навін і функцый Cherrygram!</string>
+    <string name="CG_FollowChannelInfo">Падключыцеся да нашага канала, каб быць у курсе ўсіх навін і функцый Calamus!</string>
     <string name="CG_DoNotRemindAgain">Больш не нагадваць</string>
     <!--Telegram screens-->
     <string name="CG_RegistrationDate">Дата рэгістрацыі:</string>

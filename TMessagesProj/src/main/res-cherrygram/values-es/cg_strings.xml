@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle">Suscríbete al canal oficial</string>
-    <string name="CG_FollowChannelInfo">¡Únete al canal para estar al día con todas las noticias y características de Cherrygram!</string>
+    <string name="CG_FollowChannelInfo">¡Únete al canal para estar al día con todas las noticias y características de Calamus!</string>
     <string name="CG_DoNotRemindAgain">No volver a recordar</string>
     <!--Telegram screens-->
     <string name="CG_JoinedDate">Te uniste a **%1$s**%2$s**</string>
@@ -339,7 +339,7 @@ Si se encuentra una coincidencia dentro del enlace, el mensaje completo se ocult
     <string name="SP_LockedChats_Lock_Destination">actualizar la lista bloqueada</string>
     <string name="SP_LockedChats_Lock_Destination_Sure">se bloqueará</string>
     <string name="SP_HideArchive">Ocultar archivo de la lista de chats</string>
-    <string name="SP_HideArchive_Desc">El archivo se enmascarará como un canal de Cherrygram. \nUsted será capaz de abrir el archivo desde el cajón o pulsando largo en el botón de búsqueda.</string>
+    <string name="SP_HideArchive_Desc">El archivo se enmascarará como un canal de Calamus. \nUsted será capaz de abrir el archivo desde el cajón o pulsando largo en el botón de búsqueda.</string>
     <string name="SP_AskPin">Requiere contraseña</string>
     <string name="SP_DoNotAskPin">No requiere contraseña</string>
     <string name="SP_AskPinBeforeDelete">Requiere biometría para eliminar chats</string>
@@ -369,7 +369,7 @@ Si se encuentra una coincidencia dentro del enlace, el mensaje completo se ocult
     <!--Donations-->
     <string name="DP_EnjoyingUs">¿Disfrutando de Cherrygram?</string>
     <string name="DP_RateUs">¡Califícanos en Google Play!</string>
-    <string name="DP_DonatesMoreInfo">¿Quieres ayudar a que Cherrygram crezca? Echa un vistazo a **Cherrygram Support** chat.</string>
+    <string name="DP_DonatesMoreInfo">¿Quieres ayudar a que Cherrygram crezca? Echa un vistazo a **CalamusGram** chat.</string>
     <string name="DP_DonatesThanks">¡Gracias por tu apoyo! Hiciste Cherry feliz ❤️</string>
     <string name="DP_DonateBadge">Donar y desbloquear bonificaciones</string>
     <string name="DP_Donate_Desc">Cuando donas 2 o más $, también obtendrás algunos regalos de bonos:</string>

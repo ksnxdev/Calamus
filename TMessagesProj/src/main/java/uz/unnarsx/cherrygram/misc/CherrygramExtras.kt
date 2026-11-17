@@ -70,7 +70,7 @@ object CherrygramExtras : CoroutineScope by CoroutineScope(
         }
     }
 
-    private val channelUsername = Constants.CG_CHANNEL_USERNAME
+    private val channelUsername = Constants.CALAMUS_CHANNEL_USERNAME
     fun checkChannelFollow(activity: Activity, currentAccount: Int) = AndroidUtilities.runOnUIThread {
 
         if (MessagesController.getMainSettings(currentAccount).getBoolean("update_channel_follow_skip", false)) return@runOnUIThread

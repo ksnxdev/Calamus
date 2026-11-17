@@ -465,7 +465,7 @@ public class DonatesPreferencesEntry extends BaseFragment implements Notificatio
                         CharSequence moreInfoText = AndroidUtilities.replaceSingleTag(getString(R.string.DP_DonatesMoreInfo),
                                 Theme.key_windowBackgroundWhiteLinkText,
                                 AndroidUtilities.REPLACING_TAG_TYPE_LINKBOLD,
-                                () -> Browser.openUrl(getContext(), "https://t.me/CherrygramSupport")
+                                () -> Browser.openUrl(getContext(), Constants.CALAMUS_CHANNEL_URL)
                         );
                         tableView.addFullRow(
                                 didDonate && !isTestBackend ? getString(R.string.DP_DonatesThanks) : moreInfoText,

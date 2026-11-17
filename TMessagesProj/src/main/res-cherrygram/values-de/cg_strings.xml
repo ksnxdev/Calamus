@@ -2,7 +2,7 @@
 <resources>
     <!-- by t.me/arsLan-->
     <string name="CG_FollowChannelTitle"> Abonnieren Sie den offiziellen Kanal</string>
-    <string name="CG_FollowChannelInfo">Treten Sie unserem Kanal bei, um über alle Neuigkeiten und Funktionen von Cherrygram auf dem Laufenden zu bleiben!</string>
+    <string name="CG_FollowChannelInfo">Treten Sie unserem Kanal bei, um über alle Neuigkeiten und Funktionen von Calamus auf dem Laufenden zu bleiben!</string>
     <string name="CG_DoNotRemindAgain">Nicht noch einmal daran erinnern</string>
     <!--Telegram screens-->
     <string name="CG_RegistrationDate">Datum der Registrierung:</string>
