@@ -41,6 +41,7 @@ object RemoteConfigHelper {
             1 * HOUR
 
     private const val FILE_NAME = "remote_config.json"
+    private const val MAX_CONFIG_BYTES = 256 * 1024
     private val REMOTE_URLS = listOf(
         "https://gitlab.com/arsLan4k1390/Cherrygram-IDS/-/raw/main/remote_config.json?inline=false",
         "https://raw.githubusercontent.com/arsLan4k1390/Cherrygram-IDS/main/remote_config.json",
@@ -147,9 +148,7 @@ object RemoteConfigHelper {
                 throw IOException("HTTP ${connection.responseCode} (${connection.responseMessage})")
             }
 
-            val text = connection.inputStream.bufferedReader().use {
-                it.readText()
-            }
+            val text = connection.inputStream.use { readTextLimited(it) }
 
             if (text.isBlank()) {
                 throw IOException("Remote config is empty")
@@ -193,7 +192,7 @@ object RemoteConfigHelper {
             }
 
             try {
-                val text = file.readText()
+                val text = file.inputStream().use { readTextLimited(it) }
 
                 if (text.isBlank()) {
                     throw IOException("Cached remote config is empty")
@@ -208,6 +207,41 @@ object RemoteConfigHelper {
                 config = JSONObject()
             }
         }
+
+    private fun readTextLimited(input: java.io.InputStream): String {
+        val output = java.io.ByteArrayOutputStream()
+        val buffer = ByteArray(4096)
+        while (true) {
+            val count = input.read(buffer)
+            if (count < 0) break
+            if (output.size() + count > MAX_CONFIG_BYTES) throw IOException("Remote config exceeds size limit")
+            output.write(buffer, 0, count)
+        }
+        val text = Charsets.UTF_8.newDecoder()
+            .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+            .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT)
+            .decode(java.nio.ByteBuffer.wrap(output.toByteArray())).toString()
+        android.util.JsonReader(java.io.StringReader(text)).use { reader ->
+            reader.isLenient = false
+            var depth = 0
+            var tokens = 0
+            while (reader.peek() != android.util.JsonToken.END_DOCUMENT) {
+                if (++tokens > 8192) throw IOException("Remote config has too many tokens")
+                when (reader.peek()) {
+                    android.util.JsonToken.BEGIN_OBJECT -> { if (++depth > 16) throw IOException("Remote config nesting limit exceeded"); reader.beginObject() }
+                    android.util.JsonToken.BEGIN_ARRAY -> { if (++depth > 16) throw IOException("Remote config nesting limit exceeded"); reader.beginArray() }
+                    android.util.JsonToken.END_OBJECT -> { reader.endObject(); depth-- }
+                    android.util.JsonToken.END_ARRAY -> { reader.endArray(); depth-- }
+                    android.util.JsonToken.NAME -> reader.nextName()
+                    android.util.JsonToken.STRING, android.util.JsonToken.NUMBER -> reader.nextString()
+                    android.util.JsonToken.BOOLEAN -> reader.nextBoolean()
+                    android.util.JsonToken.NULL -> reader.nextNull()
+                    else -> throw IOException("Invalid remote config JSON")
+                }
+            }
+        }
+        return text
+    }
 
     private fun showToast(text: String) {
         if (CherrygramCoreConfig.isDevBuild() || CherrygramDebugConfig.showRPCErrors) {

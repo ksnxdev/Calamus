@@ -55,7 +55,8 @@ public final class PluginArchiveActivity extends BaseCGPreferencesEntry {
     }
     private boolean allowed() {
         int account = scope.optInt("account_id", -1);
-        return account >= 0 && account < UserConfig.MAX_ACCOUNT_COUNT && UserConfig.getInstance(account).isClientActivated()
+        return ksnxdev.calamus.plugins.TelegramPluginHost.canShowSensitiveUi()
+                && account >= 0 && account < UserConfig.MAX_ACCOUNT_COUNT && UserConfig.getInstance(account).isClientActivated()
                 && UserConfig.getInstance(account).getClientUserId() == scope.optLong("user_id")
                 && manager().authorizeApiNow(plugin, session, "archive.query", scope);
     }

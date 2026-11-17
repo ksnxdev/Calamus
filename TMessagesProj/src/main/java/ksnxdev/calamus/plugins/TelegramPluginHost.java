@@ -19,6 +19,15 @@ import org.telegram.ui.ActionBar.BaseFragment;
 import java.util.ArrayList;
 
 public final class TelegramPluginHost implements PluginBridge.Client, NotificationCenter.NotificationCenterDelegate {
+    public static boolean canShowSensitiveUi() {
+        LaunchActivity activity = LaunchActivity.instance;
+        if (activity == null || activity.isFinishing() || activity.isDestroyed() || ApplicationLoader.mainInterfacePaused
+                || org.telegram.messenger.SharedConfig.appLocked || org.telegram.messenger.SharedConfig.isWaitingForPasscodeEnter
+                || ksnxdev.calamus.access.CalamusAccountAccess.requiresUnlock()) return false;
+        android.app.KeyguardManager keyguard = (android.app.KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
+        return keyguard != null && !keyguard.isKeyguardLocked();
+    }
+    @Override public boolean canShowUi() { return canShowSensitiveUi(); }
     private static TelegramPluginHost instance;
     private final PluginManager manager;
     private final long[] identities = new long[UserConfig.MAX_ACCOUNT_COUNT];
@@ -266,6 +275,8 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
     @Override
     public void request(String pluginId, String operation, JSONObject arguments, PluginBridge.Result callback) {
         try {
+            if (java.util.Set.of("archive.show", "show_dialog", "open_chat", "send_message").contains(operation) && !canShowSensitiveUi())
+                throw new SecurityException("Plugin UI requires an unlocked foreground app");
             if (operation.equals("accounts")) {
                 JSONArray accounts = new JSONArray();
                 for (int i = 0; i < UserConfig.MAX_ACCOUNT_COUNT; i++) {
@@ -399,6 +410,7 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
 
     private static void approveSend(String pluginId, int account, long dialogId, String text,
             SendMessagesHelper.SendMessageParams params, JSONObject arguments, PluginBridge.Result callback) throws Exception {
+        if (!canShowSensitiveUi()) throw new SecurityException("Send confirmation requires an unlocked foreground app");
         PluginManager manager = PluginManager.getInstance(ApplicationLoader.applicationContext);
         String session = arguments.optString("_isolation_session");
         if (!manager.authorizeApiNow(pluginId, session, "send_message", arguments)) throw new SecurityException("Plugin access was revoked");
@@ -414,6 +426,7 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
         builder.setPositiveButton(org.telegram.messenger.LocaleController.getString(org.telegram.messenger.R.string.Send), (dialog, which) -> {
             if (!answered.compareAndSet(false, true)) return;
             try {
+                if (!canShowSensitiveUi()) throw new SecurityException("Send confirmation requires an unlocked foreground app");
                 account(arguments);
                 if (!manager.authorizeApiNow(pluginId, session, "send_message", arguments)) throw new SecurityException("Plugin access was revoked");
                 SendMessagesHelper.getInstance(account).sendMessage(params);

@@ -117,10 +117,11 @@
 
     <application
         android:name="org.telegram.messenger.ApplicationLoader"
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:fullBackupContent="@xml/calamus_backup_rules"
+        android:dataExtractionRules="@xml/calamus_data_extraction_rules"
         android:extractNativeLibs="true"
-        android:restoreAnyVersion="true"
-        android:backupAgent=".BackupAgent"
+        android:restoreAnyVersion="false"
         android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:theme="@style/Theme.TMessages.Start"
@@ -561,7 +562,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan"
-            android:exported="true"
+            android:exported="false"
             android:launchMode="singleTop">
         </activity>
         <activity

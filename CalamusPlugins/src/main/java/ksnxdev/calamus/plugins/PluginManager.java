@@ -434,6 +434,7 @@ public final class PluginManager implements PluginTransport.Listener {
                     while (logs.length() > 8) logs.remove(0); record.put("logs", logs); local = true; break;
                 }
                 case "notify": {
+                    if (!PluginBridge.canShowUi()) throw new SecurityException("Plugin notifications require an unlocked foreground app");
                     long now = android.os.SystemClock.elapsedRealtime(); if (noticeTimes.containsKey(id) && now - noticeTimes.get(id) < 5000) throw new SecurityException("Notification rate limit"); noticeTimes.put(id, now);
                     String text = args.getString("text"); android.widget.Toast.makeText(context, pluginName(id) + ": " + text.substring(0, Math.min(200, text.length())), android.widget.Toast.LENGTH_SHORT).show(); local = true; break;
                 }
