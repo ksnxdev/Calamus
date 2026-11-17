@@ -145,6 +145,10 @@ public class AdsScreen extends BaseCGPreferencesEntry {
     }
 
     private void loadADS() {
+        if (!ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) {
+            ksnxdev.calamus.CalamusPrivacy.requestExternalAds(this, this::loadADS);
+            return;
+        }
         progressDialog = new AlertDialog(
                 getParentActivity(),
                 AlertDialog.ALERT_TYPE_SPINNER,

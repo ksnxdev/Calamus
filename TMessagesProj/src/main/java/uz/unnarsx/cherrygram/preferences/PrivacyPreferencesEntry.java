@@ -62,6 +62,7 @@ public class PrivacyPreferencesEntry extends BaseCGPreferencesEntry {
     private final int hideArchivedStoriesRow = 1390;
 
     private final int material3Row = 2007;
+    private final int externalAdsRow = 2008;
 
     private boolean expandedBiometricSection = false;
 
@@ -83,6 +84,8 @@ public class PrivacyPreferencesEntry extends BaseCGPreferencesEntry {
     @Override
     protected void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
         items.add(UItem.asHeader("Calamus"));
+        items.add(SettingsHelper.asSwitchCG(externalAdsRow, getString(R.string.CalamusExternalAds), getString(R.string.CalamusExternalAdsDescription))
+                .setChecked(ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()).slug("externalAds"));
         items.add(SettingsHelper.asSwitchCG(material3Row, getString(R.string.CG_Material3), getString(R.string.CG_Material3Desc))
                 .setChecked(CalamusConfig.INSTANCE.getMaterial3()));
         items.add(UItem.asShadow(null));
@@ -176,7 +179,13 @@ public class PrivacyPreferencesEntry extends BaseCGPreferencesEntry {
 
     @Override
     protected void onClick(UItem item, View view, int position, float x, float y) {
-        if (item.id == material3Row) {
+        if (item.id == externalAdsRow) {
+            if (ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) {
+                ksnxdev.calamus.CalamusPrivacy.setExternalAdsAllowed(false); updateRows(true);
+            } else {
+                ksnxdev.calamus.CalamusPrivacy.requestExternalAds(this, () -> updateRows(true));
+            }
+        } else if (item.id == material3Row) {
             CalamusConfig.INSTANCE.setMaterial3(!CalamusConfig.INSTANCE.getMaterial3());
             SettingsHelper.updateCheckState(view, CalamusConfig.INSTANCE.getMaterial3());
             showRestartBulletin();

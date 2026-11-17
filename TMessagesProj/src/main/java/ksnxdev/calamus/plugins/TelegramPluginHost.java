@@ -445,12 +445,40 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
         AndroidUtilities.runOnUIThread(() -> { if (dialog.isShowing()) dialog.dismiss(); }, 25000);
     }
 
-    public static JSONArray accessOptions() {
+    public static JSONArray accessOptions() { return accessOptions(null); }
+    public static JSONArray accessOptions(JSONArray saved) {
+        JSONArray current = currentAccessOptions(), result = new JSONArray();
+        java.util.LinkedHashMap<String, JSONObject> choices = new java.util.LinkedHashMap<>();
+        for (JSONArray source : new JSONArray[]{saved, current}) {
+            if (source == null) continue;
+            for (int i = 0; i < source.length() && choices.size() < PluginAccessPolicy.MAX_CHAT_SCOPES; i++) try {
+                JSONObject row = source.getJSONObject(i); int account = row.getInt("account_id");
+                long user = row.getLong("user_id"), dialog = row.getLong("dialog_id");
+                if (account < 0 || account >= UserConfig.MAX_ACCOUNT_COUNT || dialog == 0 || DialogObject.isEncryptedDialog(dialog) || DialogObject.isFolderDialogId(dialog)) continue;
+                UserConfig config = UserConfig.getInstance(account);
+                if (!config.isClientActivated() || config.getClientUserId() != user || ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(account)) continue;
+                String key = account + ":" + user + ":" + dialog;
+                if (choices.containsKey(key)) continue;
+                String title = row.optString("title");
+                if (title.isEmpty()) {
+                    MessagesController controller = MessagesController.getInstance(account);
+                    title = dialog > 0 ? org.telegram.messenger.UserObject.getUserName(controller.getUser(dialog)) : controller.getChat(-dialog) == null ? "" : controller.getChat(-dialog).title;
+                    if (title.isEmpty()) title = org.telegram.messenger.LocaleController.formatString(org.telegram.messenger.R.string.CalamusChatId, dialog);
+                    title = org.telegram.messenger.UserObject.getUserName(config.getCurrentUser()) + " · " + title;
+                }
+                choices.put(key, chatContext(account, dialog).put("title", title));
+            } catch (Exception ignored) { }
+        }
+        for (JSONObject row : choices.values()) result.put(row);
+        return result;
+    }
+    private static JSONArray currentAccessOptions() {
+
         JSONArray options = new JSONArray();
         for (int account = 0; account < UserConfig.MAX_ACCOUNT_COUNT; account++) {
             if (options.length() >= PluginAccessPolicy.MAX_CHAT_SCOPES) break;
             UserConfig config = UserConfig.getInstance(account);
-            if (!config.isClientActivated()) continue;
+            if (!config.isClientActivated() || ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(account)) continue;
             try {
                 String name = org.telegram.messenger.UserObject.getUserName(config.getCurrentUser());
                 options.put(chatContext(account, config.getClientUserId()).put("title", name + " · " + org.telegram.messenger.LocaleController.getString(org.telegram.messenger.R.string.SavedMessages)));

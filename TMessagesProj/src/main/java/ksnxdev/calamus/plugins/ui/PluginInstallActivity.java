@@ -36,7 +36,7 @@ public final class PluginInstallActivity extends BaseCGPreferencesEntry {
             JSONObject value = result.optJSONObject("review");
             if (value != null && error.isEmpty()) {
                 proposal = value; loaded = true;
-                if (needsAccount()) choices = TelegramPluginHost.accessOptions();
+                if (needsAccount()) choices = TelegramPluginHost.accessOptions(proposal.optJSONArray("scopes"));
                 JSONArray previous = proposal.optJSONArray("scopes");
                 if (previous != null) for (int i = 0; i < choices.length(); i++) for (int j = 0; j < previous.length(); j++) if (sameScope(choices.optJSONObject(i), previous.optJSONObject(j))) selected.add(i);
             }
@@ -100,7 +100,7 @@ public final class PluginInstallActivity extends BaseCGPreferencesEntry {
             }
         } else if (item.id == 1) {
             try {
-                JSONArray scopes = new JSONArray(); JSONArray current = needsAccount() ? TelegramPluginHost.accessOptions() : new JSONArray();
+                JSONArray scopes = new JSONArray(); JSONArray current = needsAccount() ? TelegramPluginHost.accessOptions(choices) : new JSONArray();
                 for (int index : selected) {
                     JSONObject chosen = choices.getJSONObject(index); boolean active = false;
                     for (int i = 0; i < current.length(); i++) active |= sameScope(chosen, current.optJSONObject(i));

@@ -40,7 +40,7 @@ public class PluginAccessActivity extends BaseCGPreferencesEntry {
                 if (granted != null) for (int i = 0; i < granted.length(); i++) permissions.add(granted.getString(i));
                 JSONArray required = plugin.optJSONArray("required_permissions");
                 if ((granted == null || granted.length() == 0) && required != null) for (int i = 0; i < required.length(); i++) permissions.add(required.getString(i));
-                choices = TelegramPluginHost.accessOptions();
+                choices = TelegramPluginHost.accessOptions(plugin.optJSONArray("scopes"));
                 JSONArray saved = plugin.optJSONArray("scopes");
                 if (saved != null) for (int i = 0; i < choices.length(); i++) for (int j = 0; j < saved.length(); j++) {
                     JSONObject a = choices.getJSONObject(i), b = saved.getJSONObject(j);

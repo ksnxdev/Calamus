@@ -25661,6 +25661,7 @@ public class MessagesController extends BaseController implements NotificationCe
     private LongSparseArray<SponsoredMessagesInfo> sponsoredMessagesForADSgram = new LongSparseArray<>();
 
     public SponsoredMessagesInfo getSponsoredMessagesForADSgram(long dialogId) {
+        if (!ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) return null;
         boolean showAds = CherrygramFirebaseConfig.INSTANCE.getShowAdsScreenInSettings();
 
         if (CherrygramCoreConfig.isPlayStoreBuild()) {

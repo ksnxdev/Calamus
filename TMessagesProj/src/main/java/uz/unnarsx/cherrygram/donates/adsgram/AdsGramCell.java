@@ -280,6 +280,9 @@ public class AdsGramCell extends FrameLayout {
     }
 
     private void handleAdClick() {
+        if (!ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) {
+            ksnxdev.calamus.CalamusPrivacy.requestExternalAds(fragment, this::handleAdClick); return;
+        }
         if (ad == null || ad.banner == null || clickUrl == null) {
             return;
         }
@@ -393,6 +396,7 @@ public class AdsGramCell extends FrameLayout {
     }
 
     public static void openTracking(String url) {
+        if (!ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) return;
         if (TextUtils.isEmpty(url)) {
             return;
         }
@@ -423,6 +427,9 @@ public class AdsGramCell extends FrameLayout {
 
     /** ChatActivity start */
     public static void handleAdClick(AdsGramResponse.BannerData bannerData, BaseFragment fragment) {
+        if (!ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) {
+            ksnxdev.calamus.CalamusPrivacy.requestExternalAds(fragment, () -> handleAdClick(bannerData, fragment)); return;
+        }
         if (bannerData == null) {
             return;
         }

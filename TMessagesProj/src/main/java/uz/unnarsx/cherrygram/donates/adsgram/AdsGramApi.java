@@ -61,6 +61,10 @@ public class AdsGramApi {
             String forceLanguage,
             Callback callback
     ) {
+        if (!ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) {
+            callback.onFailure(client.newCall(new Request.Builder().url(BASE_URL).build()), new IOException("External ads require explicit consent"));
+            return;
+        }
         HttpUrl parsedUrl = HttpUrl.parse(BASE_URL);
         if (parsedUrl == null) return;
 
@@ -110,7 +114,24 @@ public class AdsGramApi {
 
         Request request = requestBuilder.build();
 
-        client.newCall(request).enqueue(callback);
+        client.newCall(request).enqueue(new Callback() {
+            @Override public void onFailure(@NonNull Call call, @NonNull IOException failure) { callback.onFailure(call, failure); }
+            @Override public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Response safe;
+                try {
+                    if (!ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) throw new IOException("External ads consent was revoked");
+                    if (response.body() == null) throw new IOException("Empty ad response");
+                    okhttp3.MediaType type = response.body().contentType();
+                    String json = ksnxdev.calamus.net.SafeJson.read(response.body().byteStream(), 1024 * 1024);
+                    safe = response.newBuilder().removeHeader("Content-Length").removeHeader("Content-Encoding")
+                            .body(okhttp3.ResponseBody.create(type, json)).build();
+                    response.close();
+                } catch (Exception failure) {
+                    response.close(); callback.onFailure(call, new IOException("Ad response rejected", failure)); return;
+                }
+                callback.onResponse(call, safe);
+            }
+        });
     }
 
     private int getBatteryLevel() {
@@ -153,6 +174,7 @@ public class AdsGramApi {
     }
 
     public static void fetchRealIp(Utilities.Callback<String> callback) {
+        if (!ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed()) { callback.run(null); return; }
         try {
             Request request = new Request.Builder()
                     .url("https://api.ipify.org")
@@ -175,11 +197,19 @@ public class AdsGramApi {
                                     return;
                                 }
 
-                                String ip = response.body().string().trim();
+                                java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+                                java.io.InputStream input = response.body().byteStream(); int next;
+                                while ((next = input.read()) != -1) {
+                                    if (out.size() >= 64) throw new IOException("IP response size limit exceeded");
+                                    out.write(next);
+                                }
+                                String ip = out.toString(java.nio.charset.StandardCharsets.US_ASCII.name()).trim();
 
                                 AndroidUtilities.runOnUIThread(() ->
-                                        callback.run(ip)
+                                        callback.run(ksnxdev.calamus.CalamusPrivacy.externalAdsAllowed() ? ip : null)
                                 );
+                            } catch (IOException failure) {
+                                callback.run(null);
                             }
                         }
                     });
