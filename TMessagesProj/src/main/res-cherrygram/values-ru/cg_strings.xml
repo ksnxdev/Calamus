@@ -590,6 +590,7 @@
     <string name="CG_TranslucentElements">Полупрозрачность элементов</string>
     <string name="CG_TranslucentElementsDesc">Прозрачный фон с размытием за нижней панелью и панелью папок с чатами.</string>
     <string name="CalamusPlugins">Плагины</string>
+    <string name="CalamusPluginsChannel">Канал с плагинами</string>
     <string name="CalamusPluginImport">Установить из файла</string>
     <string name="CalamusPluginsDisableAll">Отключить все плагины</string>
     <string name="CalamusPluginsInstalled">Установленные плагины</string>

@@ -600,6 +600,7 @@
     <string name="CG_TranslucentElements">Translucent elements</string>
     <string name="CG_TranslucentElementsDesc">Transparent, blurred backgrounds for the navigation and chat folder panels.</string>
     <string name="CalamusPlugins">Plugins</string>
+    <string name="CalamusPluginsChannel">Plugin channel</string>
     <string name="CalamusPluginImport">Install from file</string>
     <string name="CalamusPluginsDisableAll">Disable all plugins</string>
     <string name="CalamusPluginsInstalled">Installed plugins</string>

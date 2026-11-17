@@ -20,11 +20,14 @@ import java.util.ArrayList;
 
 import ksnxdev.calamus.plugins.PluginManager;
 import uz.unnarsx.cherrygram.preferences.BaseCGPreferencesEntry;
+import uz.unnarsx.cherrygram.preferences.helpers.SettingsHelper;
 
 public class PluginsActivity extends BaseCGPreferencesEntry {
     private static final int IMPORT = 1;
+    private static final int CHANNEL = 2;
     private static final int DISABLE_ALL = 3;
     private static final int PICK_PLUGIN = 2914;
+    private static final String CHANNEL_USERNAME = "CalamusPlugins";
     private JSONArray plugins = new JSONArray();
     private boolean loading = true;
     private String error = "";
@@ -56,6 +59,8 @@ public class PluginsActivity extends BaseCGPreferencesEntry {
     @Override
     protected void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
         items.add(UItem.asButton(IMPORT, R.drawable.msg_add, getString(R.string.CalamusPluginImport)));
+        items.add(SettingsHelper.asTextDetail(CHANNEL, R.drawable.msg_channel_solar, getString(R.string.CalamusPluginsChannel), "@" + CHANNEL_USERNAME)
+                .slug("pluginsChannel"));
         items.add(UItem.asShadow(null));
         items.add(UItem.asButton(DISABLE_ALL, getString(R.string.CalamusPluginsDisableAll)));
         items.add(UItem.asShadow(null));
@@ -88,6 +93,8 @@ public class PluginsActivity extends BaseCGPreferencesEntry {
                 listView.adapter.update(true);
             }
 
+        } else if (item.id == CHANNEL) {
+            getMessagesController().openByUserName(CHANNEL_USERNAME, this, 1);
         } else if (item.id == DISABLE_ALL) {
             manager().execute("disable_all", "", this::received);
         } else if (item.id >= 100 && item.id - 100 < plugins.length()) {
