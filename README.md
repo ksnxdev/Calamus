@@ -16,6 +16,3 @@ Android-клиент на базе [Cherrygram](https://github.com/arslan4k1390/
 ```
 
 APK: `TMessagesProj_App/build/outputs/apk/afat/standalone/Calamus-0.1.0-beta.1-standalone-universal.apk`.
-Для отладочного APK: `./tools/build-debug.sh`.
-
-Проверка доступа использует `CALAMUS_BLOCKLIST_URL` из `gradle.properties`. Можно задать другой публичный HTTPS raw-файл GitLab через `local.properties` или аргумент `-PCALAMUS_BLOCKLIST_URL=...`. Формат — один положительный Telegram ID на строку; пустой файл снимает ограничения. Поддерживаются до 10000 ID и 256 КиБ. Список обновляется при запуске и каждые 15 минут работы приложения, при ошибках используется последний сохранённый список. Токен GitLab в приложение не добавляется.
