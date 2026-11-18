@@ -192,7 +192,8 @@ android {
             def abi = output.getFilter('ABI')
             if (abi == null) abi = 'universal'
             def calamusApkName = rootProject.ext.calamusEmulator ? "Calamus-Emulator" : "Calamus"
-            outputFileName = "${calamusApkName}-${defaultConfig.versionName}-${variant.buildType.name}-${abi}.apk"
+            def calamusVersionFileName = defaultConfig.versionName.replaceAll(/[^A-Za-z0-9._-]+/, "-")
+            outputFileName = "${calamusApkName}-${calamusVersionFileName}-${variant.buildType.name}-${abi}.apk"
             output.versionCodeOverride = defaultConfig.versionCode
         }
     }
