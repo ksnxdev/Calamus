@@ -53,7 +53,9 @@ public final class CalamusMaterial {
         put(colors, primaryContainer,
                 Theme.key_chats_actionBackground, Theme.key_chat_outBubble, Theme.key_chat_outBubbleGradient1, Theme.key_chat_outBubbleGradient2, Theme.key_chat_outBubbleGradient3, Theme.key_chat_outBubbleShadow);
         put(colors, containerPressed,
-                Theme.key_chats_actionPressedBackground, Theme.key_chat_outBubbleSelected, Theme.key_chat_outBubbleSelectedOverlay, Theme.key_chat_outBubbleGradientSelectedOverlay);
+                Theme.key_chats_actionPressedBackground, Theme.key_chat_outBubbleSelected);
+        put(colors, ColorUtils.setAlphaComponent(primary, dark ? 28 : 22),
+                Theme.key_chat_inBubbleSelectedOverlay, Theme.key_chat_outBubbleSelectedOverlay, Theme.key_chat_outBubbleGradientSelectedOverlay);
         put(colors, onSurface,
                 Theme.key_windowBackgroundWhiteBlackText, Theme.key_dialogTextBlack, Theme.key_actionBarDefaultTitle, Theme.key_actionBarDefaultSearch, Theme.key_actionBarDefaultSubmenuItem, Theme.key_chats_name);
         put(colors, dark ? 0xffffffff : onSurface,
@@ -75,6 +77,7 @@ public final class CalamusMaterial {
         put(colors, onSurface, Theme.key_chat_inReplyMediaMessageSelectedText, Theme.key_chat_outReplyMediaMessageSelectedText);
         put(colors, primary, Theme.key_chat_inReplyLine, Theme.key_chat_outReplyLine, Theme.key_chat_outReplyLine2, Theme.key_chat_inQuote, Theme.key_chat_outQuote);
         put(colors, onSurface, Theme.key_chat_inFileNameText, Theme.key_chat_outFileNameText, Theme.key_chat_inAudioTitleText, Theme.key_chat_outAudioTitleText);
+        put(colors, fileSecondary, Theme.key_chat_inAudioDurationText, Theme.key_chat_outAudioDurationText, Theme.key_chat_inAudioDurationSelectedText, Theme.key_chat_outAudioDurationSelectedText);
         put(colors, fileSecondary, Theme.key_chat_inFileInfoText, Theme.key_chat_outFileInfoText, Theme.key_chat_inFileInfoSelectedText, Theme.key_chat_outFileInfoSelectedText);
         put(colors, container, Theme.key_chat_inFileBackground, Theme.key_chat_outFileBackground, Theme.key_chat_inLoader, Theme.key_chat_outLoader);
         put(colors, containerPressed, Theme.key_chat_inFileBackgroundSelected, Theme.key_chat_outFileBackgroundSelected, Theme.key_chat_inLoaderSelected, Theme.key_chat_outLoaderSelected);

@@ -15,4 +15,4 @@ Android-клиент на базе [Cherrygram](https://github.com/arslan4k1390/
 ./tools/build-beta.sh --console=plain
 ```
 
-APK: `TMessagesProj_App/build/outputs/apk/afat/standalone/Calamus-1.0-Beta-standalone-universal.apk`.
+APK: `TMessagesProj_App/build/outputs/apk/afat/standalone/Calamus-1.1-Beta-standalone-universal.apk`.
