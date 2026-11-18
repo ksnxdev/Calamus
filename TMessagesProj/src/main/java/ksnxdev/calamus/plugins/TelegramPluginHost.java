@@ -105,6 +105,9 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
         if (args.has("account_id") && ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(args.optInt("account_id", -1))) throw new SecurityException("Calamus access is restricted for this account");
     }
     @Override public void revoked(String pluginId, String session) { PluginPresenceController.revoke(pluginId, session); }
+    @Override public void menusChanged() {
+        for (int i = 0; i < UserConfig.MAX_ACCOUNT_COUNT; i++) NotificationCenter.getInstance(i).postNotificationName(NotificationCenter.calamusPluginMenusChanged);
+    }
     @Override public void archiveChanged(int account, long dialog) {
         if (account >= 0 && account < UserConfig.MAX_ACCOUNT_COUNT) {
             PluginRetainedChats.getInstance(account).refresh();
@@ -498,6 +501,14 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
     public static JSONArray messageActions(int account, long dialog) {
         if (DialogObject.isEncryptedDialog(dialog)) return new JSONArray();
         return PluginManager.getInstance(ApplicationLoader.applicationContext).messageActionsForChat(chatContext(account, dialog));
+    }
+    public static JSONArray chatActions(int account, long dialog) {
+        if (DialogObject.isEncryptedDialog(dialog)) return new JSONArray();
+        return plugins().chatActionsForChat(chatContext(account, dialog));
+    }
+    public static void invokeChatAction(JSONObject action, int account, long dialog) {
+        if (DialogObject.isEncryptedDialog(dialog)) return;
+        plugins().runChatAction(action, chatContext(account, dialog), null);
     }
     public static void invokeMessageAction(JSONObject action, int account, long dialog, TLRPC.Message message) {
         if (!archivable(message)) return;

@@ -72,6 +72,8 @@ class Context:
         return request("notify", text=str(text)[:200])
     def register_command(self, name, title):
         return request("command.register", name=name, title=title)
+    def register_chat_action(self, name, title):
+        return request("command.register", name=name, title=title, chat_menu=True)
     def register_message_action(self, name, title):
         return request("message.action.register", name=name, title=title)
     def accounts(self):

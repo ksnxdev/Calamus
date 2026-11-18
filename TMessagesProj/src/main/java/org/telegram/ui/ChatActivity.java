@@ -3055,6 +3055,7 @@ public class ChatActivity extends BaseFragment implements
             .add(NotificationCenter.closeChatActivity)
             .add(NotificationCenter.messagesDeleted)
             .add(NotificationCenter.calamusArchiveChanged)
+            .add(NotificationCenter.calamusPluginMenusChanged)
             .add(NotificationCenter.historyCleared)
             .add(NotificationCenter.messageReceivedByServer)
             .add(NotificationCenter.messageReceivedByAck)
@@ -3834,8 +3835,9 @@ public class ChatActivity extends BaseFragment implements
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(final int id) {
-                if (id == 975002) {
-                    ksnxdev.calamus.plugins.TelegramPluginHost.showArchive(ChatActivity.this, currentAccount, dialog_id, 0);
+                org.json.JSONObject pluginAction = calamusChatActionsById.get(id);
+                if (pluginAction != null) {
+                    ksnxdev.calamus.plugins.TelegramPluginHost.invokeChatAction(pluginAction, currentAccount, dialog_id);
                     return;
                 }
                 if (id == 975001) {
@@ -4553,12 +4555,10 @@ public class ChatActivity extends BaseFragment implements
             }
             headerItem = menu.addItem(chat_menu_options, otherIcon);
             headerItem.lazilyAddSubItem(975001, R.drawable.settings_customize_filled_solar, getString(R.string.CalamusPlugins));
-            headerItem.lazilyAddSubItem(975002, R.drawable.msg_recent, getString(R.string.CalamusViewDeleted));
-            headerItem.setSubItemShown(975002, chatMode == MODE_DEFAULT && !DialogObject.isEncryptedDialog(dialog_id));
             headerItem.setSubMenuDelegate(new ActionBarMenuItem.ActionBarSubMenuItemDelegate() {
                 @Override
                 public void onShowSubMenu() {
-                    headerItem.setSubItemShown(975002, chatMode == MODE_DEFAULT && !DialogObject.isEncryptedDialog(dialog_id));
+                    refreshPluginChatActions();
                     updateScrimSourceBitmap();
                 }
 
@@ -20967,6 +20967,11 @@ public class ChatActivity extends BaseFragment implements
 
     @Override
     public void didReceivedNotification(int id, int account, final Object... args) {
+        if (id == NotificationCenter.calamusPluginMenusChanged) {
+            if (headerItem != null) headerItem.closeSubMenu();
+            refreshPluginChatActions();
+            return;
+        }
         if (id == NotificationCenter.calamusArchiveChanged) {
             if (args.length == 0 || ((Number) args[0]).longValue() == 0 || ((Number) args[0]).longValue() == dialog_id) {
                 refreshDeletedArchive();
@@ -26801,6 +26806,35 @@ public class ChatActivity extends BaseFragment implements
     }
 
     private int calamusArchiveGeneration;
+    private org.json.JSONArray calamusChatActions = new org.json.JSONArray();
+    private final ArrayList<ActionBarMenuSubItem> calamusChatActionItems = new ArrayList<>();
+    private final SparseArray<org.json.JSONObject> calamusChatActionsById = new SparseArray<>();
+    private int nextCalamusChatActionId = -975100;
+
+    private void refreshPluginChatActions() {
+        for (ActionBarMenuSubItem item : calamusChatActionItems) {
+            if (item.getParent() instanceof ViewGroup) ((ViewGroup) item.getParent()).removeView(item);
+        }
+        calamusChatActionItems.clear();
+        calamusChatActionsById.clear();
+        calamusChatActions = new org.json.JSONArray();
+        if (headerItem == null || isFinished || chatMode != MODE_DEFAULT || DialogObject.isEncryptedDialog(dialog_id)) return;
+        calamusChatActions = ksnxdev.calamus.plugins.TelegramPluginHost.chatActions(currentAccount, dialog_id);
+        for (int i = 0; i < Math.min(64, calamusChatActions.length()); i++) {
+            org.json.JSONObject action = calamusChatActions.optJSONObject(i);
+            if (action == null) continue;
+            if (nextCalamusChatActionId == Integer.MIN_VALUE) nextCalamusChatActionId = -975100;
+            int id = nextCalamusChatActionId--;
+            calamusChatActionsById.put(id, action);
+            ActionBarMenuSubItem item = headerItem.addSubItem(id, R.drawable.settings_customize_filled_solar, action.optString("title"));
+            if (item.getParent() instanceof ViewGroup) {
+                ViewGroup parent = (ViewGroup) item.getParent();
+                parent.removeView(item);
+                parent.addView(item, Math.min(i, parent.getChildCount()));
+            }
+            calamusChatActionItems.add(item);
+        }
+    }
     private final Runnable calamusArchiveRefresh = this::loadDeletedArchive;
 
     private void refreshDeletedArchive() {
@@ -26824,7 +26858,6 @@ public class ChatActivity extends BaseFragment implements
         if (removed && chatAdapter != null) chatAdapter.notifyDataSetChanged(true);
         AndroidUtilities.cancelRunOnUIThread(calamusArchiveRefresh);
         if (ksnxdev.calamus.plugins.TelegramPluginHost.hasArchive(currentAccount, dialog_id)) AndroidUtilities.runOnUIThread(calamusArchiveRefresh, 120);
-        if (headerItem != null) headerItem.setSubItemShown(975002, chatMode == MODE_DEFAULT && !DialogObject.isEncryptedDialog(dialog_id));
     }
 
     private void loadDeletedArchive() {

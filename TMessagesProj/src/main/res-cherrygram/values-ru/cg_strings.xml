@@ -651,7 +651,6 @@
     <string name="CalamusArchiveNext">Старые записи</string>
     <string name="CalamusArchiveOriginalVersion">Исходная версия</string>
     <string name="CalamusArchiveEditedVersion">Изменённая версия</string>
-    <string name="CalamusViewDeleted">Просмотреть удалённые</string>
     <string name="CalamusSearchDeleted">Поиск по удалённым сообщениям</string>
     <string name="CalamusGhostMode">Режим призрака</string>
     <string name="CalamusGhostAllContacts">Для всех собеседников доступных плагину аккаунтов.</string>

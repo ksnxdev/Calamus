@@ -56,9 +56,21 @@ public final class PluginManager implements PluginTransport.Listener {
         JSONArray list = commands();
         for (int i = 0; i < list.length(); i++) try {
             JSONObject command = list.getJSONObject(i); JSONObject record = store.record(command.getString("plugin_id"));
-            if (record.optBoolean("enabled") && PluginAccessPolicy.scope(record, chat, true)) result.put(command);
+            if (command.optString("session").equals(sessions.get(command.getString("plugin_id"))) && record.optBoolean("enabled") && PluginAccessPolicy.has(record, "commands") && PluginAccessPolicy.scope(record, chat, true)) result.put(command);
         } catch (Exception ignored) { }
         return result;
+    }
+    public JSONArray chatActionsForChat(JSONObject chat) {
+        JSONArray result = new JSONArray(), commands = commandsForChat(chat);
+        for (int i = 0; i < commands.length(); i++) {
+            JSONObject command = commands.optJSONObject(i);
+            if (command != null && command.optBoolean("chat_menu")) result.put(command);
+        }
+        return result;
+    }
+    public boolean runChatAction(JSONObject action, JSONObject chat, Callback callback) {
+        try { return submit("chat_action", new JSONObject().put("plugin_id", action.getString("plugin_id")).put("session", action.getString("session")).put("name", action.getString("name")).put("chat", chat).toString(), callback); }
+        catch (Exception error) { return false; }
     }
     public boolean dispatchCommand(String text, JSONObject chat) {
         String value = text.trim(); if (!value.startsWith(".") || value.length() > 4096) return false;
@@ -307,10 +319,12 @@ public final class PluginManager implements PluginTransport.Listener {
                 if (sessions.containsKey(id)) invoke(id, "event", new JSONObject().put("name", "settings.changed").put("payload", new JSONObject().put("key", key).put("value", value.get("value"))));
                 break;
             }
-            case "command": {
+            case "chat_action": case "command": {
                 JSONObject value = new JSONObject(argument); String id = value.getString("plugin_id"); JSONObject record = storage.record(id);
-                if (!record.optBoolean("enabled") || !PluginAccessPolicy.has(record, "commands") || !record.optJSONObject("commands").has(value.getString("name"))) throw new SecurityException("Command is unavailable");
+                if (!sessions.containsKey(id) || !record.optBoolean("enabled") || !PluginAccessPolicy.has(record, "commands") || record.optJSONObject("commands") == null || !record.getJSONObject("commands").has(value.getString("name"))) throw new SecurityException("Command is unavailable");
+                if (operation.equals("chat_action") && (!value.optString("session").equals(sessions.get(id)) || record.optJSONObject("chat_actions") == null || !record.getJSONObject("chat_actions").optBoolean(value.getString("name")))) throw new SecurityException("Chat action is unavailable");
                 if (value.getJSONObject("chat").length() != 0 && !PluginAccessPolicy.scope(record, value.getJSONObject("chat"), true)) throw new SecurityException("Chat access was not granted");
+                if (operation.equals("chat_action")) { if (value.getJSONObject("chat").optLong("dialog_id") == 0) throw new SecurityException("Chat context is required"); PluginBridge.checkAccountAccess(value.getJSONObject("chat")); }
                 interactionUntil.put(id, android.os.SystemClock.elapsedRealtime() + 60000);
                 invoke(id, "command", value); break;
             }
@@ -326,7 +340,7 @@ public final class PluginManager implements PluginTransport.Listener {
     private void publish() throws Exception {
         JSONArray commands = new JSONArray(); JSONArray actions = new JSONArray();
         for (String id : ids()) {
-            JSONObject record = store().record(id); if (!record.optBoolean("enabled")) continue;
+            JSONObject record = store().record(id); if (!sessions.containsKey(id) || !record.optBoolean("enabled")) continue;
             JSONObject menu = record.optJSONObject("message_actions");
             if (menu != null && PluginAccessPolicy.has(record, "messages.menu")) {
                 Iterator<String> entries = menu.keys();
@@ -335,9 +349,12 @@ public final class PluginManager implements PluginTransport.Listener {
             if (!PluginAccessPolicy.has(record, "commands")) continue;
             JSONObject names = record.optJSONObject("commands"); if (names == null) continue;
             Iterator<String> keys = names.keys();
-            while (keys.hasNext()) { String name = keys.next(); commands.put(new JSONObject().put("plugin_id", id).put("name", name).put("title", names.getString(name)).put("plugin_name", pluginName(id))); }
+            JSONObject chatActions = record.optJSONObject("chat_actions");
+            while (keys.hasNext()) { String name = keys.next(); commands.put(new JSONObject().put("plugin_id", id).put("name", name).put("title", names.getString(name)).put("plugin_name", pluginName(id)).put("session", sessions.get(id)).put("chat_menu", chatActions != null && chatActions.optBoolean(name))); }
         }
+        boolean menusChanged = !registeredCommands.toString().equals(commands.toString());
         registeredCommands = commands; registeredMessageActions = actions;
+        if (menusChanged) PluginBridge.menusChanged();
     }
     private void enable(String id) throws Exception {
         JSONObject record = store().record(id);
@@ -346,7 +363,7 @@ public final class PluginManager implements PluginTransport.Listener {
         if (required != null) for (int i = 0; i < required.length(); i++) if (!PluginAccessPolicy.has(record, required.getString(i))) throw new SecurityException("Required permission was not granted: " + required.getString(i));
         if (sessions.size() >= 4) throw new IllegalStateException("At most four plugins can run concurrently");
         String session = UUID.randomUUID().toString(); sessions.put(id, session);
-        record.put("enabled", true).put("error", "").put("commands", new JSONObject()).put("message_actions", new JSONObject()); store().save();
+        record.put("enabled", true).put("error", "").put("commands", new JSONObject()).put("chat_actions", new JSONObject()).put("message_actions", new JSONObject()); store().save();
         try {
             transport.request(new JSONObject().put("operation", "load").put("session", session).put("id", id).put("archive", store().packageFile(id).getAbsolutePath()).put("permissions", record.getJSONArray("permissions")));
         } catch (Exception error) { disable(id, error.getMessage()); }
@@ -354,7 +371,7 @@ public final class PluginManager implements PluginTransport.Listener {
         PluginBridge.archiveChanged(-1, 0);
     }
     private void disable(String id, String error) throws Exception {
-        revoke(id); JSONObject record = store().record(id); record.put("enabled", false).put("commands", new JSONObject()).put("error", error == null ? "" : error); store().save(); publish();
+        revoke(id); JSONObject record = store().record(id); record.put("enabled", false).put("commands", new JSONObject()).put("chat_actions", new JSONObject()).put("error", error == null ? "" : error); store().save(); publish();
     }
     private void invoke(String id, String operation, JSONObject value) throws Exception {
         String session = sessions.get(id); if (session == null) throw new IllegalStateException("Plugin is disabled");
@@ -426,7 +443,10 @@ public final class PluginManager implements PluginTransport.Listener {
                     JSONObject commands = record.optJSONObject("commands"); if (commands == null) commands = new JSONObject();
                     if (commands.length() >= 16 && !commands.has(name)) throw new SecurityException("Too many commands");
                     for (String other : ids()) { if (other.equals(id)) continue; JSONObject existing = store().record(other).optJSONObject("commands"); if (existing != null && existing.has(name)) throw new SecurityException("Command name conflict"); }
-                    commands.put(name, title); record.put("commands", commands); local = true; break;
+                    commands.put(name, title); record.put("commands", commands);
+                    JSONObject chatActions = record.optJSONObject("chat_actions"); if (chatActions == null) chatActions = new JSONObject();
+                    if (args.optBoolean("chat_menu")) chatActions.put(name, true); else chatActions.remove(name);
+                    record.put("chat_actions", chatActions); store().save(); publish(); local = true; break;
                 }
                 case "log": {
                     String text = args.getString("text"); if (text.length() > 500) text = text.substring(0, 500);

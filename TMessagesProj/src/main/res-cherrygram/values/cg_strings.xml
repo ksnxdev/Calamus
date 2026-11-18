@@ -661,7 +661,6 @@
     <string name="CalamusArchiveNext">Older entries</string>
     <string name="CalamusArchiveOriginalVersion">Original version</string>
     <string name="CalamusArchiveEditedVersion">Edited version</string>
-    <string name="CalamusViewDeleted">View deleted messages</string>
     <string name="CalamusSearchDeleted">Search deleted messages</string>
     <string name="CalamusGhostMode">Ghost mode</string>
     <string name="CalamusGhostAllContacts">For all contacts of the accounts available to this plugin.</string>
