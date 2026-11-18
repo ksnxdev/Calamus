@@ -9515,7 +9515,20 @@ public class Theme {
             settings.isWallpaperMotion = currentTheme.isMotion;
             settings.isPatternWallpaper = currentTheme.patternBgColor != 0;
         }
-        if (!overrideTheme) {
+        boolean defaultMonetWallpaper = uz.ksnxdev.calamus.CalamusMaterial.isEnabled() && currentTheme.isMonet()
+                && (overrideWallpaper == null || overrideWallpaper.isDefault())
+                && wallpaperFile == null && TextUtils.isEmpty(themedWallpaperLink) && themedWallpaperFileOffset <= 0 && wallpaperDocument == null;
+        if (defaultMonetWallpaper) {
+            MotionBackgroundDrawable background = (MotionBackgroundDrawable) createDefaultWallpaper();
+            if (currentTheme.isDark()) {
+                background.setColors(0xff1b2733, 0xff17212b, 0xff24313d, 0xff1c2936);
+                background.setPatternColorFilter(background.getPatternColor());
+            }
+            settings.wallpaper = background;
+            settings.isPatternWallpaper = true;
+            settings.isCustomTheme = false;
+            settings.isWallpaperMotion = false;
+        } else if (!overrideTheme) {
             int backgroundColor = defaultTheme ? 0 : currentColors.get(key_chat_wallpaper);
             int gradientToColor3 = currentColors.get(key_chat_wallpaper_gradient_to3);
             int gradientToColor2 = currentColors.get(key_chat_wallpaper_gradient_to2);

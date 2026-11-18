@@ -47,7 +47,7 @@ public final class CalamusMaterial {
         put(colors, surface,
                 Theme.key_windowBackgroundWhite, Theme.key_actionBarDefault, Theme.key_actionBarDefaultArchived, Theme.key_chat_inBubble, Theme.key_chat_inBubbleShadow);
         put(colors, background,
-                Theme.key_windowBackgroundGray, Theme.key_windowBackgroundGrayShadow, Theme.key_chat_wallpaper, Theme.key_chat_wallpaper_gradient_to1, Theme.key_chat_wallpaper_gradient_to2);
+                Theme.key_windowBackgroundGray, Theme.key_windowBackgroundGrayShadow);
         put(colors, container,
                 Theme.key_dialogBackground, Theme.key_actionBarDefaultSubmenuBackground, Theme.key_chat_messagePanelBackground, Theme.key_chat_messagePanelShadow, Theme.key_chat_inBubbleSelected);
         put(colors, primaryContainer,
@@ -68,6 +68,7 @@ public final class CalamusMaterial {
                 Theme.key_chats_actionIcon);
         put(colors, outline,
                 Theme.key_divider, Theme.key_switchTrack);
+        put(colors, onSurface, Theme.key_groupcreate_spanText);
         int fileSecondary = ColorUtils.blendARGB(secondary, onSurface, 0.65f);
         put(colors, onSurface, Theme.key_chat_inReplyMessageText, Theme.key_chat_outReplyMessageText);
         put(colors, fileSecondary, Theme.key_chat_inReplyMediaMessageText, Theme.key_chat_outReplyMediaMessageText);

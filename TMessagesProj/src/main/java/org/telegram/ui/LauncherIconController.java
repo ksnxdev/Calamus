@@ -11,6 +11,7 @@ public class LauncherIconController {
     public static void tryFixLauncherIconIfNeeded() {
         for (LauncherIcon icon : LauncherIcon.values()) {
             if (isEnabled(icon)) {
+                if (icon != LauncherIcon.CHERRY && !icon.premium) setIcon(LauncherIcon.CHERRY);
                 return;
             }
         }

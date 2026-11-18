@@ -174,6 +174,7 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
     private void updateIconsVisibility() {
         availableIcons.clear();
         availableIcons.addAll(Arrays.asList(LauncherIconController.LauncherIcon.values()));
+        availableIcons.removeIf(icon -> icon != LauncherIconController.LauncherIcon.CHERRY && !icon.premium);
 
         if (Build.VERSION.SDK_INT < 27) {
             availableIcons.removeIf(p -> p.equals(LauncherIconController.LauncherIcon.DARK_CHERRY));
