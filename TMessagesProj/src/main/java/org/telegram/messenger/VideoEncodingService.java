@@ -139,7 +139,7 @@ public class VideoEncodingService extends Service implements NotificationCenter.
         if (builder == null) {
             NotificationsController.checkOtherNotificationsChannel();
             builder = new NotificationCompat.Builder(ApplicationLoader.applicationContext, NotificationsController.OTHER_NOTIFICATIONS_CHANNEL);
-            builder.setSmallIcon(android.R.drawable.stat_sys_upload);
+            builder.setSmallIcon(R.drawable.ic_stat_calamus);
             builder.setWhen(System.currentTimeMillis());
             builder.setChannelId(NotificationsController.OTHER_NOTIFICATIONS_CHANNEL);
             builder.setContentTitle(LocaleController.getString(R.string.CG_AppName));

@@ -167,7 +167,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import uz.unnarsx.cherrygram.core.CherrygramLogger;
-import uz.unnarsx.cherrygram.core.helpers.CGResourcesHelper;
 
 @SuppressLint("NewApi")
 public class VoIPService extends Service implements SensorEventListener, AudioManager.OnAudioFocusChangeListener, NotificationCenter.NotificationCenterDelegate, VoIPServiceState {
@@ -3988,13 +3987,13 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 				.setContentIntent(PendingIntent.getActivity(this, 50, intent, PendingIntent.FLAG_MUTABLE));
 		if (isConference()) {
 			builder.setContentTitle(LocaleController.getString(R.string.VoipConference));
-			builder.setSmallIcon(isMicMute() ? R.drawable.voicechat_muted : R.drawable.voicechat_active);
+			builder.setSmallIcon(R.drawable.ic_stat_calamus);
 		} else if (groupCall != null) {
 			builder.setContentTitle(ChatObject.isChannelOrGiga(chat) ? LocaleController.getString(R.string.VoipLiveStream) : LocaleController.getString(R.string.VoipVoiceChat));
-			builder.setSmallIcon(isMicMute() ? R.drawable.voicechat_muted : R.drawable.voicechat_active);
+			builder.setSmallIcon(R.drawable.ic_stat_calamus);
 		} else {
 			builder.setContentTitle(LocaleController.getString(R.string.VoipOutgoingCall));
-			builder.setSmallIcon(CGResourcesHelper.INSTANCE.getProperNotificationIcon());
+			builder.setSmallIcon(R.drawable.ic_stat_calamus);
 			builder.setOngoing(true);
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -4685,9 +4684,9 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 						.setContentTitle(LocaleController.getString(R.string.VoipOutgoingCall))
 						.setShowWhen(false);
 				if (groupCall != null) {
-					bldr.setSmallIcon(isMicMute() ? R.drawable.voicechat_muted : R.drawable.voicechat_active);
+					bldr.setSmallIcon(R.drawable.ic_stat_calamus);
 				} else {
-					bldr.setSmallIcon(R.drawable.call);
+					bldr.setSmallIcon(R.drawable.ic_stat_calamus);
 				}
 				startForegroundSafe(ID_ONGOING_CALL_NOTIFICATION, bldr.build(), true);
 			} else {
@@ -4695,7 +4694,7 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 				Notification.Builder bldr = new Notification.Builder(this, NotificationsController.OTHER_NOTIFICATIONS_CHANNEL)
 						.setContentTitle(LocaleController.getString(R.string.VoipCallEnded))
 						.setShowWhen(false);
-				bldr.setSmallIcon(R.drawable.call);
+				bldr.setSmallIcon(R.drawable.ic_stat_calamus);
 				startForegroundSafe(ID_ONGOING_CALL_NOTIFICATION, bldr.build(), true);
 			}
 		}
@@ -5151,7 +5150,7 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 
 		Notification.Builder builder = new Notification.Builder(this)
 				.setContentTitle(video ? LocaleController.getString(R.string.VoipInVideoCallBranding) : LocaleController.getString(R.string.VoipInCallBranding))
-				.setSmallIcon(CGResourcesHelper.INSTANCE.getProperNotificationIcon())
+				.setSmallIcon(R.drawable.ic_stat_calamus)
 				.setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE));
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			SharedPreferences nprefs = MessagesController.getGlobalNotificationsSettings();

@@ -178,7 +178,7 @@ public class VoIPGroupNotification {
             .putExtra("currentAccount", account);
         final Notification.Builder builder = new Notification.Builder(context)
             .setContentTitle(LocaleController.getString(R.string.VoipGroupInCallBranding))
-            .setSmallIcon(R.drawable.call)
+            .setSmallIcon(R.drawable.ic_stat_calamus)
             .setContentIntent(
                 PendingIntent.getActivity(
                     context, 0,

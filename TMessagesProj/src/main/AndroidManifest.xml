@@ -135,6 +135,7 @@
         android:enableOnBackInvokedCallback="true"
         android:networkSecurityConfig="@xml/network_security_config"
     >
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_stat_calamus" />
         <activity android:name="ksnxdev.calamus.access.RestrictedAccountActivity" android:exported="false" android:theme="@style/Theme.TMessages" />
 
         <!-- usesCleartextTraffic for browser supporting opening http:// links -->

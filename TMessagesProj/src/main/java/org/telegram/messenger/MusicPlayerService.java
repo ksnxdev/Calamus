@@ -449,7 +449,7 @@ public class MusicPlayerService extends Service implements NotificationCenter.No
                 mediaStyle.setShowActionsInCompactView(0);
             }
             Notification.Builder bldr = new Notification.Builder(this);
-            bldr.setSmallIcon(R.drawable.player)
+            bldr.setSmallIcon(R.drawable.ic_stat_calamus)
                     .setOngoing(isPlaying)
                     .setContentTitle(contentTitle)
                     .setContentText(contentText)
@@ -574,7 +574,7 @@ public class MusicPlayerService extends Service implements NotificationCenter.No
             }
 
             notification = new NotificationCompat.Builder(getApplicationContext())
-                    .setSmallIcon(R.drawable.player)
+                    .setSmallIcon(R.drawable.ic_stat_calamus)
                     .setContentIntent(contentIntent)
                     .setChannelId(NotificationsController.OTHER_NOTIFICATIONS_CHANNEL)
                     .setContentTitle(contentTitle).build();

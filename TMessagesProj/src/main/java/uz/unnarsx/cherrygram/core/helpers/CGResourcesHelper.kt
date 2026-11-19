@@ -154,16 +154,10 @@ object CGResourcesHelper {
 
     /** Misc start */
     fun getProperNotificationIcon(): Int { // App notification icon
-        return if (CherrygramCoreConfig.oldNotificationIcon) {
-            R.drawable.notification
-        } else {
-            if (isAnyOfBraIconsEnabled()) R.drawable.cg_notification_bra else R.drawable.cg_notification
-        }
+        return R.drawable.ic_stat_calamus
     }
 
-    fun getResidentNotificationIcon(): Int {
-        return if (CherrygramCoreConfig.oldNotificationIcon) R.drawable.cg_notification else R.drawable.notification
-    }
+    fun getResidentNotificationIcon(): Int = R.drawable.ic_stat_calamus
 
     fun isAnyOfBraIconsEnabled(): Boolean {
         return (LauncherIconController.isEnabled(LauncherIconController.LauncherIcon.DARK_CHERRY_BRA)

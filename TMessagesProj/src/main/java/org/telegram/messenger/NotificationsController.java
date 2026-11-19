@@ -107,7 +107,6 @@ import uz.unnarsx.cherrygram.core.configs.CherrygramChatsConfig;
 import uz.unnarsx.cherrygram.core.VibrateUtil;
 import uz.unnarsx.cherrygram.core.configs.CherrygramCoreConfig;
 import uz.unnarsx.cherrygram.core.firebase.crashlytics.FirebaseCrashlyticsHelper;
-import uz.unnarsx.cherrygram.core.helpers.CGResourcesHelper;
 
 public class NotificationsController extends BaseController implements NotificationCenter.NotificationCenterDelegate {
 
@@ -4657,7 +4656,7 @@ public class NotificationsController extends BaseController implements Notificat
             PendingIntent contentIntent = PendingIntent.getActivity(ApplicationLoader.applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
 
             mBuilder.setContentTitle(name)
-                    .setSmallIcon(CGResourcesHelper.INSTANCE.getProperNotificationIcon())
+                    .setSmallIcon(R.drawable.ic_stat_calamus)
                     .setAutoCancel(true)
                     .setNumber(total_unread_count)
                     .setContentIntent(contentIntent)
@@ -5673,7 +5672,7 @@ public class NotificationsController extends BaseController implements Notificat
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(ApplicationLoader.applicationContext)
                     .setContentTitle(name)
-                    .setSmallIcon(CGResourcesHelper.INSTANCE.getProperNotificationIcon())
+                    .setSmallIcon(R.drawable.ic_stat_calamus)
                     .setContentText(text.toString())
                     .setAutoCancel(true)
                     .setNumber(dialogKey.story ? storyPushMessages.size() : messageObjects.size())

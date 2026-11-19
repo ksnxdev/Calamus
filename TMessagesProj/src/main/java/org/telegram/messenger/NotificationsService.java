@@ -22,7 +22,6 @@ import androidx.core.app.NotificationManagerCompat;
 import org.telegram.ui.LaunchActivity;
 
 import uz.unnarsx.cherrygram.core.configs.CherrygramCoreConfig;
-import uz.unnarsx.cherrygram.core.helpers.CGResourcesHelper;
 
 public class NotificationsService extends Service {
 
@@ -84,7 +83,7 @@ public class NotificationsService extends Service {
 
         startForeground(1390,
                 new NotificationCompat.Builder(this, "cgPush")
-                        .setSmallIcon(CGResourcesHelper.INSTANCE.getResidentNotificationIcon())
+                        .setSmallIcon(R.drawable.ic_stat_calamus)
                         .setShowWhen(false)
                         .setOngoing(true)
                         .setContentText(LocaleController.getString(R.string.CG_PushService))

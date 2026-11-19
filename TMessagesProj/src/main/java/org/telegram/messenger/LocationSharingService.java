@@ -139,7 +139,7 @@ public class LocationSharingService extends Service implements NotificationCente
 
                 builder = new NotificationCompat.Builder(ApplicationLoader.applicationContext);
                 builder.setWhen(System.currentTimeMillis());
-                builder.setSmallIcon(R.drawable.live_loc);
+                builder.setSmallIcon(R.drawable.ic_stat_calamus);
                 builder.setContentIntent(contentIntent);
                 NotificationsController.checkOtherNotificationsChannel();
                 builder.setChannelId(NotificationsController.OTHER_NOTIFICATIONS_CHANNEL);

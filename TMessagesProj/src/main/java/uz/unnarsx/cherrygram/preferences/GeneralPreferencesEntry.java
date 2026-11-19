@@ -48,7 +48,6 @@ public class GeneralPreferencesEntry extends BaseCGPreferencesEntry {
     private final int ignoreMentionsExclusionsRow = 6;
     private final int ignoreMentionsAutoReadRow = 7;
 
-    private final int defaultNotificationIconRow = 8;
     private final int residentNotificationRow = 9;
 
     private final int hideStoriesRow = 10;
@@ -105,10 +104,6 @@ public class GeneralPreferencesEntry extends BaseCGPreferencesEntry {
         items.add(SettingsHelper.asSwitchCG(silenceNonContactsRow, getString(R.string.CP_SilenceNonContacts), getString(R.string.CP_SilenceNonContacts_Desc))
                 .setChecked(CherrygramCoreConfig.INSTANCE.getSilenceNonContacts())
                 .slug("silenceNonContacts")
-        );
-        items.add(SettingsHelper.asSwitchCG(defaultNotificationIconRow, getString(R.string.AP_Old_Notification_Icon))
-                .setChecked(CherrygramCoreConfig.INSTANCE.getOldNotificationIcon())
-                .slug("oldNotifIcon")
         );
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             items.add(SettingsHelper.asSwitchCG(residentNotificationRow, getString(R.string.CG_ResidentNotification), getString(R.string.NotificationsService))
@@ -265,11 +260,6 @@ public class GeneralPreferencesEntry extends BaseCGPreferencesEntry {
         } else if (item.id == ignoreMentionsAutoReadRow) {
             CherrygramCoreConfig.INSTANCE.setIgnoreMentionsMarkAsRead(!CherrygramCoreConfig.INSTANCE.getIgnoreMentionsMarkAsRead());
             SettingsHelper.updateCheckState(view, CherrygramCoreConfig.INSTANCE.getIgnoreMentionsMarkAsRead());
-        } else if (item.id == defaultNotificationIconRow) {
-            CherrygramCoreConfig.INSTANCE.setOldNotificationIcon(!CherrygramCoreConfig.INSTANCE.getOldNotificationIcon());
-            SettingsHelper.updateCheckState(view, CherrygramCoreConfig.INSTANCE.getOldNotificationIcon());
-
-            showRestartBulletin();
         } else if (item.id == residentNotificationRow) {
             CherrygramCoreConfig.INSTANCE.setResidentNotification(!CherrygramCoreConfig.INSTANCE.getResidentNotification());
             SettingsHelper.updateCheckState(view, CherrygramCoreConfig.INSTANCE.getResidentNotification());
