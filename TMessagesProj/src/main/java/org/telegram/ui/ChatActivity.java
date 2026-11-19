@@ -43235,6 +43235,7 @@ public class ChatActivity extends BaseFragment implements
                 return;
             }
 
+            final MessageObject selectedMessage = cell == null ? null : cell.getMessageObject();
             if (!getMessagesController().showSensitiveContent()) {
                 final AlertDialog progressDialog = new AlertDialog(context, AlertDialog.ALERT_TYPE_SPINNER);
                 progressDialog.showDelayed(200);
@@ -43280,15 +43281,17 @@ public class ChatActivity extends BaseFragment implements
                                             if (!(child instanceof ChatMessageCell)) continue;
                                             ChatMessageCell messageCell = (ChatMessageCell) child;
                                             if (messageCell.getMessageObject() != null && messageCell.getMessageObject().isSensitive()) {
-                                                messageCell.startRevealMedia();
+                                                messageCell.revealSensitiveContent();
                                             }
                                         }
                                     }
-                                } else if (cell != null) {
-                                    if (cell.getMessageObject() != null) {
-                                        cell.getMessageObject().isSensitiveCached = false;
+                                } else if (selectedMessage != null) {
+                                    selectedMessage.isSensitiveCached = false;
+                                    if (cell.getMessageObject() == selectedMessage) {
+                                        cell.revealSensitiveContent();
+                                    } else {
+                                        selectedMessage.forceUpdate = true;
                                     }
-                                    cell.startRevealMedia();
                                 }
                             };
                             if (always[0]) {
@@ -43327,10 +43330,7 @@ public class ChatActivity extends BaseFragment implements
                 return;
             }
             if (cell != null) {
-                if (cell.getMessageObject() != null) {
-                    cell.getMessageObject().isSensitiveCached = false;
-                }
-                cell.startRevealMedia();
+                cell.revealSensitiveContent();
             }
         }
     };

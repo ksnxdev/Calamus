@@ -22772,16 +22772,21 @@ public class MessagesController extends BaseController implements NotificationCe
                 .setTitle(getString(R.string.MessageShowSensitiveContentChannelTitle))
                 .setMessage(getString(cannotView ? R.string.MessageShowSensitiveContentChannelTextClosed : R.string.MessageShowSensitiveContentChannelText))
                 .setView(frameLayout).setCustomViewOffset(9)
-                .setNegativeButton(getString(cannotView ? R.string.MessageShowSensitiveContentChannelTextClosedButton : R.string.Cancel), null)
+                .setNegativeButton(getString(cannotView ? R.string.MessageShowSensitiveContentChannelTextClosedButton : R.string.Cancel), (di, w) -> di.dismiss())
                 .setOnDismissListener(di -> {
-                    if (!doneSet[0] && canceled != null) {
-                        canceled.run();
+                    if (!doneSet[0]) {
+                        doneSet[0] = true;
+                        if (canceled != null) {
+                            canceled.run();
+                        }
                     }
                 });
             if (!cannotView) {
                 alert.setPositiveButton(getString(R.string.MessageShowSensitiveContentButton), (di, w) -> {
+                    if (doneSet[0]) return;
                     if (needsVerification || (always[0] && settings != null && settings.sensitive_can_change)) {
                         ThemeActivity.verifyAge(context, currentAccount, passed -> {
+                            if (doneSet[0]) return;
                             final BaseFragment lastFragment2 = LaunchActivity.getSafeLastFragment();
                             if (passed) {
                                 sensitiveAgreed.add(did);
@@ -22796,6 +22801,7 @@ public class MessagesController extends BaseController implements NotificationCe
                                         .show(true);
                                 }
                                 doneSet[0] = true;
+                                di.dismiss();
                                 if (done != null) {
                                     done.run();
                                 }
@@ -22810,13 +22816,16 @@ public class MessagesController extends BaseController implements NotificationCe
                     } else {
                         sensitiveAgreed.add(did);
                         doneSet[0] = true;
+                        di.dismiss();
                         if (done != null) {
                             done.run();
                         }
                     }
                 });
             }
-            alert.show();
+            AlertDialog dialog = alert.create();
+            dialog.setDismissDialogByButtons(false);
+            dialog.show();
         });
     }
 

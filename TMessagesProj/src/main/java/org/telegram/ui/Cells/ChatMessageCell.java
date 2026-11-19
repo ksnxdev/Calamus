@@ -15280,6 +15280,24 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         }
     }
 
+    public void revealSensitiveContent() {
+        if (currentMessageObject == null) return;
+        final MessageObject message = currentMessageObject;
+        message.isSensitiveCached = false;
+        final boolean forceUpdate = message.forceUpdate;
+        final boolean revealing = message.revealingMediaSpoilers;
+        message.forceUpdate = true;
+        message.revealingMediaSpoilers = true;
+        try {
+            setMessageContent(message, currentMessagesGroup, pinnedBottom, pinnedTop, firstInChat, lastInChatList);
+        } finally {
+            message.forceUpdate = forceUpdate;
+            message.revealingMediaSpoilers = revealing;
+        }
+        startRevealMedia();
+        invalidate();
+    }
+
     public void startRevealMedia() {
         startRevealMedia(
             photoImage.getImageX() + photoImage.getImageWidth() / 2f,

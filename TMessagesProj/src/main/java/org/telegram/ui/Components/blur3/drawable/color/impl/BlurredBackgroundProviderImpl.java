@@ -237,6 +237,14 @@ public class BlurredBackgroundProviderImpl {
     }
 
     public static BlurredBackgroundProvider inputFieldDialogActivity(Theme.ResourcesProvider resourcesProvider) {
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            return new BlurredBackgroundProviderBuilder(resourcesProvider)
+                .setBackgroundColor((r, isDark) -> ColorUtils.setAlphaComponent(Theme.getColor(Theme.key_dialogBackground, r), 255))
+                .setStrokeColorTop(0, 0)
+                .setStrokeColorBottom(0, 0)
+                .setShadowColor(0, 0)
+                .build();
+        }
         return topPanel(resourcesProvider);
     }
 
@@ -257,6 +265,14 @@ public class BlurredBackgroundProviderImpl {
     }
 
     public static BlurredBackgroundProvider photoViewer(Theme.ResourcesProvider resourcesProvider) {
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            return new BlurredBackgroundProviderBuilder(resourcesProvider)
+                .setBackgroundColor((r, isDark) -> 0xFF1A1A1A)
+                .setStrokeColorTop(0, 0)
+                .setStrokeColorBottom(0, 0)
+                .setShadowColor(0, 0)
+                .build();
+        }
         return new BlurredBackgroundProviderBuilder(resourcesProvider)
                 .setBackgroundColor((r, isDark) -> {
                     final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.85f : 0.76f;
