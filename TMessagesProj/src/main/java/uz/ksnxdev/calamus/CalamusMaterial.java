@@ -42,7 +42,7 @@ public final class CalamusMaterial {
         int onSurface = tone(hsl[0], saturation * 0.25f, dark ? 0.80f : 0.24f);
         int secondary = tone(hsl[0], saturation * 0.25f, dark ? 0.66f : 0.40f);
         int onPrimary = tone(hsl[0], saturation * 0.45f, dark ? 0.16f : 0.98f);
-        int onContainer = ColorUtils.blendARGB(primary, onSurface, 0.25f);
+        int onContainer = ColorUtils.blendARGB(primary, onSurface, 0.50f);
         int outline = ColorUtils.blendARGB(container, secondary, 0.24f);
         put(colors, surface,
                 Theme.key_windowBackgroundWhite, Theme.key_actionBarDefault, Theme.key_actionBarDefaultArchived, Theme.key_chat_inBubble, Theme.key_chat_inBubbleShadow);
@@ -74,7 +74,7 @@ public final class CalamusMaterial {
         int fileSecondary = ColorUtils.blendARGB(secondary, onSurface, 0.65f);
         put(colors, onSurface, Theme.key_chat_inReplyMessageText, Theme.key_chat_outReplyMessageText);
         put(colors, fileSecondary, Theme.key_chat_inReplyMediaMessageText, Theme.key_chat_outReplyMediaMessageText);
-        put(colors, onSurface, Theme.key_chat_inReplyMediaMessageSelectedText, Theme.key_chat_outReplyMediaMessageSelectedText);
+        put(colors, dark ? 0xffe6e6e6 : onSurface, Theme.key_chat_inReplyMediaMessageSelectedText, Theme.key_chat_outReplyMediaMessageSelectedText);
         put(colors, primary, Theme.key_chat_inReplyLine, Theme.key_chat_outReplyLine, Theme.key_chat_outReplyLine2, Theme.key_chat_inQuote, Theme.key_chat_outQuote);
         put(colors, onSurface, Theme.key_chat_inFileNameText, Theme.key_chat_outFileNameText, Theme.key_chat_inAudioTitleText, Theme.key_chat_outAudioTitleText);
         put(colors, fileSecondary, Theme.key_chat_inAudioDurationText, Theme.key_chat_outAudioDurationText, Theme.key_chat_inAudioDurationSelectedText, Theme.key_chat_outAudioDurationSelectedText);
@@ -83,7 +83,28 @@ public final class CalamusMaterial {
         put(colors, containerPressed, Theme.key_chat_inFileBackgroundSelected, Theme.key_chat_outFileBackgroundSelected, Theme.key_chat_inLoaderSelected, Theme.key_chat_outLoaderSelected);
         put(colors, onContainer, Theme.key_chat_inMediaIcon, Theme.key_chat_outMediaIcon, Theme.key_chat_inMediaIconSelected, Theme.key_chat_outMediaIconSelected);
         put(colors, primary, Theme.key_chat_inFileProgress, Theme.key_chat_outFileProgress, Theme.key_chat_inFileProgressSelected, Theme.key_chat_outFileProgressSelected);
-        put(colors, secondary, Theme.key_chat_inTimeSelectedText, Theme.key_chat_outTimeSelectedText);
+        put(colors, onContainer, Theme.key_chat_inForwardedNameText, Theme.key_chat_outForwardedNameText,
+                Theme.key_chat_inViaBotNameText, Theme.key_chat_outViaBotNameText, Theme.key_chat_inPsaNameText, Theme.key_chat_outPsaNameText,
+                Theme.key_chat_inSiteNameText, Theme.key_chat_outSiteNameText, Theme.key_chat_inPreviewInstantText, Theme.key_chat_outPreviewInstantText,
+                Theme.key_chat_messageLinkIn, Theme.key_chat_messageLinkOut, Theme.key_chat_inReplyNameText, Theme.key_chat_outReplyNameText);
+        put(colors, onSurface, Theme.key_chat_inContactNameText, Theme.key_chat_outContactNameText);
+        put(colors, fileSecondary, Theme.key_chat_inContactPhoneText, Theme.key_chat_outContactPhoneText,
+                Theme.key_chat_inContactPhoneSelectedText, Theme.key_chat_outContactPhoneSelectedText,
+                Theme.key_chat_inAudioPerformerText, Theme.key_chat_outAudioPerformerText,
+                Theme.key_chat_inAudioPerformerSelectedText, Theme.key_chat_outAudioPerformerSelectedText,
+                Theme.key_chat_inVenueInfoText, Theme.key_chat_outVenueInfoText, Theme.key_chat_inVenueInfoSelectedText, Theme.key_chat_outVenueInfoSelectedText);
+        put(colors, onContainer, Theme.key_chat_inInstant, Theme.key_chat_outInstant, Theme.key_chat_inInstantSelected, Theme.key_chat_outInstantSelected,
+                Theme.key_chat_inPreviewLine, Theme.key_chat_outPreviewLine);
+        put(colors, primary, Theme.key_chat_inAudioProgress, Theme.key_chat_outAudioProgress, Theme.key_chat_inAudioSelectedProgress, Theme.key_chat_outAudioSelectedProgress,
+                Theme.key_chat_inVoiceSeekbarFill, Theme.key_chat_outVoiceSeekbarFill, Theme.key_chat_inAudioSeekbarFill, Theme.key_chat_outAudioSeekbarFill);
+        put(colors, ColorUtils.blendARGB(fileSecondary, primaryContainer, 0.25f),
+                Theme.key_chat_inVoiceSeekbar, Theme.key_chat_outVoiceSeekbar, Theme.key_chat_inVoiceSeekbarSelected, Theme.key_chat_outVoiceSeekbarSelected,
+                Theme.key_chat_inAudioSeekbar, Theme.key_chat_outAudioSeekbar, Theme.key_chat_inAudioSeekbarSelected, Theme.key_chat_outAudioSeekbarSelected);
+        put(colors, fileSecondary, Theme.key_chat_inViews, Theme.key_chat_outViews, Theme.key_chat_inViewsSelected, Theme.key_chat_outViewsSelected,
+                Theme.key_chat_inMenu, Theme.key_chat_outMenu, Theme.key_chat_inMenuSelected, Theme.key_chat_outMenuSelected);
+        put(colors, onContainer, Theme.key_chat_inSentClock, Theme.key_chat_outSentClock, Theme.key_chat_inSentClockSelected, Theme.key_chat_outSentClockSelected,
+                Theme.key_chat_outSentCheck, Theme.key_chat_outSentCheckSelected, Theme.key_chat_outSentCheckRead, Theme.key_chat_outSentCheckReadSelected);
+        put(colors, fileSecondary, Theme.key_chat_inTimeText, Theme.key_chat_outTimeText, Theme.key_chat_inTimeSelectedText, Theme.key_chat_outTimeSelectedText);
         colors.put(Theme.key_listSelector, ColorUtils.setAlphaComponent(primary, dark ? 22 : 18));
     }
 
