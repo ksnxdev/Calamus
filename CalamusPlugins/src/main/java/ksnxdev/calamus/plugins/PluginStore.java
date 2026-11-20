@@ -138,7 +138,7 @@ final class PluginStore {
             if (value.trim().isEmpty() || value.length() > limit || value.codePoints().anyMatch(c -> Character.isISOControl(c) || c >= 0x202a && c <= 0x202e || c >= 0x2066 && c <= 0x2069)) throw new IOException("Invalid manifest field: " + key);
         }
         Object version = manifest.get("api_version");
-        if (!(version instanceof Integer) || ((Integer) version != 1 && (Integer) version != 2 && (Integer) version != 3)) throw new IOException("Unsupported plugin API");
+        if (!(version instanceof Integer) || ((Integer) version < 1 || (Integer) version > 4)) throw new IOException("Unsupported plugin API");
         for (String key : List.of("permissions", "events")) {
             JSONArray list = manifest.optJSONArray(key); if (list == null) list = new JSONArray();
             Set<String> used = new HashSet<>(); Set<String> allowed = key.equals("permissions") ? PERMISSIONS : EVENTS;

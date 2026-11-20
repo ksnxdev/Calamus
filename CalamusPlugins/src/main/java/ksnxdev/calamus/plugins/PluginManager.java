@@ -112,6 +112,30 @@ public final class PluginManager implements PluginTransport.Listener {
             });
         } catch (Exception error) { callback.complete(null, "Archive queue is full"); }
     }
+    public boolean hasArchiveCapture() {
+        if (store == null) return false;
+        for (String id : new ArrayList<>(sessions.keySet())) try {
+            JSONObject record = store().record(id);
+            if (!capturing(id) || !PluginAccessPolicy.has(record, "messages.read") || !PluginAccessPolicy.has(record, "messages.archive")) continue;
+            JSONArray scopes = record.optJSONArray("scopes");
+            if (scopes != null) for (int i = 0; i < scopes.length(); i++) if (scopes.optJSONObject(i) != null && scopes.optJSONObject(i).optLong("dialog_id") != 0) return true;
+        } catch (Exception ignored) { }
+        return false;
+    }
+    public void retainDeletedNow(JSONObject scope, JSONArray messages) {
+        JSONArray providers = archiveProviders(scope);
+        for (int i = 0; i < providers.length(); i++) try {
+            JSONObject provider = providers.getJSONObject(i); String id = provider.getString("plugin"), session = provider.getString("session");
+            synchronized (PluginArchiveStore.class) {
+                if (!capturing(id) || !authorizeApiNow(id, session, "archive.record", scope)) continue;
+                PluginArchiveStore.recordBatch(context, id, scope, messages, () -> capturing(id) && authorizeApiNow(id, session, "archive.record", scope));
+                JSONArray ids = new JSONArray(); for (int j = 0; j < messages.length(); j++) ids.put(messages.getJSONObject(j).getInt("id"));
+                if (!authorizeApiNow(id, session, "archive.query", scope)) continue;
+                PluginArchiveStore.deleted(context, id, scope.getLong("user_id"), scope.optLong("channel_id"), ids, new JSONArray().put(scope));
+            }
+            PluginBridge.archiveChanged(scope.getInt("account_id"), scope.getLong("dialog_id"));
+        } catch (Exception ignored) { }
+    }
     public JSONArray archiveProviders(JSONObject chat) {
         JSONArray result = new JSONArray();
         if (store == null) return result;
@@ -410,7 +434,21 @@ public final class PluginManager implements PluginTransport.Listener {
             if (name.startsWith("message.") && (!PluginAccessPolicy.has(record, "messages.read") || payload.optLong("dialog_id") == 0)) continue;
             if (name.equals("chat.opened") && !PluginAccessPolicy.has(record, "chats.read")) continue;
             if (payload.has("account_id") && !PluginAccessPolicy.scope(record, payload, payload.optLong("dialog_id") != 0)) continue;
-            invoke(id, "event", event);
+            JSONObject delivered = event;
+            if (Set.of("message.received", "message.updated", "message.sent").contains(name) && capturing(id) && PluginAccessPolicy.has(record, "messages.archive") && PluginAccessPolicy.has(record, "messages.read")) {
+                JSONArray messages = payload.optJSONArray("messages");
+                if (payload.optJSONObject("message") != null) messages = new JSONArray().put(payload.getJSONObject("message"));
+                if (messages != null) {
+                    final String pluginId = id, session = sessions.get(id); final JSONObject scope = payload;
+                    try {
+                        PluginArchiveStore.recordBatch(context, id, scope, messages, () -> capturing(pluginId) && authorizeApiNow(pluginId, session, "archive.record", scope));
+                        delivered = new JSONObject(event.toString()).put("payload", new JSONObject(payload.toString()).put("host_archived", true));
+                    } catch (Exception failure) {
+                        record.put("archive_error", failure.getClass().getSimpleName());
+                    }
+                }
+            }
+            invoke(id, "event", delivered);
         }
     }
     public String pluginName(String id) { try { return store().info(id).getString("name"); } catch (Exception error) { return id; } }
@@ -474,7 +512,10 @@ public final class PluginManager implements PluginTransport.Listener {
                         JSONArray filtered = new JSONArray(); JSONArray all = (JSONArray) value;
                         for (int i = 0; i < all.length(); i++) {
                             JSONObject item = all.getJSONObject(i); JSONObject check = operation.equals("accounts") ? item : new JSONObject(args.toString()).put("dialog_id", item.getLong("dialog_id"));
-                            if (PluginAccessPolicy.scope(record, check, operation.equals("chats"))) filtered.put(item);
+                            if (PluginAccessPolicy.scope(record, check, operation.equals("chats"))) {
+                                if (operation.equals("accounts")) item.put("presence_control", PluginAccessPolicy.has(record, "presence.control") && (record.getJSONObject("manifest").optInt("api_version") < 4 || PluginAccessPolicy.accountScope(record, check)));
+                                filtered.put(item);
+                            }
                         }
                         value = filtered;
                     }

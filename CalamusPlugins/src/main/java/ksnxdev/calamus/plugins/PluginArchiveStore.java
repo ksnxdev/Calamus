@@ -38,38 +38,57 @@ public final class PluginArchiveStore {
     private static String searchable(String text) {
         return java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFKC).toLowerCase(java.util.Locale.ROOT).replace('ё', 'е');
     }
+    private static JSONObject record(SQLiteDatabase db, long user, long dialog, JSONObject message) throws Exception {
+        int id = message.getInt("id");
+        if (id <= 0 || message.getLong("dialog_id") != dialog || !message.optBoolean("archivable")) return new JSONObject().put("stored", false);
+        String text = message.optString("text"), media = message.optString("media_type");
+        if (text.codePointCount(0, text.length()) > 4096 || media.length() > 40) throw new IllegalArgumentException("Archive message is too large");
+        String[] key = {Long.toString(user), Long.toString(dialog), Integer.toString(id)};
+        boolean deleted = false;
+        try (Cursor previous = db.rawQuery("SELECT text,media,edit_date,deleted FROM journal WHERE user_id=? AND dialog_id=? AND message_id=? ORDER BY id DESC LIMIT 1", key)) {
+            if (previous.moveToFirst()) {
+                deleted = previous.getInt(3) != 0;
+                if (previous.getInt(2) > message.optInt("edit_date")) return new JSONObject().put("stored", false);
+                if (previous.getString(0).equals(text) && previous.getString(1).equals(media)) return new JSONObject().put("stored", false);
+            }
+        }
+        long pages = DatabaseUtils.longForQuery(db, "PRAGMA page_count", null) - DatabaseUtils.longForQuery(db, "PRAGMA freelist_count", null);
+        if (pages * DatabaseUtils.longForQuery(db, "PRAGMA page_size", null) >= 12 * 1024 * 1024) {
+            long prune = Math.max(1, Math.min(2000, DatabaseUtils.queryNumEntries(db, "journal") / 4));
+            db.execSQL("DELETE FROM journal WHERE id IN (SELECT id FROM journal ORDER BY id LIMIT " + prune + ")");
+        }
+        ContentValues values = new ContentValues();
+        values.put("user_id", user); values.put("dialog_id", dialog); values.put("message_id", id);
+        values.put("channel_id", message.optLong("channel_id")); values.put("date", message.optInt("date"));
+        values.put("edit_date", message.optInt("edit_date")); values.put("captured", System.currentTimeMillis());
+        values.put("deleted", deleted ? 1 : 0);
+        values.put("text", text); values.put("media", media);
+        values.put("sender_id", message.optLong("sender_id")); values.put("outgoing", message.optBoolean("outgoing") ? 1 : 0);
+        long version = db.insertOrThrow("journal", null, values);
+        db.execSQL("DELETE FROM journal WHERE id IN (SELECT id FROM journal ORDER BY id DESC LIMIT -1 OFFSET 20000)");
+        return new JSONObject().put("stored", true).put("version_id", version);
+    }
+    static synchronized int recordBatch(Context context, String plugin, JSONObject scope, JSONArray messages, java.util.function.BooleanSupplier authorized) throws Exception {
+        if (messages.length() > 1000) throw new IllegalArgumentException("Archive batch exceeds 1000 messages");
+        int stored = 0;
+        try (SQLiteDatabase db = open(context, plugin)) {
+            db.beginTransaction();
+            try {
+                for (int i = 0; i < messages.length(); i++) {
+                    if (!authorized.getAsBoolean()) throw new SecurityException("Plugin archive access was revoked");
+                    if (record(db, scope.getLong("user_id"), scope.getLong("dialog_id"), messages.getJSONObject(i)).optBoolean("stored")) stored++;
+                }
+                if (!authorized.getAsBoolean()) throw new SecurityException("Plugin archive access was revoked");
+                db.setTransactionSuccessful();
+            } finally { db.endTransaction(); }
+        }
+        return stored;
+    }
     public static synchronized JSONObject request(Context context, String plugin, String operation, JSONObject args) throws Exception {
         long user = args.getLong("user_id"), dialog = args.getLong("dialog_id");
         try (SQLiteDatabase db = open(context, plugin)) {
             if (operation.equals("archive.record")) {
-                JSONObject message = args.getJSONObject("message");
-                int id = message.getInt("id");
-                if (id <= 0 || message.getLong("dialog_id") != dialog || !message.optBoolean("archivable")) return new JSONObject().put("stored", false);
-                String text = message.optString("text"), media = message.optString("media_type");
-                if (text.length() > 4096 || media.length() > 40) throw new IllegalArgumentException("Archive message is too large");
-                String[] key = {Long.toString(user), Long.toString(dialog), Integer.toString(id)};
-                boolean deleted = false;
-                try (Cursor previous = db.rawQuery("SELECT text,media,edit_date,deleted FROM journal WHERE user_id=? AND dialog_id=? AND message_id=? ORDER BY id DESC LIMIT 1", key)) {
-                    if (previous.moveToFirst()) {
-                        deleted = previous.getInt(3) != 0;
-                        if (previous.getString(0).equals(text) && previous.getString(1).equals(media)) return new JSONObject().put("stored", false);
-                    }
-                }
-                long pages = DatabaseUtils.longForQuery(db, "PRAGMA page_count", null) - DatabaseUtils.longForQuery(db, "PRAGMA freelist_count", null);
-                if (pages * DatabaseUtils.longForQuery(db, "PRAGMA page_size", null) >= 12 * 1024 * 1024) {
-                    long prune = Math.max(1, Math.min(2000, DatabaseUtils.queryNumEntries(db, "journal") / 4));
-                    db.execSQL("DELETE FROM journal WHERE id IN (SELECT id FROM journal ORDER BY id LIMIT " + prune + ")");
-                }
-                ContentValues values = new ContentValues();
-                values.put("user_id", user); values.put("dialog_id", dialog); values.put("message_id", id);
-                values.put("channel_id", message.optLong("channel_id")); values.put("date", message.optInt("date"));
-                values.put("edit_date", message.optInt("edit_date")); values.put("captured", System.currentTimeMillis());
-                values.put("deleted", deleted ? 1 : 0);
-                values.put("text", text); values.put("media", media);
-                values.put("sender_id", message.optLong("sender_id")); values.put("outgoing", message.optBoolean("outgoing") ? 1 : 0);
-                long version = db.insertOrThrow("journal", null, values);
-                db.execSQL("DELETE FROM journal WHERE id IN (SELECT id FROM journal ORDER BY id DESC LIMIT -1 OFFSET 20000)");
-                return new JSONObject().put("stored", true).put("version_id", version);
+                return record(db, user, dialog, args.getJSONObject("message"));
             }
             if (!operation.equals("archive.query")) throw new IllegalArgumentException("Unknown archive operation");
             long version = args.optLong("version_id"); int message = args.optInt("message_id");

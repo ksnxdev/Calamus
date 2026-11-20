@@ -102,7 +102,12 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
     }
 
     @Override public void checkAccountAccess(JSONObject args) {
-        if (args.has("account_id") && ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(args.optInt("account_id", -1))) throw new SecurityException("Calamus access is restricted for this account");
+        if (!args.has("account_id")) return;
+        int account = args.optInt("account_id", -1);
+        if (account < 0 || account >= UserConfig.MAX_ACCOUNT_COUNT) throw new SecurityException("Invalid account");
+        UserConfig config = UserConfig.getInstance(account);
+        if (!config.isClientActivated() || args.has("user_id") && config.getClientUserId() != args.optLong("user_id")) throw new SecurityException("Account identity changed");
+        if (ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(account)) throw new SecurityException("Calamus access is restricted for this account");
     }
     @Override public void revoked(String pluginId, String session) { PluginPresenceController.revoke(pluginId, session); }
     @Override public void menusChanged() {
@@ -148,6 +153,22 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
     }
     public static boolean allowedDeleted(int account, long dialog, MessageObject message) {
         return message.calamusDeleted && plugins().authorizeApiNow(message.calamusArchivePlugin, message.calamusArchiveSession, "archive.query", chatContext(account, dialog));
+    }
+    public static boolean hasArchiveCapture() {
+        return ApplicationLoader.applicationContext != null && plugins().hasArchiveCapture();
+    }
+    public static void retainDeletedFromStorage(int account, long dialog, ArrayList<TLRPC.Message> messages) {
+        if (messages.isEmpty() || DialogObject.isEncryptedDialog(dialog)) return;
+        JSONObject scope = chatContext(account, dialog);
+        if (!plugins().canRetainMessages(scope)) return;
+        try {
+            JSONArray snapshots = new JSONArray(); long channel = 0;
+            for (TLRPC.Message item : messages) {
+                if (item.id <= 0 || !archivable(item) || item.action != null && !(item.action instanceof TLRPC.TL_messageActionEmpty)) continue;
+                JSONObject snapshot = message(item); snapshots.put(snapshot); channel = snapshot.optLong("channel_id");
+            }
+            if (snapshots.length() > 0) plugins().retainDeletedNow(scope.put("channel_id", channel), snapshots);
+        } catch (Exception ignored) { }
     }
     public static void retainDeleted(int account, long dialog, long channel, ArrayList<MessageObject> messages) {
         JSONObject scope = chatContext(account, dialog);
@@ -457,12 +478,13 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
             for (int i = 0; i < source.length() && choices.size() < PluginAccessPolicy.MAX_CHAT_SCOPES; i++) try {
                 JSONObject row = source.getJSONObject(i); int account = row.getInt("account_id");
                 long user = row.getLong("user_id"), dialog = row.getLong("dialog_id");
-                if (account < 0 || account >= UserConfig.MAX_ACCOUNT_COUNT || dialog == 0 || DialogObject.isEncryptedDialog(dialog) || DialogObject.isFolderDialogId(dialog)) continue;
+                if (account < 0 || account >= UserConfig.MAX_ACCOUNT_COUNT || DialogObject.isEncryptedDialog(dialog) || DialogObject.isFolderDialogId(dialog)) continue;
                 UserConfig config = UserConfig.getInstance(account);
                 if (!config.isClientActivated() || config.getClientUserId() != user || ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(account)) continue;
                 String key = account + ":" + user + ":" + dialog;
                 if (choices.containsKey(key)) continue;
                 String title = row.optString("title");
+                if (dialog == 0) title = org.telegram.messenger.UserObject.getUserName(config.getCurrentUser());
                 if (title.isEmpty()) {
                     MessagesController controller = MessagesController.getInstance(account);
                     title = dialog > 0 ? org.telegram.messenger.UserObject.getUserName(controller.getUser(dialog)) : controller.getChat(-dialog) == null ? "" : controller.getChat(-dialog).title;
@@ -472,7 +494,8 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
                 choices.put(key, chatContext(account, dialog).put("title", title));
             } catch (Exception ignored) { }
         }
-        for (JSONObject row : choices.values()) result.put(row);
+        for (JSONObject row : choices.values()) if (row.optLong("dialog_id") == 0) result.put(row);
+        for (JSONObject row : choices.values()) if (row.optLong("dialog_id") != 0) result.put(row);
         return result;
     }
     private static JSONArray currentAccessOptions() {
@@ -484,6 +507,7 @@ public final class TelegramPluginHost implements PluginBridge.Client, Notificati
             if (!config.isClientActivated() || ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(account)) continue;
             try {
                 String name = org.telegram.messenger.UserObject.getUserName(config.getCurrentUser());
+                options.put(chatContext(account, 0).put("title", name));
                 options.put(chatContext(account, config.getClientUserId()).put("title", name + " · " + org.telegram.messenger.LocaleController.getString(org.telegram.messenger.R.string.SavedMessages)));
                 MessagesController controller = MessagesController.getInstance(account);
                 for (TLRPC.Dialog item : controller.getDialogs(0)) {

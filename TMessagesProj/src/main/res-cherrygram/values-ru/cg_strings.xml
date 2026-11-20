@@ -627,7 +627,7 @@
     <string name="CalamusPluginApproveInstall">Установить</string>
     <string name="CalamusPluginApproveUpdate">Обновить</string>
     <string name="CalamusPluginInstallConsent">Подтверждая установку или обновление, вы разрешаете перечисленные возможности и запуск плагина. Изоляция остаётся включённой. Отправку сообщений по-прежнему нужно подтверждать.</string>
-    <string name="CalamusPluginInstallScopeHint">Выберите аккаунты и чаты, к которым плагин получит доступ. Без выбора данные аккаунтов и чатов останутся недоступны.</string>
+    <string name="CalamusPluginInstallScopeHint">Выберите аккаунт для общих функций. Чаты выбираются отдельно для чтения и сохранения сообщений. Для режима призрака доступ к чатам не нужен.</string>
     <string name="CalamusPluginReviewExpired">Пакет изменился или срок подтверждения истёк. Выберите файл ещё раз.</string>
     <string name="CalamusPluginScopeLimit">Можно выбрать не более 4096 чатов.</string>
     <string name="CalamusPluginAccountChanged">Выбранный аккаунт или чат больше недоступен. Откройте установку заново.</string>
@@ -653,7 +653,7 @@
     <string name="CalamusArchiveEditedVersion">Изменённая версия</string>
     <string name="CalamusSearchDeleted">Поиск по удалённым сообщениям</string>
     <string name="CalamusGhostMode">Режим призрака</string>
-    <string name="CalamusGhostAllContacts">Для всех собеседников доступных плагину аккаунтов.</string>
+    <string name="CalamusGhostAllContacts">Для всего выбранного аккаунта, включая пользователей вне контактов. Доступ к чатам не требуется.</string>
     <string name="CalamusGhostRequiresAccess">Включите плагин и разрешите доступ к аккаунту и онлайн-статусу.</string>
     <string name="CalamusArchiveNeedsAccess">Включите Private View и разрешите ему доступ к сообщениям и локальному архиву этого чата в настройках доступа плагина.</string>
     <string name="CalamusDeletedChat">Удаленный чат</string>
@@ -666,4 +666,5 @@
     <string name="CalamusExternalAds">Сторонняя реклама</string>
     <string name="CalamusExternalAdsDescription">По умолчанию выключена. Данные аккаунта и устройства передаются AdsGram только после вашего согласия.</string>
     <string name="CalamusExternalAdsConsent">Разрешить стороннюю рекламу для аккаунтов в этом приложении? AdsGram (api.adsgram.ai) получает Telegram ID, статус Premium, язык, модель устройства, версию Android, размер экрана, уровень заряда и состояние зарядки, яркость и время запросов. Для определения IP также используется api.ipify.org. Эти сервисы видят ваш IP-адрес. Отключить передачу можно в Calamus → Конфиденциальность.</string>
+    <string name="CalamusPluginAllowedAccounts">Разрешённые аккаунты</string>
 </resources>

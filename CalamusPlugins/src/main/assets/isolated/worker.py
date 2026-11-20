@@ -38,7 +38,7 @@ class Output:
 
 sys.stdout = Output()
 sys.stderr = Output()
-API_VERSION = 3
+API_VERSION = 4
 
 def request(operation, **arguments):
     response = json.loads(_calamus.request(json.dumps({"operation": operation, "arguments": arguments}, ensure_ascii=True)))

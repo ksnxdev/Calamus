@@ -14582,6 +14582,32 @@ public class MessagesStorage extends BaseController {
         AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.quickRepliesUpdated));
     }
 
+    private void retainPluginMessagesBeforeDelete(String where) {
+        if (!ksnxdev.calamus.plugins.TelegramPluginHost.hasArchiveCapture()) return;
+        SQLiteCursor snapshots = null;
+        try {
+            snapshots = database.queryFinalized("SELECT uid,mid,data FROM messages_v2 WHERE " + where);
+            LongSparseArray<ArrayList<TLRPC.Message>> batches = new LongSparseArray<>();
+            while (snapshots.next()) {
+                long dialog = snapshots.longValue(0);
+                if (DialogObject.isEncryptedDialog(dialog)) continue;
+                NativeByteBuffer data = snapshots.byteBufferValue(2);
+                if (data == null) continue;
+                TLRPC.Message message;
+                try { message = TLRPC.Message.TLdeserialize(data, data.readInt32(false), false); if (message != null) message.readAttachPath(data, getUserConfig().clientUserId); }
+                finally { data.reuse(); }
+                if (message == null) continue;
+                message.id = snapshots.intValue(1); message.dialog_id = dialog;
+                ArrayList<TLRPC.Message> batch = batches.get(dialog);
+                if (batch == null) batches.put(dialog, batch = new ArrayList<>());
+                batch.add(message);
+                if (batch.size() >= 256) { ksnxdev.calamus.plugins.TelegramPluginHost.retainDeletedFromStorage(currentAccount, dialog, batch); batch.clear(); }
+            }
+            for (int i = 0; i < batches.size(); i++) ksnxdev.calamus.plugins.TelegramPluginHost.retainDeletedFromStorage(currentAccount, batches.keyAt(i), batches.valueAt(i));
+        } catch (Exception error) { FileLog.e(error); }
+        finally { if (snapshots != null) snapshots.dispose(); }
+    }
+
     private ArrayList<Long> markMessagesAsDeletedInternal(long dialogId, ArrayList<Integer> messages, boolean deleteFiles, int mode, int threadMessageId) {
         SQLiteCursor cursor = null;
         SQLitePreparedStatement state = null;
@@ -14651,6 +14677,8 @@ public class MessagesStorage extends BaseController {
                     broadcastScheduledMessagesChange(dialogsToUpdate.get(a));
                 }
             } else {
+                String archiveIds = TextUtils.join(",", messages);
+                retainPluginMessagesBeforeDelete("mid IN(" + archiveIds + ") AND " + (dialogId != 0 ? "uid = " + dialogId : "is_channel = 0"));
                 long currentUser = getUserConfig().getClientUserId();
 
                 ArrayList<Integer> unknownMessages = new ArrayList<>(messages);
@@ -15393,6 +15421,7 @@ public class MessagesStorage extends BaseController {
     }
 
     private ArrayList<Long> markMessagesAsDeletedInternal(long channelId, int mid, boolean deleteFiles) {
+        retainPluginMessagesBeforeDelete("uid = " + (-channelId) + " AND mid <= " + mid);
         SQLiteCursor cursor = null;
         SQLitePreparedStatement state = null;
         try {

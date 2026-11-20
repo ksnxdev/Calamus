@@ -26,7 +26,7 @@ final class PluginGhostSettings {
     private static Set<Integer> accounts(JSONObject plugin) {
         Set<Integer> accounts = new LinkedHashSet<>(); JSONArray scopes = plugin.optJSONArray("scopes");
         if (scopes != null) for (int i = 0; i < scopes.length(); i++) {
-            JSONObject scope = scopes.optJSONObject(i); if (scope == null) continue;
+            JSONObject scope = scopes.optJSONObject(i); if (scope == null || plugin.optInt("api_version") >= 4 && scope.optLong("dialog_id") != 0) continue;
             int account = scope.optInt("account_id", -1);
             if (account >= 0 && account < UserConfig.MAX_ACCOUNT_COUNT && UserConfig.getInstance(account).isClientActivated() && UserConfig.getInstance(account).getClientUserId() == scope.optLong("user_id")) accounts.add(account);
         }

@@ -13,11 +13,20 @@ public final class PluginAccessPolicy {
     }
     public static boolean scope(JSONObject record, JSONObject args, boolean dialog) {
         JSONArray scopes = record.optJSONArray("scopes");
-        if (scopes == null || !args.has("account_id") || !args.has("user_id")) return false;
+        if (scopes == null || !args.has("account_id") || !args.has("user_id") || dialog && args.optLong("dialog_id") == 0) return false;
         for (int i = 0; i < scopes.length(); i++) {
             JSONObject value = scopes.optJSONObject(i); if (value == null) continue;
             if (value.optInt("account_id", -1) == args.optInt("account_id", -2) && value.optLong("user_id") == args.optLong("user_id", -1)
                     && (!dialog || value.optLong("dialog_id") == args.optLong("dialog_id", 0))) return true;
+        }
+        return false;
+    }
+    public static boolean accountScope(JSONObject record, JSONObject args) {
+        JSONArray scopes = record.optJSONArray("scopes");
+        if (scopes == null || !args.has("account_id") || !args.has("user_id")) return false;
+        for (int i = 0; i < scopes.length(); i++) {
+            JSONObject scope = scopes.optJSONObject(i);
+            if (scope != null && scope.optLong("dialog_id") == 0 && scope.optInt("account_id", -1) == args.optInt("account_id", -2) && scope.optLong("user_id") == args.optLong("user_id", -1)) return true;
         }
         return false;
     }
@@ -45,6 +54,8 @@ public final class PluginAccessPolicy {
         String permission = permission(operation);
         if (!permission.isEmpty() && !has(record, permission)) throw new SecurityException("Permission was not granted: " + permission);
         if ((operation.startsWith("archive.") || operation.equals("message.action.register")) && !has(record, "messages.read")) throw new SecurityException("Message read access is required");
+        JSONObject manifest = record.optJSONObject("manifest");
+        if (operation.equals("presence.set") && manifest != null && manifest.optInt("api_version") >= 4 && !accountScope(record, arguments)) throw new SecurityException("Account status access was not granted");
         if (operation.equals("archive.show") && !has(record, "messages.archive")) throw new SecurityException("Archive permission is required");
         if (Set.of("presence.set", "presence.get", "archive.record", "archive.query", "archive.show", "validate_account", "chats", "history", "send_message", "show_dialog", "open_chat").contains(operation)) {
             boolean dialog = Set.of("history", "send_message", "open_chat", "archive.record", "archive.query", "archive.show", "presence.get").contains(operation);
@@ -61,7 +72,7 @@ public final class PluginAccessPolicy {
         for (int i = 0; i < scopes.length(); i++) {
             JSONObject scope = scopes.getJSONObject(i);
             int account = scope.getInt("account_id"); long user = scope.getLong("user_id"); long dialog = scope.getLong("dialog_id");
-            if (account < 0 || user <= 0 || dialog == 0) throw new SecurityException("Invalid account/chat grant");
+            if (account < 0 || account >= 32 || user <= 0) throw new SecurityException("Invalid account/chat grant");
             clean.put(new JSONObject().put("account_id", account).put("user_id", user).put("dialog_id", dialog));
         }
         record.put("permissions", new JSONArray(permissions.toString())).put("scopes", clean).put("grant_digest", record.getString("digest"));

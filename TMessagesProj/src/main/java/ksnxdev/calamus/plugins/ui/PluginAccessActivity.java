@@ -84,10 +84,13 @@ public class PluginAccessActivity extends BaseCGPreferencesEntry {
             items.add(SettingsHelper.asSwitchCG(100 + i, title).setChecked(permissions.contains(permission)));
         }
         items.add(UItem.asShadow(null));
-        items.add(UItem.asHeader(getString(R.string.CalamusPluginAllowedChats)));
+        items.add(UItem.asHeader(getString(R.string.CalamusPluginAllowedAccounts)));
         if (choices.length() == 0) items.add(UItem.asShadow(getString(R.string.CalamusPluginNoAccounts)));
-        if (choices.length() > 0) items.add(UItem.asButton(2, getString(scopes.size() == choices.length() ? R.string.DeselectAll : R.string.SelectAll)));
-        for (int i = 0; i < choices.length(); i++) items.add(SettingsHelper.asSwitchCG(1000 + i, choices.optJSONObject(i).optString("title")).setChecked(scopes.contains(i)));
+        boolean chatsHeader = false;
+        for (int i = 0; i < choices.length(); i++) {
+            if (!chatsHeader && choices.optJSONObject(i).optLong("dialog_id") != 0) { items.add(UItem.asHeader(getString(R.string.CalamusPluginAllowedChats))); items.add(UItem.asButton(2, getString(allChatsSelected() ? R.string.DeselectAll : R.string.SelectAll))); chatsHeader = true; }
+            items.add(SettingsHelper.asSwitchCG(1000 + i, choices.optJSONObject(i).optString("title")).setChecked(scopes.contains(i)));
+        }
         items.add(UItem.asShadow(null));
         if (busy || !loaded) for (UItem item : items) item.enabled = false;
     }
@@ -105,11 +108,19 @@ public class PluginAccessActivity extends BaseCGPreferencesEntry {
         }
         return android.text.TextUtils.join(", ", missing);
     }
+    private boolean allChatsSelected() {
+        boolean any = false;
+        for (int i = 0; i < choices.length(); i++) if (choices.optJSONObject(i).optLong("dialog_id") != 0) { any = true; if (!scopes.contains(i)) return false; }
+        return any;
+    }
+    private void toggleChats() {
+        boolean clear = allChatsSelected();
+        for (int i = 0; i < choices.length(); i++) if (choices.optJSONObject(i).optLong("dialog_id") != 0) { if (clear) scopes.remove(i); else scopes.add(i); }
+    }
     @Override protected void onClick(UItem item, View view, int position, float x, float y) {
         if (busy || !loaded) return;
         if (item.id == 2) {
-            if (scopes.size() == choices.length()) scopes.clear();
-            else for (int i = 0; i < choices.length(); i++) scopes.add(i);
+            toggleChats();
             error = "";
         } else if (item.id >= 1000) {
             int index = item.id - 1000;

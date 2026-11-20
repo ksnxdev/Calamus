@@ -65,7 +65,7 @@ public final class PluginPresenceController {
             if (pending == null) return true;
             long now = android.os.SystemClock.elapsedRealtime();
             pending.values().removeIf(expires -> expires < now);
-            return pending.isEmpty();
+            return true;
         }
     }
     public static void beginSend(int account, int message) {
@@ -76,7 +76,7 @@ public final class PluginPresenceController {
             long now = android.os.SystemClock.elapsedRealtime(); pending.values().removeIf(expires -> expires < now);
             first = pending.isEmpty(); pending.put(message, now+30000);
         }
-        if (first) MessagesController.getInstance(account).applyPluginPresence(false);
+        if (first) MessagesController.getInstance(account).applyPluginPresence(true);
     }
     public static void endSend(int account, int message) {
         synchronized (leases) {

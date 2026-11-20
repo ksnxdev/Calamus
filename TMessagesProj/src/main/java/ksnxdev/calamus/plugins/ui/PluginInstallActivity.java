@@ -39,6 +39,7 @@ public final class PluginInstallActivity extends BaseCGPreferencesEntry {
                 if (needsAccount()) choices = TelegramPluginHost.accessOptions(proposal.optJSONArray("scopes"));
                 JSONArray previous = proposal.optJSONArray("scopes");
                 if (previous != null) for (int i = 0; i < choices.length(); i++) for (int j = 0; j < previous.length(); j++) if (sameScope(choices.optJSONObject(i), previous.optJSONObject(j))) selected.add(i);
+                for (int i = 0; i < choices.length(); i++) if (choices.optJSONObject(i).optLong("dialog_id") == 0 && choices.optJSONObject(i).optInt("account_id") == org.telegram.messenger.UserConfig.selectedAccount) selected.add(i);
             }
             if (listView != null) { listView.adapter.update(false); listView.scrollToPosition(0); }
         });
@@ -70,27 +71,33 @@ public final class PluginInstallActivity extends BaseCGPreferencesEntry {
         items.add(UItem.asShadow(getString(R.string.CalamusPluginInstallConsent)));
         if (!error.isEmpty()) items.add(UItem.asShadow(error));
         if (loaded && needsAccount()) {
-            items.add(UItem.asHeader(getString(R.string.CalamusPluginAllowedChats)));
+            items.add(UItem.asHeader(getString(R.string.CalamusPluginAllowedAccounts)));
             items.add(UItem.asShadow(getString(R.string.CalamusPluginInstallScopeHint)));
             if (choices.length() == 0) items.add(UItem.asShadow(getString(R.string.CalamusPluginNoAccounts)));
-            if (choices.length() > 0) {
-                UItem all = UItem.asButton(3, getString(selected.size() == choices.length() ? R.string.DeselectAll : R.string.SelectAll));
-                all.enabled = !busy; items.add(all);
-            }
+            boolean chatsHeader = false;
             for (int i = 0; i < choices.length(); i++) {
+                if (!chatsHeader && choices.optJSONObject(i).optLong("dialog_id") != 0) { items.add(UItem.asHeader(getString(R.string.CalamusPluginAllowedChats))); items.add(UItem.asButton(3, getString(allChatsSelected() ? R.string.DeselectAll : R.string.SelectAll))); chatsHeader = true; }
                 UItem scope = SettingsHelper.asSwitchCG(1000 + i, choices.optJSONObject(i).optString("title")).setChecked(selected.contains(i));
                 scope.enabled = !busy; items.add(scope);
             }
             items.add(UItem.asShadow(null));
         }
     }
+    private boolean allChatsSelected() {
+        boolean any = false;
+        for (int i = 0; i < choices.length(); i++) if (choices.optJSONObject(i).optLong("dialog_id") != 0) { any = true; if (!selected.contains(i)) return false; }
+        return any;
+    }
+    private void toggleChats() {
+        boolean clear = allChatsSelected();
+        for (int i = 0; i < choices.length(); i++) if (choices.optJSONObject(i).optLong("dialog_id") != 0) { if (clear) selected.remove(i); else selected.add(i); }
+    }
     @Override protected void onClick(UItem item, View view, int position, float x, float y) {
         if (busy) return;
         if (item.id == 2) { finishFragment(); return; }
         if (!loaded) return;
         if (item.id == 3) {
-            if (selected.size() == choices.length()) selected.clear();
-            else for (int i = 0; i < choices.length(); i++) selected.add(i);
+            toggleChats();
             error = "";
         } else if (item.id >= 1000) {
             int index = item.id - 1000;

@@ -11452,6 +11452,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public boolean sendTyping(long dialogId, long threadMsgId, int action, String emojicon, int classGuid) {
+        if (ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) return false;
         if (action < 0 || action >= sendingTypings.length || dialogId == 0) {
             return false;
         }
@@ -14481,6 +14482,7 @@ public class MessagesController extends BaseController implements NotificationCe
         if (messageObject.getId() < 0) {
             markMessageAsRead(messageObject.getDialogId(), messageObject.messageOwner.random_id, Integer.MIN_VALUE);
         } else {
+            if (ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) return;
             if (messageObject.messageOwner.peer_id.channel_id != 0) {
                 TLRPC.TL_channels_readMessageContents req = new TLRPC.TL_channels_readMessageContents();
                 req.channel = getInputChannel(messageObject.messageOwner.peer_id.channel_id);
@@ -14506,6 +14508,7 @@ public class MessagesController extends BaseController implements NotificationCe
 
     public void markMentionMessageAsRead(int mid, long channelId, long did) {
         getMessagesStorage().markMentionMessageAsRead(-channelId, mid, did);
+        if (ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) return;
         if (channelId != 0) {
             TLRPC.TL_channels_readMessageContents req = new TLRPC.TL_channels_readMessageContents();
             req.channel = getInputChannel(channelId);
@@ -14630,6 +14633,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void completeReadTask(ReadTask task) {
+        if (!DialogObject.isEncryptedDialog(task.dialogId) && ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) return;
         if (task.replyId != 0 && task.monoForumPeerId == 0) {
             TLRPC.TL_messages_readDiscussion req = new TLRPC.TL_messages_readDiscussion();
             req.msg_id = (int) task.replyId;
@@ -14686,6 +14690,7 @@ public class MessagesController extends BaseController implements NotificationCe
         long time = SystemClock.elapsedRealtime();
         for (int a = 0, size = readTasks.size(); a < size; a++) {
             ReadTask task = readTasks.get(a);
+            if (!DialogObject.isEncryptedDialog(task.dialogId) && ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) continue;
             if (task.sendRequestTime > time) {
                 continue;
             }
@@ -14697,6 +14702,7 @@ public class MessagesController extends BaseController implements NotificationCe
         }
         for (int a = 0, size = repliesReadTasks.size(); a < size; a++) {
             ReadTask task = repliesReadTasks.get(a);
+            if (!DialogObject.isEncryptedDialog(task.dialogId) && ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) continue;
             if (task.sendRequestTime > time) {
                 continue;
             }
@@ -14709,6 +14715,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void markDialogAsReadNow(long dialogId, long replyId) {
+        if (!DialogObject.isEncryptedDialog(dialogId) && ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) return;
         Utilities.stageQueue.postRunnable(() -> {
             if (replyId != 0) {
                 String key = dialogId + "_" + replyId;
@@ -14736,6 +14743,7 @@ public class MessagesController extends BaseController implements NotificationCe
             return;
         }
         getMessagesStorage().resetMentionsCount(dialogId, topicId, 0);
+        if (ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) return;
         TLRPC.TL_messages_readMentions req = new TLRPC.TL_messages_readMentions();
         req.peer = getInputPeer(dialogId);
         if (topicId != 0) {
@@ -14882,7 +14890,7 @@ public class MessagesController extends BaseController implements NotificationCe
                     currentReadTask.replyId = threadId;
                     currentReadTask.monoForumPeerId = monoForumPeerId;
                     currentReadTask.sendRequestTime = SystemClock.elapsedRealtime() + 5000;
-                    if (!readNow) {
+                    if (!readNow || ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) {
                         if (threadId != 0) {
                             threadsReadTasksMap.put(dialogId + "_" + threadId, currentReadTask);
                             repliesReadTasks.add(currentReadTask);
@@ -14894,7 +14902,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
                 currentReadTask.maxDate = maxDate;
                 currentReadTask.maxId = maxPositiveId;
-                if (readNow) {
+                if (readNow && !ksnxdev.calamus.plugins.PluginPresenceController.enabled(currentAccount)) {
                     completeReadTask(currentReadTask);
                 }
             });
