@@ -36,7 +36,7 @@ object CGResourcesHelper {
 
     @JvmStatic
     fun getBuildType(): String {
-        if (BuildConfig.CALAMUS_VERSION_NAME.contains("-beta")) return getString(R.string.UP_BTBeta)
+        if (BuildConfig.CALAMUS_VERSION_NAME.contains("beta", ignoreCase = true)) return getString(R.string.UP_BTBeta)
         if (CherrygramCoreConfig.isStandaloneStableBuild()) {
             return getString(R.string.UP_BTRelease)
         } else if (CherrygramCoreConfig.isPlayStoreBuild()) {

@@ -14715,8 +14715,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     menuItem.hideSubItem(gallery_menu_paint2);
                     setItemVisible(pipItem, true, false);
                 } else if (isVideo && !isLivePhoto) {
-                    if (!noforwards || (slideshowMessageId == 0 ? MessageObject.getMedia(newMessageObject.messageOwner).webpage != null && MessageObject.getMedia(newMessageObject.messageOwner).webpage.url != null :
-                            MessageObject.getMedia(imagesArr.get(0).messageOwner).webpage != null && MessageObject.getMedia(imagesArr.get(0).messageOwner).webpage.url != null)) {
+                    TLRPC.MessageMedia webPageMedia = MessageObject.getMedia(slideshowMessageId == 0 ? newMessageObject : imagesArr.get(0));
+                    if (!noforwards || webPageMedia != null && webPageMedia.webpage != null && webPageMedia.webpage.url != null) {
                         menuItem.showSubItem(gallery_menu_openin);
                     } else {
                         menuItem.hideSubItem(gallery_menu_openin);

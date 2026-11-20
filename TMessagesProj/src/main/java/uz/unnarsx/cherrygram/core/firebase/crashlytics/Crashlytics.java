@@ -20,6 +20,7 @@ import androidx.core.content.FileProvider;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BuildVars;
+import org.telegram.messenger.BuildConfig;
 import org.telegram.messenger.FileLoader;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.SharedConfig;
@@ -138,7 +139,7 @@ public class Crashlytics implements Thread.UncaughtExceptionHandler {
         return  "Steps to reproduce:\n" +
                 "Write here the steps to reproduce\n\n" +
                 "Details:\n"+
-                "• Cherrygram Version: " + CGResourcesHelper.getCherryVersion() + " (" + CGResourcesHelper.getAbiCode() + ")\n" +
+                "• Calamus Version: " + BuildConfig.CALAMUS_VERSION_NAME + " (" + CGResourcesHelper.getAbiCode() + ")\n" +
                 "• Telegram Version: " + BuildVars.BUILD_VERSION_STRING + " (" + CGResourcesHelper.getSourceCodeVersion() + ")\n" +
                 "• Build Type: " + CGResourcesHelper.getBuildType() + "\n" +
                 "• Build Date: " + CGResourcesHelper.getBuildDate() + "\n" +
