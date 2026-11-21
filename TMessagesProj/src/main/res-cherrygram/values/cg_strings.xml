@@ -131,7 +131,7 @@
     <string name="CG_UnknownCherrySettingsOption">There is no such Cherry Settings option.</string>
     <string name="CG_Restart">Restart app</string>
     <string name="CG_RestartToApply">Restart app to apply changes</string>
-    <string name="CG_PushService">Cherrygram Push Service.</string>
+    <string name="CG_PushService">Calamus</string>
     <string name="CG_Kaboom">This feature can be accessed without the Cherrygram password, through the system settings. \n\nThis feature **completely erases all your local (Cherrygram\'s) data**. It can be used in emergency situations.</string>
     <string name="CG_AppCrashed">Something went wrong</string>
     <string name="CG_AppCrashedDesc">Cherrygram has stopped working. Please send logs to the developers so they can fix this bug as soon as possible.</string>

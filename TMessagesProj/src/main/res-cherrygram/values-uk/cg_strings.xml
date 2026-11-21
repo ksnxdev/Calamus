@@ -107,7 +107,7 @@
     <string name="CG_UnknownCherrySettingsOption">Немає такого параметра Cherry.</string>
     <string name="CG_Restart">Перезапустити додаток</string>
     <string name="CG_RestartToApply">Перезавантажте додаток для застосування змін</string>
-    <string name="CG_PushService">Сервіс повідомлень Cherrygram.</string>
+    <string name="CG_PushService">Calamus</string>
     <string name="CG_Kaboom">Доступ до цієї функції, можна отримати без паролю Cherrygram, через системні налаштування. Функція повністю видаляє всі дані додатку. Її можна використати в аварійних ситуаціях.</string>
     <string name="CG_AppCrashed">Щось пішло не так</string>
     <string name="CG_AppCrashedDesc">Cherrygram перестав працювати. Будь ласка, відправте логи розробникам, щоб вони могли виправити цю помилку якомога швидше</string>

@@ -102,7 +102,7 @@
     <string name="CG_UnknownCherrySettingsOption">Essa opção de Configurações Cherry não existe.</string>
     <string name="CG_Restart">Reiniciar aplicação</string>
     <string name="CG_RestartToApply">Reiniciar para aplicar alterações</string>
-    <string name="CG_PushService">Serviço de Notificações do Cherrygram.</string>
+    <string name="CG_PushService">Calamus</string>
     <string name="CG_Kaboom">Este recurso pode ser acessado sem a senha do Cherrygram, através de 
 as configurações do sistema. Esta característica apaga completamente todas as suas 
 (Cherrygram\'s) dados. Pode ser utilizado em situações de emergência.</string>
