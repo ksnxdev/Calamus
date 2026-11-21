@@ -63,7 +63,7 @@ object CherrygramCoreConfig: CoroutineScope by CoroutineScope(
     var ignoreMentions by sharedPreferences.boolean("CG_IgnoreMentions", false)
     var ignoreMentionsMarkAsRead by sharedPreferences.boolean("CG_IgnoreMentionsMarkAsRead", false)
     var oldNotificationIcon by sharedPreferences.boolean("AP_Old_Notification_Icon", false)
-    var residentNotification by sharedPreferences.boolean("CG_ResidentNotification", Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && !ApplicationLoader.checkPlayServices())
+    var residentNotification by sharedPreferences.boolean("CG_ResidentNotification", Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && (!org.telegram.messenger.BuildConfig.CALAMUS_FIREBASE_ENABLED || !ApplicationLoader.checkPlayServices()))
     /** Notifications finish */
 
     /** Stories start */

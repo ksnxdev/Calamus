@@ -105,7 +105,7 @@ public class GeneralPreferencesEntry extends BaseCGPreferencesEntry {
                 .setChecked(CherrygramCoreConfig.INSTANCE.getSilenceNonContacts())
                 .slug("silenceNonContacts")
         );
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             items.add(SettingsHelper.asSwitchCG(residentNotificationRow, getString(R.string.CG_ResidentNotification), getString(R.string.NotificationsService))
                     .setChecked(CherrygramCoreConfig.INSTANCE.getResidentNotification())
                     .slug("residentNotification")

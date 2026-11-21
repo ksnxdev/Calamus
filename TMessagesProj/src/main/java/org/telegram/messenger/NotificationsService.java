@@ -60,6 +60,10 @@ public class NotificationsService extends Service {
         return null;
     }
 
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+    }
+
     public void onDestroy() {
         super.onDestroy();
         SharedPreferences preferences = MessagesController.getGlobalNotificationsSettings();
@@ -81,20 +85,24 @@ public class NotificationsService extends Service {
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
         );
 
-        startForeground(1390,
-                new NotificationCompat.Builder(this, "cgPush")
+        android.app.Notification notification = new NotificationCompat.Builder(this, "cgPush")
                         .setSmallIcon(R.drawable.ic_stat_calamus)
                         .setShowWhen(false)
                         .setOngoing(true)
                         .setContentText(LocaleController.getString(R.string.CG_PushService))
                         .setCategory(NotificationCompat.CATEGORY_STATUS)
                         .setContentIntent(pendingIntent)
-                        .build());
+                        .build();
+        if (Build.VERSION.SDK_INT >= 34) {
+            startForeground(1390, notification, android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+        } else {
+            startForeground(1390, notification);
+        }
         if (CherrygramCoreConfig.isDevBuild()) FileLog.d("cgPush: " + "Started foreground");
     }
 
     private boolean allowResidentNotification() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && CherrygramCoreConfig.INSTANCE.getResidentNotification();
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && CherrygramCoreConfig.INSTANCE.getResidentNotification();
     }
 
 }

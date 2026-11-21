@@ -25,6 +25,7 @@ import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BaseController;
 import org.telegram.messenger.BuildVars;
+import org.telegram.messenger.BuildConfig;
 import org.telegram.messenger.EmuDetector;
 import org.telegram.messenger.FileLoadOperation;
 import org.telegram.messenger.FileLoader;
@@ -286,7 +287,7 @@ public class ConnectionsManager extends BaseController {
         if (preferences.contains("pushConnection")) {
             return preferences.getBoolean("pushConnection", true);
         } else {
-            return MessagesController.getMainSettings(UserConfig.selectedAccount).getBoolean("backgroundConnection", false);
+            return !BuildConfig.CALAMUS_FIREBASE_ENABLED || MessagesController.getMainSettings(currentAccount).getBoolean("backgroundConnection", false);
         }
     }
 

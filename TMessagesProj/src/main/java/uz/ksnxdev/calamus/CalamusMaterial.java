@@ -70,7 +70,7 @@ public final class CalamusMaterial {
                 Theme.key_chats_actionIcon);
         put(colors, outline,
                 Theme.key_divider, Theme.key_switchTrack);
-        put(colors, onSurface, Theme.key_groupcreate_spanText);
+        put(colors, onSurface, Theme.key_groupcreate_spanText, Theme.key_chat_botSwitchToInlineText);
         int fileSecondary = ColorUtils.blendARGB(secondary, onSurface, 0.65f);
         put(colors, onSurface, Theme.key_chat_inReplyMessageText, Theme.key_chat_outReplyMessageText);
         put(colors, fileSecondary, Theme.key_chat_inReplyMediaMessageText, Theme.key_chat_outReplyMediaMessageText);

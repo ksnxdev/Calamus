@@ -8405,11 +8405,8 @@ public class ChatActivity extends BaseFragment implements
         int chatListIndex = contentView.indexOfChild(chatListView);
         chatListIndex = chatListIndex < 0 ? contentView.getChildCount() : (chatListIndex + 1);
 
-        roundVideoRecordBackground = new View(context);
+        roundVideoRecordBackground = new ksnxdev.calamus.ui.RecordingBlurView(context);
         roundVideoRecordBackground.setVisibility(View.GONE);
-        BlurredBackgroundDrawable d = navbarContentDrawableFactory.create(roundVideoRecordBackground);
-        d.setAlpha(232);
-        roundVideoRecordBackground.setBackground(d);
 
         contentView.addView(roundVideoRecordBackground, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
         contentView.addView(chatInputViewsContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
@@ -11140,8 +11137,12 @@ public class ChatActivity extends BaseFragment implements
                 themeDelegate,
                 true
         );
-        instantCameraView.setAnimationCallback((open, fromPaused) ->
-                animatorRoundMessageCameraVisibility.setValue(open, true));
+        instantCameraView.setAnimationCallback((open, fromPaused) -> {
+            if (open && roundVideoRecordBackground instanceof ksnxdev.calamus.ui.RecordingBlurView) {
+                ((ksnxdev.calamus.ui.RecordingBlurView) roundVideoRecordBackground).capture(contentView, instantCameraView);
+            }
+            animatorRoundMessageCameraVisibility.setValue(open, true);
+        });
         instantCameraView.setTrimCallback((start, end) -> {
             if (chatActivityEnterView != null) {
                 chatActivityEnterView.setVideoTimelineTrim(start, end);
@@ -44001,7 +44002,7 @@ public class ChatActivity extends BaseFragment implements
         themeDescriptions.add(new ThemeDescription(chatActivityEnterView, 0, null, null, new Drawable[]{Theme.chat_composeShadowDrawable}, null, Theme.key_chat_messagePanelShadow));
         themeDescriptions.add(new ThemeDescription(chatActivityEnterView, ThemeDescription.FLAG_TEXTCOLOR, new Class[]{ChatActivityEnterView.class}, new String[]{"messageEditText"}, null, null, null, Theme.key_chat_messagePanelText));
         themeDescriptions.add(new ThemeDescription(chatActivityEnterView, ThemeDescription.FLAG_CURSORCOLOR, new Class[]{ChatActivityEnterView.class}, new String[]{"messageEditText"}, null, null, null, Theme.key_chat_messagePanelCursor));
-        themeDescriptions.add(new ThemeDescription(chatActivityEnterView, ThemeDescription.FLAG_HINTTEXTCOLOR, new Class[]{ChatActivityEnterView.class}, new String[]{"messageEditText"}, null, null, null, Theme.key_glass_defaultText));
+        themeDescriptions.add(new ThemeDescription(chatActivityEnterView, ThemeDescription.FLAG_HINTTEXTCOLOR, new Class[]{ChatActivityEnterView.class}, new String[]{"messageEditText"}, null, null, null, Theme.key_chat_messagePanelHint));
         themeDescriptions.add(new ThemeDescription(chatActivityEnterView, ThemeDescription.FLAG_IMAGECOLOR, new Class[]{ChatActivityEnterView.class}, new String[]{"sendButton"}, null, null, null, Theme.key_chat_messagePanelSend));
         themeDescriptions.add(new ThemeDescription(chatActivityEnterView, ThemeDescription.FLAG_USEBACKGROUNDDRAWABLE | ThemeDescription.FLAG_DRAWABLESELECTEDSTATE, new Class[]{ChatActivityEnterView.class}, new String[]{"sendButton"}, null, null, 24, null, Theme.key_chat_messagePanelSend));
         themeDescriptions.add(new ThemeDescription(chatActivityEnterView, 0, new Class[]{ChatActivityEnterView.class}, new String[]{"botButton"}, null, null, null, Theme.key_glass_defaultIcon));
@@ -47831,6 +47832,9 @@ public class ChatActivity extends BaseFragment implements
             if (roundVideoRecordBackground != null) {
                 roundVideoRecordBackground.setAlpha(factor);
                 roundVideoRecordBackground.setVisibility(factor > 0 ? View.VISIBLE : View.INVISIBLE);
+                if (factor == 0 && !animatorRoundMessageCameraVisibility.getValue() && roundVideoRecordBackground instanceof ksnxdev.calamus.ui.RecordingBlurView) {
+                    ((ksnxdev.calamus.ui.RecordingBlurView) roundVideoRecordBackground).clear();
+                }
             }
             // checkUi_BlurHeight();
         } else if (id == ANIMATOR_ID_POLL_ADD_ANSWER_VISIBILITY) {

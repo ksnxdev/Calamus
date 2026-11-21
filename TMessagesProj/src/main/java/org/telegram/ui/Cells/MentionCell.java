@@ -261,7 +261,7 @@ public class MentionCell extends LinearLayout {
     }
 
     public void setIsDarkTheme(boolean isDarkTheme) {
-        if (isDarkTheme) {
+        if (isDarkTheme && !uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
             nameTextView.setTextColor(0xffffffff);
             usernameTextView.setTextColor(0xffbbbbbb);
         } else {
