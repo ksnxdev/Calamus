@@ -445,10 +445,10 @@ public abstract class MD3ListAdapter extends RecyclerListView.SelectionAdapter {
     public static class Md3Config {
         public int sidePaddingDp = 16;
         public int firstTopPaddingDp = 12; // Use when actionBar background == listView's background
-        public int innerGapDp = 2;
-        public int cornerRadiusDp = 24;
+        public int innerGapDp = 0;
+        public int cornerRadiusDp = 16;
 
-        public boolean useRipple = false;
+        public boolean useRipple = true;
         public boolean headerBackgroundEnabled = true;
 
         @Nullable

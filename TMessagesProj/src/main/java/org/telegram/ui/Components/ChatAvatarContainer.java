@@ -380,7 +380,7 @@ public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.T
         titleTextView.setTextColor(getThemedColor(Theme.key_actionBarDefaultTitle));
         titleTextView.setTextSize(18);
         titleTextView.setGravity(isCentered() ? Gravity.CENTER_HORIZONTAL : Gravity.LEFT);
-        titleTextView.setTypeface(AndroidUtilities.bold());
+        titleTextView.setTypeface(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) : AndroidUtilities.bold());
         titleTextView.setLeftDrawableTopPadding(-dp(1.3f));
         titleTextView.setCanHideRightDrawable(false);
         titleTextView.setRightDrawableOutside(!isCentered());

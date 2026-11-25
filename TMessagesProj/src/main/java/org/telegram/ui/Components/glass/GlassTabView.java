@@ -112,8 +112,9 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
         mainNavigationTab = true;
         setContentDescription(LocaleController.getString(labelRes));
         if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            textView.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL));
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) textView.getLayoutParams();
-            params.topMargin = dp(32);
+            params.topMargin = dp(40);
             params.height = dp(18);
             textView.setLayoutParams(params);
         }
@@ -170,7 +171,9 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
         if (selectedFactor > 0 && !skipDrawSelector) {
             final float alpha = AnimatorUtils.DECELERATE_INTERPOLATOR.getInterpolation(selectedFactor);
 
-            paintCounterBackground.setColor(Theme.multAlpha(colorSelected, 0.16f * alpha));
+            paintCounterBackground.setColor(uz.ksnxdev.calamus.CalamusMaterial.isEnabled()
+                    ? Theme.multAlpha(Theme.getColor(Theme.key_chat_outBubble, resourcesProvider), alpha)
+                    : Theme.multAlpha(colorSelected, 0.16f * alpha));
             if (uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3()) {
                 float width = Math.min(dp(64), viewWidth);
                 float top = mainNavigationTab && textView.getVisibility() == GONE ? (getHeight() - dp(32)) / 2f : getPaddingTop();
@@ -257,7 +260,7 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
         isSelectedAnimator.setValue(selected, animated);
         checkPlayAnimation(animated);
 
-        textView.setTypeface(selected ? AndroidUtilities.getTypeface(AndroidUtilities.TYPEFACE_ROBOTO_EXTRA_BOLD) : AndroidUtilities.bold());
+        textView.setTypeface(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) : selected ? AndroidUtilities.getTypeface(AndroidUtilities.TYPEFACE_ROBOTO_EXTRA_BOLD) : AndroidUtilities.bold());
     }
 
     public boolean isTabSelected() {

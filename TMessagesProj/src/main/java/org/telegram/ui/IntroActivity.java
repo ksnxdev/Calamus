@@ -376,7 +376,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         ScaleStateListAnimator.apply(startMessagingButton, .02f, 1.2f);
         startMessagingButton.setText(LocaleController.getString(R.string.StartMessaging));
         startMessagingButton.setGravity(Gravity.CENTER);
-        startMessagingButton.setTypeface(AndroidUtilities.bold());
+        startMessagingButton.setTypeface(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) : AndroidUtilities.bold());
         startMessagingButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
         startMessagingButton.setPadding(dp(34), 0, dp(34), 0);
         frameContainerView.addView(startMessagingButton, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 16, 0, 16, 76));

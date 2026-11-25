@@ -397,6 +397,10 @@ public class Switch extends View {
         if (getVisibility() != VISIBLE) {
             return;
         }
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            drawMaterialSwitch(canvas);
+            return;
+        }
 
         int x;
         float y;
@@ -619,6 +623,53 @@ public class Switch extends View {
         }
         if (overrideColorProgress != 0) {
             canvas.drawBitmap(overlayBitmap[1], 0, 0, null);
+        }
+    }
+
+    private void drawMaterialSwitch(Canvas canvas) {
+        float scale = Math.min(1f, getWidth() / (float) AndroidUtilities.dp(52));
+        float width = AndroidUtilities.dp(52) * scale;
+        float height = AndroidUtilities.dp(32) * scale;
+        float left = (getWidth() - width) / 2f;
+        float cy = getHeight() / 2f;
+        float p = Math.max(0, Math.min(1, progress));
+        int checked = processColor(Theme.getColor(trackCheckedColorKey, resourcesProvider));
+        int unchecked = Theme.getColor(Theme.key_dialogBackground, resourcesProvider);
+        int outline = Theme.getColor(Theme.key_switchTrack, resourcesProvider);
+        rectF.set(left, cy - height / 2, left + width, cy + height / 2);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(androidx.core.graphics.ColorUtils.blendARGB(unchecked, checked, p));
+        canvas.drawRoundRect(rectF, height / 2, height / 2, paint);
+        paint2.setStrokeWidth(AndroidUtilities.dp(2) * scale);
+        paint2.setColor(androidx.core.graphics.ColorUtils.setAlphaComponent(outline, Math.round(255 * (1 - p))));
+        float inset = AndroidUtilities.dp(1) * scale;
+        rectF.inset(inset, inset);
+        canvas.drawRoundRect(rectF, height / 2, height / 2, paint2);
+        float position = org.telegram.messenger.LocaleController.isRTL ? 1 - p : p;
+        float cx = left + AndroidUtilities.dp(16) * scale + AndroidUtilities.dp(20) * scale * position;
+        float radius = AndroidUtilities.dp(8 + 4 * p) * scale;
+        int thumb = androidx.core.graphics.ColorUtils.blendARGB(outline,
+                Theme.getColor(Theme.key_switchTrackBlueThumbChecked, resourcesProvider), p);
+        paint.setColor(thumb);
+        canvas.drawCircle(cx, cy, radius, paint);
+        if (rippleDrawable != null) {
+            int r = Math.round(AndroidUtilities.dp(20) * scale);
+            rippleDrawable.setBounds(Math.round(cx) - r, Math.round(cy) - r, Math.round(cx) + r, Math.round(cy) + r);
+            rippleDrawable.draw(canvas);
+        }
+        if (iconDrawable != null) {
+            int r = Math.round(AndroidUtilities.dp(8) * scale);
+            int iconColor = androidx.core.graphics.ColorUtils.blendARGB(unchecked, checked, p);
+            if (lastIconColor != iconColor) {
+                lastIconColor = iconColor;
+                iconDrawable.setColorFilter(new PorterDuffColorFilter(iconColor, PorterDuff.Mode.SRC_IN));
+            }
+            iconDrawable.setBounds(Math.round(cx) - r, Math.round(cy) - r, Math.round(cx) + r, Math.round(cy) + r);
+            iconDrawable.draw(canvas);
+        } else if (p > 0) {
+            paint2.setColor(androidx.core.graphics.ColorUtils.setAlphaComponent(checked, Math.round(255 * p)));
+            canvas.drawLine(cx - AndroidUtilities.dp(4) * scale, cy, cx - AndroidUtilities.dp(1) * scale, cy + AndroidUtilities.dp(3) * scale, paint2);
+            canvas.drawLine(cx - AndroidUtilities.dp(1) * scale, cy + AndroidUtilities.dp(3) * scale, cx + AndroidUtilities.dp(5) * scale, cy - AndroidUtilities.dp(3) * scale, paint2);
         }
     }
 

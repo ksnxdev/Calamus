@@ -1223,6 +1223,9 @@ public class BottomSheet extends Dialog implements BaseFragment.AttachedSheet {
 
         Rect padding = new Rect();
         shadowDrawable = context.getResources().getDrawable(R.drawable.sheet_shadow_round).mutate();
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            shadowDrawable = uz.ksnxdev.calamus.CalamusMaterial.surfaceDrawable(android.graphics.Color.WHITE, 28, true, 8);
+        }
         shadowDrawable.setColorFilter(new PorterDuffColorFilter(internalBackgroundColor = getThemedColor(Theme.key_dialogBackground), PorterDuff.Mode.MULTIPLY));
         shadowDrawable.getPadding(padding);
         backgroundPaddingLeft = padding.left;

@@ -151,7 +151,7 @@ public class BaseCGPreferencesEntry extends UniversalFragment {
         iBlur3Capture = new ViewGroupPartRenderer(listView, contentView, listView::drawChild);
         listView.addEdgeEffectListener(() -> listView.postOnAnimation(this::blur3_InvalidateBlur));
         if (uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3()) {
-            listView.setSections(dp(16), dp(24), false);
+            listView.setSections(dp(16), dp(16), false);
         } else {
             listView.setSections(0, 0, false);
         }

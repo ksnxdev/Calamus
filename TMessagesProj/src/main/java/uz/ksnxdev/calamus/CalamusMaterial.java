@@ -30,20 +30,18 @@ public final class CalamusMaterial {
     public static void apply(SparseIntArray colors, boolean dark) {
         if (!CalamusConfig.INSTANCE.getMaterial3()) return;
         int seed = seedColor();
-        float[] hsl = new float[3];
-        ColorUtils.colorToHSL(seed, hsl);
-        float saturation = Math.min(hsl[1], 0.22f);
-        int primary = tone(hsl[0], saturation, dark ? 0.70f : 0.37f);
-        int background = tone(hsl[0], saturation * 0.45f, dark ? 0.105f : 0.96f);
-        int surface = tone(hsl[0], saturation * 0.45f, dark ? 0.13f : 0.98f);
-        int container = tone(hsl[0], saturation * 0.45f, dark ? 0.17f : 0.935f);
-        int primaryContainer = ColorUtils.blendARGB(container, primary, dark ? 0.13f : 0.12f);
+        paletteKeys.clear();
+        int primary = tonal(seed, 28, dark ? 80 : 40);
+        int background = tonal(seed, 5, dark ? 6 : 98);
+        int surface = tonal(seed, 5, dark ? 10 : 100);
+        int container = tonal(seed, 7, dark ? 16 : 94);
+        int primaryContainer = tonal(seed, 18, dark ? 30 : 90);
         int containerPressed = ColorUtils.blendARGB(primaryContainer, primary, 0.10f);
-        int onSurface = tone(hsl[0], saturation * 0.25f, dark ? 0.80f : 0.24f);
-        int secondary = tone(hsl[0], saturation * 0.25f, dark ? 0.66f : 0.40f);
-        int onPrimary = tone(hsl[0], saturation * 0.45f, dark ? 0.16f : 0.98f);
-        int onContainer = ColorUtils.blendARGB(primary, onSurface, 0.50f);
-        int outline = ColorUtils.blendARGB(container, secondary, 0.24f);
+        int onSurface = tonal(seed, 5, dark ? 90 : 10);
+        int secondary = tonal(seed, 8, dark ? 80 : 30);
+        int onPrimary = tonal(seed, 24, dark ? 20 : 100);
+        int onContainer = tonal(seed, 18, dark ? 90 : 10);
+        int outline = tonal(seed, 7, dark ? 60 : 50);
         put(colors, surface,
                 Theme.key_windowBackgroundWhite, Theme.key_actionBarDefault, Theme.key_actionBarDefaultArchived, Theme.key_chat_inBubble, Theme.key_chat_inBubbleShadow);
         put(colors, background,
@@ -69,7 +67,23 @@ public final class CalamusMaterial {
         put(colors, onContainer,
                 Theme.key_chats_actionIcon);
         put(colors, outline,
-                Theme.key_divider, Theme.key_switchTrack);
+                Theme.key_switchTrack);
+        put(colors, tonal(seed, 7, dark ? 30 : 90), Theme.key_divider);
+        put(colors, container, Theme.key_switch2Track, Theme.key_switchTrackBlue,
+                Theme.key_groupcreate_spanBackground, Theme.key_dialogSearchBackground);
+        put(colors, primary, Theme.key_switch2TrackChecked, Theme.key_checkbox, Theme.key_radioBackgroundChecked,
+                Theme.key_dialogRadioBackgroundChecked, Theme.key_dialogCheckboxSquareBackground,
+                Theme.key_dialogInputFieldActivated, Theme.key_windowBackgroundWhiteInputFieldActivated,
+                Theme.key_progressCircle, Theme.key_windowBackgroundWhiteBlueButton);
+        put(colors, onPrimary, Theme.key_checkboxCheck, Theme.key_dialogCheckboxSquareCheck);
+        put(colors, outline, Theme.key_radioBackground, Theme.key_dialogRadioBackground,
+                Theme.key_windowBackgroundWhiteInputField, Theme.key_dialogInputField);
+        put(colors, onSurface, Theme.key_dialogSearchText, Theme.key_dialogSearchIcon);
+        put(colors, secondary, Theme.key_dialogSearchHint);
+        put(colors, onSurface, Theme.key_actionBarActionModeDefaultIcon);
+        put(colors, primaryContainer, Theme.key_actionBarActionModeDefault);
+        int error = dark ? 0xffffb4ab : 0xffba1a1a;
+        put(colors, error, Theme.key_text_RedRegular);
         put(colors, onSurface, Theme.key_groupcreate_spanText, Theme.key_chat_botSwitchToInlineText);
         int fileSecondary = ColorUtils.blendARGB(secondary, onSurface, 0.65f);
         put(colors, onSurface, Theme.key_chat_inReplyMessageText, Theme.key_chat_outReplyMessageText);
@@ -125,17 +139,31 @@ public final class CalamusMaterial {
         int surface = Theme.getColor(Theme.key_dialogBackground, provider);
         android.graphics.drawable.GradientDrawable background = new android.graphics.drawable.GradientDrawable();
         background.setColor(backdrop == null ? panelColor(surface) : android.graphics.Color.TRANSPARENT);
-        background.setCornerRadius(org.telegram.messenger.AndroidUtilities.dp(28));
-        background.setStroke(org.telegram.messenger.AndroidUtilities.dp(1), ColorUtils.blendARGB(
-                surface, Theme.getColor(Theme.key_windowBackgroundWhiteGrayText2, provider), 0.50f));
+        background.setCornerRadius(org.telegram.messenger.AndroidUtilities.dp(24));
         android.graphics.drawable.Drawable content = backdrop == null ? background :
                 new android.graphics.drawable.LayerDrawable(new android.graphics.drawable.Drawable[]{backdrop, background});
         return new android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(
                 Theme.getColor(Theme.key_listSelector, provider)), content, null);
     }
 
-    private static int tone(float hue, float saturation, float lightness) {
-        return ColorUtils.HSLToColor(new float[]{hue, saturation, lightness});
+    public static int tonal(int seed, double chroma, double lightness) {
+        double[] lab = new double[3];
+        ColorUtils.colorToLAB(seed, lab);
+        double original = Math.hypot(lab[1], lab[2]);
+        double scale = original == 0 ? 0 : Math.min(chroma, original) / original;
+        return ColorUtils.LABToColor(lightness, lab[1] * scale, lab[2] * scale);
+    }
+
+    public static android.graphics.drawable.Drawable surfaceDrawable(int color, float radius, boolean topOnly, int inset) {
+        android.graphics.drawable.GradientDrawable shape = new android.graphics.drawable.GradientDrawable();
+        shape.setColor(color);
+        float r = org.telegram.messenger.AndroidUtilities.dp(radius);
+        shape.setCornerRadii(new float[]{r, r, r, r, topOnly ? 0 : r, topOnly ? 0 : r, topOnly ? 0 : r, topOnly ? 0 : r});
+        return new android.graphics.drawable.InsetDrawable(shape, org.telegram.messenger.AndroidUtilities.dp(inset));
+    }
+
+    public static int switchWidth() {
+        return isEnabled() ? 52 : 39;
     }
 
     public static int settingsIconBackground() {

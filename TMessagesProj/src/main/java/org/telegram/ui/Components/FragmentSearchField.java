@@ -104,7 +104,7 @@ public class FragmentSearchField extends FrameLayout implements FactorAnimator.T
                 return super.onKeyDown(keyCode, event);
             }
         };
-        editText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 16 : 15);
         editText.setCursorWidth(1.5f);
         editText.setInputType(editText.getInputType() | InputType.TYPE_TEXT_VARIATION_FILTER);
         editText.setSingleLine(true);

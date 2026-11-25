@@ -545,7 +545,9 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
             titleTextView[i].setTextColor(getThemedColor(Theme.key_actionBarDefaultTitle));
         }
         titleTextView[i].setEmojiColor(titleTextView[i].getTextColor());
-        if (gilroy) {
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            titleTextView[i].setTypeface(android.graphics.Typeface.create("sans-serif", android.graphics.Typeface.NORMAL));
+        } else if (gilroy) {
             titleTextView[i].setTypeface(FontHelper.createTypeface2(FontHelper.TYPEFACE_GILROY_EXTRABOLD));
         } else {
             titleTextView[i].setTypeface(AndroidUtilities.bold());
@@ -1503,6 +1505,9 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 }
 
                 if (titleTextView[i] != null && titleTextView[i].getVisibility() != GONE) {
+                    if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+                        titleTextView[i].setTextSize(subtitleTextView != null && subtitleTextView.getVisibility() == VISIBLE ? 18 : 22);
+                    }
                     titleTextView[i].measure(MeasureSpec.makeMeasureSpec(availableWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(dp(24) + titleTextView[i].getPaddingTop() + titleTextView[i].getPaddingBottom(), MeasureSpec.AT_MOST));
                     if (centerScale) {
                         CharSequence text = titleTextView[i].getText();
@@ -1977,6 +1982,9 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
     }
 
     public static int getCurrentActionBarHeight() {
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            return dp(AndroidUtilities.displaySize.x > AndroidUtilities.displaySize.y ? 56 : 64);
+        }
         if (AndroidUtilities.displaySize.x > AndroidUtilities.displaySize.y) {
             return dp(48);
         } else {
@@ -2737,6 +2745,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
     }
 
     private boolean isTitleCentered() {
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) return false;
         return CherrygramAppearanceConfig.INSTANCE.getCenterTitle() || chatAvatarContainer2 != null && chatAvatarContainer2.isCentered();
     }
 

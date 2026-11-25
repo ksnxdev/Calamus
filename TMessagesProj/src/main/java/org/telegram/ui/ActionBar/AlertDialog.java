@@ -308,10 +308,17 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
         final boolean isDark = AndroidUtilities.computePerceivedBrightness(backgroundColor) < 0.721f;
         blurredNativeBackground = supportsNativeBlur() && progressViewStyle == ALERT_TYPE_MESSAGE;
         blurredBackground = (blurredNativeBackground || !supportsNativeBlur()/* && SharedConfig.getDevicePerformanceClass() >= SharedConfig.PERFORMANCE_CLASS_HIGH && LiteMode.isEnabled(LiteMode.FLAG_CHAT_BLUR)*/) && isDark;
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            blurredNativeBackground = false;
+            blurredBackground = false;
+        }
 
         backgroundPaddings = new Rect();
         if (progressStyle != ALERT_TYPE_SPINNER || blurredBackground) {
             shadowDrawable = context.getResources().getDrawable(R.drawable.popup_fixed_alert4).mutate();
+            if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+                shadowDrawable = uz.ksnxdev.calamus.CalamusMaterial.surfaceDrawable(android.graphics.Color.WHITE, 28, false, 8);
+            }
             blurOpacity = progressStyle == ALERT_TYPE_SPINNER ? 0.55f : (isDark ? 0.80f : 0.985f);
             shadowDrawable.setColorFilter(new PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY));
             shadowDrawable.getPadding(backgroundPaddings);
@@ -662,7 +669,7 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                 containerView.setPadding(0, 0, 0, 0);
                 containerView.setBackground(shadowDrawable);
 
-                containerView.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(dp(8), dp(20)));
+                containerView.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(dp(8), dp(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 28 : 20)));
                 containerView.setClipToOutline(true);
 
                 drawBackground = false;
@@ -790,8 +797,8 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
             titleTextView.cacheType = AnimatedEmojiDrawable.CACHE_TYPE_ALERT_PREVIEW;
             titleTextView.setText(title);
             titleTextView.setTextColor(getThemedColor(Theme.key_dialogTextBlack));
-            titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-            titleTextView.setTypeface(AndroidUtilities.bold());
+            titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 24 : 20);
+            titleTextView.setTypeface(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? android.graphics.Typeface.create("sans-serif", android.graphics.Typeface.NORMAL) : AndroidUtilities.bold());
             titleTextView.setGravity((topAnimationIsNew ? Gravity.CENTER_HORIZONTAL : LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP);
             titleContainer.addView(titleTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, (topAnimationIsNew ? Gravity.CENTER_HORIZONTAL : LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP, 0, 19, 0, topAnimationIsNew ? 4 : (subtitle != null ? 2 : (items != null ? 14 : 10))));
         }
@@ -1127,10 +1134,10 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                 };
                 textView.setMinWidth(dp(64));
                 textView.setTag(Dialog.BUTTON_POSITIVE);
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 14 : 16);
                 textView.setTextColor(getThemedColor(dialogButtonColorKey));
                 textView.setGravity(Gravity.CENTER);
-                textView.setTypeface(AndroidUtilities.bold());
+                textView.setTypeface(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) : AndroidUtilities.bold());
                 textView.setText(positiveButtonText);
                 textView.setBackground(Theme.getRoundRectSelectorDrawable(dp(20), getThemedColor(dialogButtonColorKey)));
                 textView.setPadding(dp(12), 0, dp(12), 0);
@@ -1166,10 +1173,10 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                 };
                 textView.setMinWidth(dp(64));
                 textView.setTag(Dialog.BUTTON_NEGATIVE);
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 14 : 16);
                 textView.setTextColor(getThemedColor(dialogButtonColorKey));
                 textView.setGravity(Gravity.CENTER);
-                textView.setTypeface(AndroidUtilities.bold());
+                textView.setTypeface(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) : AndroidUtilities.bold());
                 textView.setEllipsize(TextUtils.TruncateAt.END);
                 textView.setSingleLine(true);
                 textView.setText(negativeButtonText.toString());
@@ -1207,10 +1214,10 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                 };
                 textView.setMinWidth(dp(64));
                 textView.setTag(Dialog.BUTTON_NEUTRAL);
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 14 : 16);
                 textView.setTextColor(getThemedColor(dialogButtonColorKey));
                 textView.setGravity(Gravity.CENTER);
-                textView.setTypeface(AndroidUtilities.bold());
+                textView.setTypeface(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) : AndroidUtilities.bold());
                 textView.setEllipsize(TextUtils.TruncateAt.END);
                 textView.setSingleLine(true);
                 textView.setText(neutralButtonText.toString());
@@ -1248,10 +1255,10 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                 };
                 textView.setMinWidth(dp(64));
                 textView.setTag(AlertDialog.BUTTON_NEGATIVE_2);
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 14 : 16);
                 textView.setTextColor(getThemedColor(dialogButtonColorKey));
                 textView.setGravity(Gravity.CENTER);
-                textView.setTypeface(AndroidUtilities.bold());
+                textView.setTypeface(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) : AndroidUtilities.bold());
                 textView.setEllipsize(TextUtils.TruncateAt.END);
                 textView.setSingleLine(true);
                 textView.setText(negative2ButtonText.toString());
