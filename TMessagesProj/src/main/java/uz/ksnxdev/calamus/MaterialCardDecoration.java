@@ -13,6 +13,7 @@ import org.telegram.ui.Cells.DialogCell;
 import org.telegram.ui.Cells.HeaderCell;
 import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.Components.UniversalAdapter;
+import org.telegram.ui.Components.UItem;
 import uz.unnarsx.cherrygram.core.ui.MD3ListAdapter;
 
 public final class MaterialCardDecoration extends RecyclerView.ItemDecoration {
@@ -29,6 +30,10 @@ public final class MaterialCardDecoration extends RecyclerView.ItemDecoration {
         if (holder == null || holder.getAdapterPosition() == RecyclerView.NO_POSITION) return false;
         if (parent.getAdapter() instanceof MD3ListAdapter adapter) {
             return adapter.isMaterialCardPosition(holder.getAdapterPosition());
+        }
+        if (parent.getAdapter() instanceof UniversalAdapter adapter) {
+            UItem item = adapter.getItem(holder.getAdapterPosition());
+            if (item == null || item.transparent || item.viewType == UniversalAdapter.VIEW_TYPE_SPACE_CG) return false;
         }
         return parent.hasMaterialCardRows() && !(view instanceof HeaderCell)
                 && holder.getItemViewType() != UniversalAdapter.VIEW_TYPE_HEADER
