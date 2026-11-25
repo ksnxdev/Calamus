@@ -3044,6 +3044,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         BirthdayController.getInstance(currentAccount).check();
         additionNavigationBarHeight = hasMainTabs || foldersAtBottom && !CherrygramAppearanceConfig.INSTANCE.getShowMainTabs() ? dp(MAIN_TABS_HEIGHT_WITH_MARGINS) : 0;
         additionFloatingButtonOffset = hasMainTabs || foldersAtBottom && !CherrygramAppearanceConfig.INSTANCE.getShowMainTabs() ? dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN) : 0;
+        if (hasMainTabs && uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            additionNavigationBarHeight += dp(8);
+            additionFloatingButtonOffset += dp(16);
+        }
 
         return true;
     }

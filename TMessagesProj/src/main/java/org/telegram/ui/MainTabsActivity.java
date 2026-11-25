@@ -213,7 +213,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         Bulletin.Delegate delegate = new Bulletin.Delegate() {
             @Override
             public int getBottomOffset(int tag) {
-                return navigationBarHeight + dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN);
+                return navigationBarHeight + dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN + (uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 14 : 0));
             }
         };
 
@@ -296,7 +296,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         Bulletin.Delegate delegate = new Bulletin.Delegate() {
             @Override
             public int getBottomOffset(int tag) {
-                int offset = navigationBarHeight + dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN);
+                int offset = navigationBarHeight + dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN + (uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 14 : 0));
 
                 if (CherrygramAppearanceConfig.INSTANCE.getFoldersAtBottom()) {
                     offset += dp(DialogsActivity.SEARCH_FIELD_HEIGHT);
@@ -479,7 +479,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
             if (uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3()) {
                 tabsView.setBackgroundColor(Color.TRANSPARENT);
-                searchButton.setPadding(0, dp(18), 0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 12 : 18));
+                searchButton.setPadding(0, dp(12), 0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : 12));
                 tabsContainer.addView(searchButton, LayoutHelper.createLinear(0, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS, 1.0f));
             } else {
                 int searchSize = DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS;
@@ -1275,15 +1275,15 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
         final boolean isUpdateLayoutVisible = updateLayoutWrapper.isUpdateLayoutVisible();
         final int updateLayoutHeight = isUpdateLayoutVisible ? dp(UpdateLayoutWrapper.HEIGHT) : 0;
-        final int normalY = -(navigationBarHeight + updateLayoutHeight);
+        final int normalY = -(navigationBarHeight + updateLayoutHeight + dp(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 8 : 0));
         final int hiddenY = normalY + dp(40);
 
         final float factor = animatorTabsVisible.getFloatValue();
         final float scale = lerp(0.85f, 1f, factor);
 
         finalTabsView.setTranslationY(lerp(hiddenY, normalY, factor));
-        finalTabsView.setClickable(factor > 1);
-        finalTabsView.setEnabled(factor > 1);
+        finalTabsView.setClickable(factor >= 1);
+        finalTabsView.setEnabled(factor >= 1);
         finalTabsView.setAlpha(factor);
         finalTabsView.setVisibility(factor > 0 ? View.VISIBLE : View.GONE);
     }

@@ -232,6 +232,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         telegramSettingsHelper.checkChannelSubscription();
 
         additionNavigationBarHeight = hasMainTabs ? dp(DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS) : 0;
+        if (hasMainTabs && uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) additionNavigationBarHeight += dp(8);
         return super.onFragmentCreate();
     }
 

@@ -276,7 +276,7 @@ public class UniversalRecyclerView extends RecyclerListView {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (!hasSections()) adapter.drawWhiteSections(canvas, this);
+        if (!hasSections() && !hasMaterialCardRows()) adapter.drawWhiteSections(canvas, this);
         super.dispatchDraw(canvas);
     }
 
@@ -434,6 +434,12 @@ public class UniversalRecyclerView extends RecyclerListView {
         setSections(dp(12), dp(16), topPadding);
     }
     public void setSections(int padding, float roundRadius, boolean topPadding) {
+        if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()
+                && !(getLayoutManager() instanceof androidx.recyclerview.widget.GridLayoutManager grid && grid.getSpanCount() > 1)) {
+            setMaterialCardRows(true);
+            return;
+        }
+        setMaterialCardRows(false);
         super.setSections(
             view -> {
                 if (view.getParent() != this) return false;

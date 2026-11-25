@@ -4095,7 +4095,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             if (translationX != 0 || cornerProgress != 0.0f) {
                 canvas.save();
 
-                Theme.dialogs_pinnedPaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhite, resourcesProvider));
+                Theme.dialogs_pinnedPaint.setColor(Theme.getColor((uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite), resourcesProvider));
                 rect.set(getMeasuredWidth() - dp(64), 0, getMeasuredWidth(), getMeasuredHeight());
                 rect.offset(0, -translateY);
                 canvas.drawRoundRect(rect, cornersRadius, cornersRadius, Theme.dialogs_pinnedPaint);
@@ -4794,7 +4794,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                 canvas.drawCircle(
                     communityArrowDrawable.getBounds().exactCenterX(),
                     communityArrowDrawable.getBounds().exactCenterY(),
-                    dp(8), Theme.fillingPaint(Theme.getColor(Theme.key_windowBackgroundWhite, resourcesProvider)));
+                    dp(8), Theme.fillingPaint(Theme.getColor((uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite), resourcesProvider)));
 
                 communityArrowDrawable.draw(canvas);
             }
@@ -4862,7 +4862,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             if (Build.VERSION.SDK_INT != 24) {
                 canvas.restore();
             } else {
-                Theme.dialogs_pinnedPaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhite, resourcesProvider));
+                Theme.dialogs_pinnedPaint.setColor(Theme.getColor((uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite), resourcesProvider));
                 canvas.drawRect(0, 0, getMeasuredWidth(), topClip * clipProgress, Theme.dialogs_pinnedPaint);
                 canvas.drawRect(0, getMeasuredHeight() - (int) (bottomClip * clipProgress), getMeasuredWidth(), getMeasuredHeight(), Theme.dialogs_pinnedPaint);
             }
@@ -4870,7 +4870,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
 
         if (clipArchive) {
             final int cy = (int) (getMeasuredHeight() * (1f - archivePullProgress));
-            final int color = Theme.getColor(Theme.key_windowBackgroundWhite);
+            final int color = Theme.getColor(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite);
             if (archiveFadeGradientDrawable == null) {
                 archiveFadeGradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, null);
             }
@@ -4994,7 +4994,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
     private int reorderGradientLastColor;
     private Paint reorderGradientPaint;
     private Paint getPaintReorderGradient() {
-        final int color = Theme.getColor(Theme.key_windowBackgroundWhite, resourcesProvider);
+        final int color = Theme.getColor((uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite), resourcesProvider);
         if (reorderGradientLastColor != color || reorderGradientPaint == null) {
             reorderGradientLastColor = color;
 
@@ -5025,7 +5025,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             if (starBg == null) {
                 starBg = getContext().getResources().getDrawable(R.drawable.star_small_outline).mutate();
             }
-            final int bg = Theme.getColor(Theme.key_windowBackgroundWhite);
+            final int bg = Theme.getColor(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite);
             if (starBgColor != bg) {
                 starBg.setColorFilter(new PorterDuffColorFilter(starBgColor = bg, PorterDuff.Mode.SRC_IN));
             }
@@ -5050,7 +5050,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             float left = avatarImage.getCenterX() + dp(18);
 
             canvas.save();
-            Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhite, resourcesProvider));
+            Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor((uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite), resourcesProvider));
             canvas.drawCircle(left, top, dp(10 + 1.33f) * lockT, Theme.dialogs_onlineCirclePaint);
             if (premiumGradient == null) {
                 premiumGradient = new PremiumGradient.PremiumGradientTools(Theme.key_premiumGradient1, Theme.key_premiumGradient2, -1, -1, -1, resourcesProvider);
@@ -5138,7 +5138,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                         left = (int) (storyParams.originalAvatarRect.right - dp(useForceThreeLines || SharedConfig.useThreeLinesLayout ? 10 : 6));
                     }
 
-                    Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhite, resourcesProvider));
+                    Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor((uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite), resourcesProvider));
                     canvas.drawCircle(left, top, dp(9) * onlineProgress, Theme.dialogs_onlineCirclePaint);
                     Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor(Theme.key_chats_onlineCircle, resourcesProvider));
                     canvas.drawCircle(left, top, dp(5) * onlineProgress, Theme.dialogs_onlineCirclePaint);
@@ -5177,11 +5177,11 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                         float scale = 1f - rightFragmentOpenedProgress;
                         canvas.scale(scale, scale, left, top);
                     }
-                    Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhite, resourcesProvider));
+                    Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor((uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite), resourcesProvider));
                     canvas.drawCircle(left, top, dp(11) * chatCallProgress * checkProgress, Theme.dialogs_onlineCirclePaint);
                     Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor(Theme.key_chats_onlineCircle, resourcesProvider));
                     canvas.drawCircle(left, top, dp(9) * chatCallProgress * checkProgress, Theme.dialogs_onlineCirclePaint);
-                    Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhite, resourcesProvider));
+                    Theme.dialogs_onlineCirclePaint.setColor(Theme.getColor((uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite), resourcesProvider));
 
                     float size1;
                     float size2;
@@ -5298,7 +5298,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                 }
                 int color = Theme.getColor(Theme.key_chats_pinnedOverlay);
                 counterPaintOutline.setColor(ColorUtils.blendARGB(
-                        Theme.getColor(Theme.key_windowBackgroundWhite),
+                        Theme.getColor(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? Theme.key_dialogBackground : Theme.key_windowBackgroundWhite),
                         ColorUtils.setAlphaComponent(color, 255),
                         Color.alpha(color) / 255f
                 ));

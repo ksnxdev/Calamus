@@ -113,9 +113,10 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
         setContentDescription(LocaleController.getString(labelRes));
         if (uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
             textView.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL));
+            textView.setIncludeFontPadding(false);
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) textView.getLayoutParams();
-            params.topMargin = dp(40);
-            params.height = dp(18);
+            params.topMargin = dp(34);
+            params.height = LayoutHelper.WRAP_CONTENT;
             textView.setLayoutParams(params);
         }
     }

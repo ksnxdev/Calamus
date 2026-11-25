@@ -158,6 +158,18 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
     private BlurredBackgroundColorProviderThemed iBlur3ColorProviderTabs;
 
     public void updateColors() {
+        if (isSubButton && uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
+            int foreground = Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider);
+            imageView.setColorFilter(foreground, PorterDuff.Mode.SRC_IN);
+            progressView.setProgressColor(foreground);
+            setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(12),
+                    Theme.getColor(Theme.key_dialogBackground, resourcesProvider),
+                    Theme.getColor(Theme.key_listSelector, resourcesProvider)));
+            setOutlineProvider(android.view.ViewOutlineProvider.BACKGROUND);
+            setElevation(dp(1));
+            invalidate();
+            return;
+        }
         if (isSubButton) {
             imageView.setColorFilter(Theme.getColor(Theme.key_actionBarDefaultIcon, resourcesProvider), PorterDuff.Mode.SRC_IN);
             progressView.setProgressColor(Theme.getColor(Theme.key_actionBarDefaultIcon, resourcesProvider));
@@ -224,7 +236,7 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        if (iBlur3Background != null) {
+        if (iBlur3Background != null && !uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
             iBlur3Background.draw(canvas);
         }
         super.draw(canvas);

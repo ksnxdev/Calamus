@@ -520,6 +520,12 @@ public abstract class MD3ListAdapter extends RecyclerListView.SelectionAdapter {
         return uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3();
     }
 
+    public boolean isMaterialCardPosition(int position) {
+        if (position < 0 || position >= getItemCount()) return false;
+        int type = getItemViewType(position);
+        return !mustIgnoreView(type) && !isDividerView(type) && !isHeaderView(type);
+    }
+
     public static boolean canTryToIgnoreHeaderBackground(Object fragment) {
         return isMd3ContainersEnabled() && !(fragment instanceof ChatActivity || fragment instanceof ProfileActivity);
     }

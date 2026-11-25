@@ -97,6 +97,7 @@ public class MainTabsLayout extends AnimatedLinearLayout {
             }
         }
 
+        if (material) chosenPass = 0;
         applyPassTextSize(chosenPass);
 
         final int tabPadding = dp(PASS_PADDINGS_DP[chosenPass]);

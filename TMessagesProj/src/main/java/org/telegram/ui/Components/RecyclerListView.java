@@ -2515,6 +2515,10 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
 
     @Override
     public void setAdapter(Adapter adapter) {
+        if (materialCardDecoration == null) {
+            materialCardDecoration = new uz.ksnxdev.calamus.MaterialCardDecoration();
+            addItemDecoration(materialCardDecoration);
+        }
         final Adapter oldAdapter = getAdapter();
         if (oldAdapter != null) {
             oldAdapter.unregisterAdapterDataObserver(observer);
@@ -2666,6 +2670,12 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
     }
 
     private void drawSelector(Canvas canvas) {
+        if (selectorView != null && materialCardDecoration != null && materialCardDecoration.isCard(selectorView, this)) {
+            int save = materialCardDecoration.clipSelector(canvas, selectorView);
+            selectorDrawable.draw(canvas);
+            canvas.restoreToCount(save);
+            return;
+        }
         if (hasSections()) {
             canvas.save();
             clipChild(canvas, selectorView);
@@ -2677,9 +2687,26 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
     }
 
     private boolean ignoreClipChild;
+    private uz.ksnxdev.calamus.MaterialCardDecoration materialCardDecoration;
+    private boolean materialCardRows;
+
+    public boolean hasMaterialCardRows() {
+        return materialCardRows;
+    }
+
+    public void setMaterialCardRows(boolean enabled) {
+        materialCardRows = enabled;
+        invalidateItemDecorations();
+    }
 
     @Override
     public boolean drawChild(Canvas canvas, View child, long drawingTime) {
+        if (materialCardDecoration != null && materialCardDecoration.isCard(child, this)) {
+            int save = materialCardDecoration.clip(canvas, child);
+            boolean drawn = super.drawChild(canvas, child, drawingTime);
+            canvas.restoreToCount(save);
+            return drawn;
+        }
         if (hasSections() && !ignoreClipChild) {
             canvas.save();
             clipChild(canvas, child);
