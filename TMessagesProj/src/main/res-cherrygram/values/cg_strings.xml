@@ -677,4 +677,5 @@
     <string name="CalamusExternalAdsDescription">Disabled by default. AdsGram receives account and device data only after your consent.</string>
     <string name="CalamusExternalAdsConsent">Allow third-party advertising for accounts in this app? AdsGram (api.adsgram.ai) receives your Telegram ID, Premium status, language, device model, Android version, screen size, battery and charging status, brightness and timestamps. IP detection also contacts api.ipify.org. These services see your IP address. You can turn this off in Calamus → Privacy and Security.</string>
     <string name="CalamusPluginAllowedAccounts">Allowed accounts</string>
+    <string name="CalamusMoreMessageActions">More actions</string>
 </resources>

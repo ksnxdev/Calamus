@@ -43,6 +43,7 @@ import java.util.function.Supplier;
 import uz.unnarsx.cherrygram.chats.helpers.ChatsHelper2;
 import uz.unnarsx.cherrygram.core.VibrateUtil;
 import uz.unnarsx.cherrygram.core.configs.CherrygramChatsConfig;
+import uz.unnarsx.cherrygram.core.configs.CherrygramMessagesConfig;
 import uz.unnarsx.cherrygram.core.firebase.FirebaseAnalyticsHelper;
 import uz.unnarsx.cherrygram.core.helpers.DeeplinkHelper;
 import uz.unnarsx.cherrygram.helpers.ui.PopupHelper;
@@ -73,6 +74,8 @@ public class ChatsPreferencesEntry extends BaseCGPreferencesEntry {
 
     private final int notificationSoundRow = 28, vibrateInChatsRow = 29;
 
+    private final int iosMessageMenuRow = 30;
+
     private boolean expandedHeaderSettingsSection = false;
     private boolean expandedBottomBarSettingsSection = false;
 
@@ -98,6 +101,11 @@ public class ChatsPreferencesEntry extends BaseCGPreferencesEntry {
     @Override
     protected void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
         items.add(UItem.asHeader(getString(R.string.AP_Header_Appearance)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            items.add(SettingsHelper.asSwitchCG(iosMessageMenuRow, getString(R.string.CP_BlurMessageMenu), getString(R.string.CP_BlurMessageMenu_Desc))
+                    .setChecked(CherrygramMessagesConfig.INSTANCE.getBlurMessageMenuBackground())
+                    .slug("iosMsgMenu"));
+        }
         items.add(SettingsHelper.asSwitchCG(glareEffectsRow, getString(R.string.CP_StrokeOnViews))
                 .setChecked(CherrygramChatsConfig.INSTANCE.getGlareEffects())
                 .slug("glareEffects")
@@ -307,7 +315,11 @@ public class ChatsPreferencesEntry extends BaseCGPreferencesEntry {
 
     @Override
     protected void onClick(UItem item, View view, int position, float x, float y) {
-        if (item.id == glareEffectsRow) {
+        if (item.id == iosMessageMenuRow) {
+            CherrygramMessagesConfig.INSTANCE.setBlurMessageMenuBackground(!CherrygramMessagesConfig.INSTANCE.getBlurMessageMenuBackground());
+            SettingsHelper.updateCheckState(view, CherrygramMessagesConfig.INSTANCE.getBlurMessageMenuBackground());
+            updateRows(true);
+        } else if (item.id == glareEffectsRow) {
             CherrygramChatsConfig.INSTANCE.setGlareEffects(!CherrygramChatsConfig.INSTANCE.getGlareEffects());
             SettingsHelper.updateCheckState(view, CherrygramChatsConfig.INSTANCE.getGlareEffects());
 

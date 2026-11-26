@@ -34,7 +34,6 @@ import uz.unnarsx.cherrygram.preferences.helpers.SettingsHelper;
 
 public class MessageMenuPreferencesEntry extends BaseCGPreferencesEntry {
 
-    private final int enableNewMessageMenuRow = 1;
     private final int unifiedScrollRow = 2;
     private final int autoScrollMessagesRow = 3;
     private final int fixedMessageHeightRow = 4;
@@ -62,16 +61,6 @@ public class MessageMenuPreferencesEntry extends BaseCGPreferencesEntry {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             items.add(UItem.asHeader(getString(R.string.AP_Header_Appearance)));
-            items.add(
-                    SettingsHelper.asSwitchCG
-                            (
-                                    enableNewMessageMenuRow,
-                                    getString(R.string.CP_BlurMessageMenu),
-                                    getString(R.string.CP_BlurMessageMenu_Desc)
-                            )
-                    .setChecked(CherrygramMessagesConfig.INSTANCE.getBlurMessageMenuBackground())
-                    .slug("iosMsgMenu")
-            );
             items.add(SettingsHelper.asSwitchCG(unifiedScrollRow, getString(R.string.CP_MessageMenuUnifiedScroll), getString(R.string.CP_MessageMenuUnifiedScroll_Desc))
                     .setChecked(CherrygramMessagesConfig.INSTANCE.getMsgMenuUnifiedScroll())
                     .setEnabled(CherrygramMessagesConfig.INSTANCE.getBlurMessageMenuBackground())
@@ -144,12 +133,7 @@ public class MessageMenuPreferencesEntry extends BaseCGPreferencesEntry {
             return;
         }
 
-        if (item.id == enableNewMessageMenuRow) {
-            CherrygramMessagesConfig.INSTANCE.setBlurMessageMenuBackground(!CherrygramMessagesConfig.INSTANCE.getBlurMessageMenuBackground());
-            SettingsHelper.updateCheckState(view, CherrygramMessagesConfig.INSTANCE.getBlurMessageMenuBackground());
-
-            updateRows(true);
-        } else if (item.id == unifiedScrollRow) {
+        if (item.id == unifiedScrollRow) {
             CherrygramMessagesConfig.INSTANCE.setMsgMenuUnifiedScroll(!CherrygramMessagesConfig.INSTANCE.getMsgMenuUnifiedScroll());
             SettingsHelper.updateCheckState(view, CherrygramMessagesConfig.INSTANCE.getMsgMenuUnifiedScroll());
 //            if (view instanceof TextCheckCell) {

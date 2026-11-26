@@ -6,6 +6,10 @@ import android.graphics.Canvas;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import org.telegram.messenger.LocaleController;
+import org.telegram.messenger.R;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +29,10 @@ import uz.unnarsx.cherrygram.core.configs.CherrygramMessagesConfig;
 public final class CalamusMessageMenuLayout extends FrameLayout {
     private final ScrollView scroll;
     private final LinearLayout column;
+    private final ScrollView previewScroll;
+    private final ScrollView actionScroll;
+    private final TextView moreActions;
+    private final int previewHeight;
     private final int anchorY;
     private final boolean outgoing;
 
@@ -47,7 +55,10 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         setOnClickListener(v -> dismiss.run());
         scroll = new ScrollView(context);
         scroll.setClipToPadding(false);
-        scroll.setVerticalScrollBarEnabled(false);
+        scroll.setVerticalScrollBarEnabled(true);
+        scroll.setScrollbarFadingEnabled(false);
+        scroll.setVerticalFadingEdgeEnabled(true);
+        scroll.setFadingEdgeLength(AndroidUtilities.dp(24));
         scroll.setOverScrollMode(OVER_SCROLL_NEVER);
         addView(scroll, new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         column = new LinearLayout(context);
@@ -62,16 +73,19 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
             column.addView(reactions, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, AndroidUtilities.dp(76) + (int) reactions.getTopOffset()));
         }
         ImageView preview = preview(original);
-        if (CherrygramMessagesConfig.INSTANCE.getMsgMenuUnifiedScroll()) {
-            column.addView(preview, previewParams(preview));
-        } else {
-            ScrollView messageScroll = new ScrollView(context);
-            messageScroll.setVerticalScrollBarEnabled(false);
-            messageScroll.addView(preview, new ScrollView.LayoutParams(preview.getDrawable().getIntrinsicWidth(), preview.getDrawable().getIntrinsicHeight()));
-            LinearLayout.LayoutParams params = previewParams(preview);
-            params.height = Math.min(params.height, AndroidUtilities.displaySize.y / 3);
-            column.addView(messageScroll, params);
-            if (CherrygramMessagesConfig.INSTANCE.getMsgMenuAutoScroll()) messageScroll.post(() -> messageScroll.fullScroll(FOCUS_DOWN));
+        previewScroll = new ScrollView(context);
+        previewScroll.setTag("calamus_ios_message_preview_scroll");
+        previewScroll.setVerticalScrollBarEnabled(true);
+        previewScroll.setScrollbarFadingEnabled(false);
+        previewScroll.setVerticalFadingEdgeEnabled(true);
+        previewScroll.setFadingEdgeLength(AndroidUtilities.dp(20));
+        previewScroll.setOverScrollMode(OVER_SCROLL_NEVER);
+        LinearLayout.LayoutParams previewParams = previewParams(preview);
+        previewHeight = previewParams.height;
+        previewScroll.addView(preview, new ScrollView.LayoutParams(previewParams.width, previewHeight));
+        column.addView(previewScroll, previewParams);
+        if (!CherrygramMessagesConfig.INSTANCE.getMsgMenuUnifiedScroll() && CherrygramMessagesConfig.INSTANCE.getMsgMenuAutoScroll()) {
+            previewScroll.post(() -> previewScroll.fullScroll(FOCUS_DOWN));
         }
         actions.setTag("calamus_ios_message_actions");
         actions.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(16), Theme.getColor(Theme.key_actionBarDefaultSubmenuBackground)));
@@ -84,6 +98,29 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         }
         column.addView(actions, actionParams);
         for (View extra : extras) column.addView(extra, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        actionScroll = findScroll(actions);
+        if (actionScroll != null) {
+            actionScroll.setVerticalScrollBarEnabled(true);
+            actionScroll.setScrollbarFadingEnabled(false);
+            actionScroll.setVerticalFadingEdgeEnabled(true);
+            actionScroll.setFadingEdgeLength(AndroidUtilities.dp(24));
+            actionScroll.getViewTreeObserver().addOnScrollChangedListener(this::updateMoreActions);
+        }
+        moreActions = new TextView(context);
+        moreActions.setTag("calamus_ios_message_more_actions");
+        moreActions.setText(LocaleController.getString(R.string.CalamusMoreMessageActions) + " ↓");
+        moreActions.setTextSize(14);
+        moreActions.setGravity(Gravity.CENTER);
+        moreActions.setPadding(AndroidUtilities.dp(16), 0, AndroidUtilities.dp(16), 0);
+        moreActions.setTextColor(Theme.getColor(Theme.key_actionBarDefaultSubmenuItem));
+        moreActions.setBackground(Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(24),
+                Theme.getColor(Theme.key_actionBarDefaultSubmenuBackground), Theme.getColor(Theme.key_listSelector)));
+        moreActions.setOnClickListener(v -> {
+            ScrollView target = scroll.canScrollVertically(1) ? scroll : actionScroll;
+            if (target != null) target.smoothScrollBy(0, Math.max(AndroidUtilities.dp(96), target.getHeight() * 2 / 3));
+        });
+        addView(moreActions, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, AndroidUtilities.dp(48)));
+        scroll.setOnScrollChangeListener((v, x, y, oldX, oldY) -> updateMoreActions());
     }
 
     private LinearLayout.LayoutParams previewParams(ImageView view) {
@@ -117,14 +154,49 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         return image;
     }
 
+    private static ScrollView findScroll(View view) {
+        if (view instanceof ScrollView) return (ScrollView) view;
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                ScrollView found = findScroll(group.getChildAt(i));
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    private void updateMoreActions() {
+        if (moreActions == null) return;
+        moreActions.setVisibility(scroll.canScrollVertically(1) || actionScroll != null && actionScroll.canScrollVertically(1)
+                ? VISIBLE : INVISIBLE);
+    }
+
+    @Override protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        updateMoreActions();
+    }
+
     @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec), height = MeasureSpec.getSize(heightMeasureSpec);
         int topInset = AndroidUtilities.statusBarHeight + AndroidUtilities.dp(12);
         int bottomInset = Math.max(AndroidUtilities.dp(16), AndroidUtilities.navigationBarHeight + AndroidUtilities.dp(12));
         int limit = Math.max(1, height - topInset - bottomInset);
-        scroll.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(limit, MeasureSpec.AT_MOST));
+        previewScroll.getLayoutParams().height = Math.min(previewHeight, Math.max(AndroidUtilities.dp(48), limit / 3));
+        int exactWidth = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+        scroll.measure(exactWidth, MeasureSpec.makeMeasureSpec(limit, MeasureSpec.AT_MOST));
+        boolean overflow = column.getMeasuredHeight() > scroll.getMeasuredHeight()
+                || actionScroll != null && actionScroll.getChildCount() > 0
+                    && actionScroll.getChildAt(0).getMeasuredHeight() > actionScroll.getMeasuredHeight();
+        int footer = overflow ? Math.min(AndroidUtilities.dp(52), limit / 4) : 0;
+        if (footer > 0) scroll.measure(exactWidth, MeasureSpec.makeMeasureSpec(limit - footer, MeasureSpec.AT_MOST));
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) scroll.getLayoutParams();
-        params.topMargin = Math.max(topInset, Math.min(anchorY - AndroidUtilities.dp(80), height - scroll.getMeasuredHeight() - bottomInset));
+        params.topMargin = Math.max(topInset, Math.min(anchorY - AndroidUtilities.dp(80), height - scroll.getMeasuredHeight() - footer - bottomInset));
+        moreActions.measure(MeasureSpec.makeMeasureSpec(width - AndroidUtilities.dp(24), MeasureSpec.AT_MOST),
+                MeasureSpec.makeMeasureSpec(Math.max(0, footer - AndroidUtilities.dp(4)), MeasureSpec.EXACTLY));
+        FrameLayout.LayoutParams hint = (FrameLayout.LayoutParams) moreActions.getLayoutParams();
+        hint.topMargin = params.topMargin + scroll.getMeasuredHeight() + AndroidUtilities.dp(4);
+        hint.leftMargin = outgoing ? width - moreActions.getMeasuredWidth() - AndroidUtilities.dp(12) : AndroidUtilities.dp(12);
         setMeasuredDimension(width, height);
     }
 }

@@ -667,4 +667,5 @@
     <string name="CalamusExternalAdsDescription">По умолчанию выключена. Данные аккаунта и устройства передаются AdsGram только после вашего согласия.</string>
     <string name="CalamusExternalAdsConsent">Разрешить стороннюю рекламу для аккаунтов в этом приложении? AdsGram (api.adsgram.ai) получает Telegram ID, статус Premium, язык, модель устройства, версию Android, размер экрана, уровень заряда и состояние зарядки, яркость и время запросов. Для определения IP также используется api.ipify.org. Эти сервисы видят ваш IP-адрес. Отключить передачу можно в Calamus → Конфиденциальность.</string>
     <string name="CalamusPluginAllowedAccounts">Разрешённые аккаунты</string>
+    <string name="CalamusMoreMessageActions">Ещё действия</string>
 </resources>
