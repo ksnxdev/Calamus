@@ -1274,6 +1274,7 @@ public class ChatActivity extends BaseFragment implements
 
     public final static int OPTION_VIEW_STATISTICS = 115;
     public final static int OPTION_WELCOME_REVERT = 116;
+    public final static int OPTION_SELECT_MESSAGE = 117;
 
     private final static int[] allowedNotificationsDuringChatListAnimations = new int[]{
             NotificationCenter.cgUnreadCounterChanged,
@@ -31673,7 +31674,7 @@ public class ChatActivity extends BaseFragment implements
             } else if (type >= 0 || type == -1 && single && (message.isSending() || message.isEditing()) && currentEncryptedChat == null) {
                 selectedObject = message;
                 selectedObjectGroup = groupedMessages;
-                fillMessageMenu(primaryMessage, icons, items, options);
+                fillMessageMenu(primaryMessage, icons, items, options, ksnxdev.calamus.CalamusMessageMenuLayout.enabled(message, v));
             }
             if (selectedObject != null && selectedObject.isHiddenSensitive() && !selectedObject.isMediaSpoilersRevealed) {
                 for (int i = 0; i < options.size(); ++i) {
@@ -33385,6 +33386,17 @@ public class ChatActivity extends BaseFragment implements
             return true;
         }
 
+        return beginMessageSelection(message, listView);
+    }
+
+    private boolean canSelectMessageFromMenu(MessageObject message) {
+        if (message == null || message.isAnyGift() || message.isSponsored() || message.isEphemeral() || message.isWallpaperAction()) return false;
+        int type = getMessageType(message);
+        return type >= 2 && type != 20 && type != MessageObject.TYPE_SUGGEST_PHOTO
+            && message.type != MessageObject.TYPE_JOINED_CHANNEL && message.type != MessageObject.TYPE_GIFT_STARS;
+    }
+
+    private boolean beginMessageSelection(MessageObject message, boolean listView) {
         if (chatActivityEnterView != null && (chatActivityEnterView.isRecordingAudioVideo() || chatActivityEnterView.isRecordLocked())) {
             return false;
         }
@@ -34272,6 +34284,15 @@ public class ChatActivity extends BaseFragment implements
         org.json.JSONObject pluginAction = pluginMessageActions.get(option);
         if (pluginAction != null) {
             ksnxdev.calamus.plugins.TelegramPluginHost.invokeMessageAction(pluginAction, currentAccount, dialog_id, selectedObject.messageOwner);
+            return;
+        }
+        if (option == OPTION_SELECT_MESSAGE) {
+            MessageObject message = selectedObject;
+            if (!canSelectMessageFromMenu(message)) return;
+            selectedObject = null;
+            selectedObjectGroup = null;
+            selectedObjectToEditCaption = null;
+            beginMessageSelection(message, false);
             return;
         }
         boolean preserveDim = false;
@@ -46876,6 +46897,11 @@ public class ChatActivity extends BaseFragment implements
         ArrayList<CharSequence> items,
         ArrayList<Integer> options
     ) {
+        fillMessageMenu(primaryMessage, icons, items, options, false);
+    }
+
+    private void fillMessageMenu(MessageObject primaryMessage, ArrayList<Integer> icons,
+            ArrayList<CharSequence> items, ArrayList<Integer> options, boolean iosMenu) {
         final MessageObject message = selectedObject;
         final MessageObject.GroupedMessages groupedMessages = selectedObjectGroup;
         final int type = getMessageType(message);
@@ -47574,7 +47600,7 @@ public class ChatActivity extends BaseFragment implements
                 icons.add(deleteIconRes);
             }
 
-            CGMessageMenuInjector.INSTANCE.removeItems(this, message, allowEdit, noforwardsOrPaidMedia, items, options, icons);
+            CGMessageMenuInjector.INSTANCE.removeItems(this, message, allowEdit, noforwardsOrPaidMedia, items, options, icons, iosMenu);
 
             this.lastMessageMenuStatus = new MessageMenuStatus(allowReply, allowEdit, allowForward, allowCopy, allowCopyPhoto, allowCopyLink, allowDelete);
         }
@@ -47585,6 +47611,11 @@ public class ChatActivity extends BaseFragment implements
             icons.add(R.drawable.outline_revert_24);
         }
 
+        if (iosMenu && canSelectMessageFromMenu(message)) {
+            items.add(getString(R.string.Select));
+            options.add(OPTION_SELECT_MESSAGE);
+            icons.add(R.drawable.msg_select);
+        }
         CGMessageMenuInjector.INSTANCE.injectJSON(this, false, items, options, icons);
         exteraMessageActions.clear();
         if (primaryMessage != null && ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady()) {

@@ -404,7 +404,8 @@ object CGMessageMenuInjector {
         noforwardsOrPaidMedia: Boolean,
         items: ArrayList<CharSequence?>,
         options: ArrayList<Int?>,
-        icons: ArrayList<Int?>
+        icons: ArrayList<Int?>,
+        iosMenu: Boolean
     ) {
         if (selectedObject == null) return
 
@@ -432,7 +433,7 @@ object CGMessageMenuInjector {
                     noforwardsOrPaidMedia || !CherrygramMessagesConfig.showCopyPhotoAsSticker || (MessageMenuCompactView.allowCompactStyle() && primaryMessageText == null)
 
                 ChatActivity.OPTION_FORWARD ->
-                    noforwardsOrPaidMedia || !CherrygramMessagesConfig.showForward || MessageMenuCompactView.allowCompactStyle()
+                    noforwardsOrPaidMedia || !iosMenu && (!CherrygramMessagesConfig.showForward || MessageMenuCompactView.allowCompactStyle())
 
                 ChatActivityHelper.OPTION_FORWARD_WO_AUTHOR ->
                     noforwardsOrPaidMedia || !CherrygramMessagesConfig.showForwardWoAuthorship || MessageMenuCompactView.allowCompactStyle()
