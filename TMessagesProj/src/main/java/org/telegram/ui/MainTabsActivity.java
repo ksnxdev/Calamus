@@ -213,7 +213,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         Bulletin.Delegate delegate = new Bulletin.Delegate() {
             @Override
             public int getBottomOffset(int tag) {
-                return navigationBarHeight + dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN + (uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 14 : 0));
+                return navigationBarHeight + dp(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? DialogsActivity.getMainTabsHeightWithMargins() + 8 : DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN);
             }
         };
 
@@ -296,7 +296,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         Bulletin.Delegate delegate = new Bulletin.Delegate() {
             @Override
             public int getBottomOffset(int tag) {
-                int offset = navigationBarHeight + dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN + (uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? 14 : 0));
+                int offset = navigationBarHeight + dp(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? DialogsActivity.getMainTabsHeightWithMargins() + 8 : DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN);
 
                 if (CherrygramAppearanceConfig.INSTANCE.getFoldersAtBottom()) {
                     offset += dp(DialogsActivity.SEARCH_FIELD_HEIGHT);
@@ -354,7 +354,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
         tabsView = new MainTabsLayout(context, resourceProvider);
         tabsView.setClipChildren(false);
-        int verticalTabPadding = uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3() ? 12 : DialogsActivity.MAIN_TABS_MARGIN + 4;
+        int verticalTabPadding = uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3() && CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 12 : DialogsActivity.MAIN_TABS_MARGIN + 4;
         tabsView.setPadding(dp(DialogsActivity.MAIN_TABS_MARGIN + 4), dp(verticalTabPadding), dp(DialogsActivity.MAIN_TABS_MARGIN + 4), dp(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() && CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : verticalTabPadding));
         tabsView.setMaxWidth(uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3() ? 0 : dp(328 + DialogsActivity.MAIN_TABS_MARGIN * 2));
 
@@ -404,7 +404,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
             View clickInterceptorView = new View(context);
             clickInterceptorView.setBackgroundColor(Color.TRANSPARENT);
             clickInterceptorView.setOnTouchListener((v, event) -> true);
-            contentView.addView(clickInterceptorView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS / 4, Gravity.BOTTOM));
+            contentView.addView(clickInterceptorView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, DialogsActivity.getMainTabsHeightWithMargins() / 4, Gravity.BOTTOM));
         }
 
         updateTabs();
@@ -444,10 +444,10 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
             tabsContainer.setOrientation(LinearLayout.HORIZONTAL);
             tabsContainer.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
-            LinearLayout.LayoutParams tabsParams = LayoutHelper.createLinear(0, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS, 1.0f);
+            LinearLayout.LayoutParams tabsParams = LayoutHelper.createLinear(0, DialogsActivity.getMainTabsHeightWithMargins(), 1.0f);
             if (uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3()) {
                 tabsParams.weight = MainTabsManager.INSTANCE.getEnabledTabs().size();
-                tabsView.setPadding(0, dp(12), 0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : 12));
+                tabsView.setPadding(0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 12 : 10), 0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : 10));
             }
             tabsContainer.addView(tabsView, tabsParams);
 
@@ -479,22 +479,22 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
             if (uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3()) {
                 tabsView.setBackgroundColor(Color.TRANSPARENT);
-                searchButton.setPadding(0, dp(12), 0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : 12));
-                tabsContainer.addView(searchButton, LayoutHelper.createLinear(0, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS, 1.0f));
+                searchButton.setPadding(0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 12 : 10), 0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : 10));
+                tabsContainer.addView(searchButton, LayoutHelper.createLinear(0, DialogsActivity.getMainTabsHeightWithMargins(), 1.0f));
             } else {
-                int searchSize = DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS;
+                int searchSize = DialogsActivity.getMainTabsHeightWithMargins();
                 tabsContainer.addView(searchButton, LayoutHelper.createLinear(searchSize, searchSize, -dp(10), 0, 0, 0));
             }
 
             if (uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3()) {
                 contentView.addView(tabsContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT,
-                        DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS, Gravity.BOTTOM, 12, 0, 12, 0));
+                        DialogsActivity.getMainTabsHeightWithMargins(), Gravity.BOTTOM, 12, 0, 12, 0));
             } else {
-                contentView.addView(tabsContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS, Gravity.BOTTOM));
+                contentView.addView(tabsContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, DialogsActivity.getMainTabsHeightWithMargins(), Gravity.BOTTOM));
             }
             tabsContainer.setPadding(dp(2), dp(2), dp(2), dp(2));
         } else {
-            contentView.addView(tabsView, LayoutHelper.createFrame(uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3() ? LayoutHelper.MATCH_PARENT : 328 + DialogsActivity.MAIN_TABS_MARGIN * 2, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
+            contentView.addView(tabsView, LayoutHelper.createFrame(uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3() ? LayoutHelper.MATCH_PARENT : 328 + DialogsActivity.MAIN_TABS_MARGIN * 2, DialogsActivity.getMainTabsHeightWithMargins(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
         }
 
         updateLayoutWrapper = new UpdateLayoutWrapper(context);
@@ -1108,7 +1108,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
         ViewGroup.MarginLayoutParams lp;
         {
-            final int height = navigationBarHeight + updateLayoutHeight + dp(DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS);
+            final int height = navigationBarHeight + updateLayoutHeight + dp(DialogsActivity.getMainTabsHeightWithMargins());
             lp = (ViewGroup.MarginLayoutParams) fadeView.getLayoutParams();
             if (lp.height != height) {
                 lp.height = height;
@@ -1118,7 +1118,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         {
             int bottomMargin = isUpdateLayoutVisible ? (navigationBarHeight + updateLayoutHeight) : 0;
             if (tabletLayout) {
-                bottomMargin = Math.max(bottomMargin, navigationBarHeight + dp(DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS));
+                bottomMargin = Math.max(bottomMargin, navigationBarHeight + dp(DialogsActivity.getMainTabsHeightWithMargins()));
             }
             lp = (ViewGroup.MarginLayoutParams) viewPager.getLayoutParams();
             if (lp.bottomMargin != bottomMargin || lp.leftMargin != systemInsets.left || lp.rightMargin != systemInsets.right) {
@@ -1384,7 +1384,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
                 accountSwitchHint.setCloseButton(true);
                 accountSwitchHint.setText(getString(R.string.SwitchAccountHint));
                 accountSwitchHint.setJoint(1, -translate + 7.33f);
-                contentView.addView(accountSwitchHint, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 100, Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, 0, 0, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS));
+                contentView.addView(accountSwitchHint, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 100, Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, 0, 0, DialogsActivity.getMainTabsHeightWithMargins()));
                 accountSwitchHint.setOnHiddenListener(() -> AndroidUtilities.removeFromParent(accountSwitchHint));
                 accountSwitchHint.setDuration(8000);
                 accountSwitchHint.show();

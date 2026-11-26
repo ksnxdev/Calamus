@@ -305,9 +305,14 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     public static final int MAIN_TABS_HEIGHT = 68;
     public static final int MAIN_TABS_MARGIN = 6;
     public static final int MAIN_TABS_HEIGHT_WITH_MARGINS = MAIN_TABS_HEIGHT + MAIN_TABS_MARGIN * 2;
+
     public static final int FILTER_TABS_HEIGHT = 36;
     public static final int SEARCH_TABS_HEIGHT = 36 + 7 + 7;
     public static final int SEARCH_FIELD_HEIGHT = 48;
+
+    public static int getMainTabsHeightWithMargins() {
+        return uz.ksnxdev.calamus.CalamusMaterial.isEnabled() ? MAIN_TABS_HEIGHT : MAIN_TABS_HEIGHT_WITH_MARGINS;
+    }
 
     private static final int ANIMATOR_ID_SEARCH_VISIBLE = 1;
     private static final int ANIMATOR_ID_DONE_BUTTON_VISIBLE = 2;
@@ -3042,11 +3047,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         BirthdayController.getInstance(currentAccount).check();
-        additionNavigationBarHeight = hasMainTabs || foldersAtBottom && !CherrygramAppearanceConfig.INSTANCE.getShowMainTabs() ? dp(MAIN_TABS_HEIGHT_WITH_MARGINS) : 0;
+        additionNavigationBarHeight = hasMainTabs ? dp(getMainTabsHeightWithMargins()) : foldersAtBottom && !CherrygramAppearanceConfig.INSTANCE.getShowMainTabs() ? dp(MAIN_TABS_HEIGHT_WITH_MARGINS) : 0;
         additionFloatingButtonOffset = hasMainTabs || foldersAtBottom && !CherrygramAppearanceConfig.INSTANCE.getShowMainTabs() ? dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN) : 0;
         if (hasMainTabs && uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
             additionNavigationBarHeight += dp(8);
-            additionFloatingButtonOffset += dp(16);
+            additionFloatingButtonOffset = dp(getMainTabsHeightWithMargins() + 10);
         }
 
         return true;
