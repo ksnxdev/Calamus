@@ -1,7 +1,6 @@
 # Calamus
 
-Android-клиент на базе [Cherrygram](https://github.com/arslan4k1390/Cherrygram) и [Telegram](https://github.com/DrKLO/Telegram). Лицензия — [GNU GPL](LICENSE); уведомления об авторстве сохранены в исходниках.
-
+Android-клиент на базе [Cherrygram](https://github.com/arslan4k1390/Cherrygram) и [Telegram](https://github.com/DrKLO/Telegram).
 ## Сборка
 
 Нужны JDK 21, Android SDK 36, Build Tools 36.0.0, NDK 27.2.12479018 и 29.0.14206865, CMake 3.22.1 и Python 3.11. Команда `python3.11` должна быть доступна в `PATH`.
