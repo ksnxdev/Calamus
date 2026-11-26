@@ -354,8 +354,8 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
         tabsView = new MainTabsLayout(context, resourceProvider);
         tabsView.setClipChildren(false);
-        int verticalTabPadding = uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3() && CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 12 : DialogsActivity.MAIN_TABS_MARGIN + 4;
-        tabsView.setPadding(dp(DialogsActivity.MAIN_TABS_MARGIN + 4), dp(verticalTabPadding), dp(DialogsActivity.MAIN_TABS_MARGIN + 4), dp(uz.ksnxdev.calamus.CalamusMaterial.isEnabled() && CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : verticalTabPadding));
+        int verticalTabPadding = uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3() ? 10 : DialogsActivity.MAIN_TABS_MARGIN + 4;
+        tabsView.setPadding(dp(DialogsActivity.MAIN_TABS_MARGIN + 4), dp(verticalTabPadding), dp(DialogsActivity.MAIN_TABS_MARGIN + 4), dp(verticalTabPadding));
         tabsView.setMaxWidth(uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3() ? 0 : dp(328 + DialogsActivity.MAIN_TABS_MARGIN * 2));
 
         /*tabs = new GlassTabView[5];
@@ -447,7 +447,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
             LinearLayout.LayoutParams tabsParams = LayoutHelper.createLinear(0, DialogsActivity.getMainTabsHeightWithMargins(), 1.0f);
             if (uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3()) {
                 tabsParams.weight = MainTabsManager.INSTANCE.getEnabledTabs().size();
-                tabsView.setPadding(0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 12 : 10), 0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : 10));
+                tabsView.setPadding(0, dp(10), 0, dp(10));
             }
             tabsContainer.addView(tabsView, tabsParams);
 
@@ -479,7 +479,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
             if (uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getMaterial3()) {
                 tabsView.setBackgroundColor(Color.TRANSPARENT);
-                searchButton.setPadding(0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 12 : 10), 0, dp(CherrygramAppearanceConfig.INSTANCE.getShowMainTabsTitle() ? 8 : 10));
+                searchButton.setPadding(0, dp(10), 0, dp(10));
                 tabsContainer.addView(searchButton, LayoutHelper.createLinear(0, DialogsActivity.getMainTabsHeightWithMargins(), 1.0f));
             } else {
                 int searchSize = DialogsActivity.getMainTabsHeightWithMargins();
