@@ -26,6 +26,7 @@ public class PluginsActivity extends BaseCGPreferencesEntry {
     private static final int IMPORT = 1;
     private static final int CHANNEL = 2;
     private static final int DISABLE_ALL = 3;
+    private static final int EXTERA = 4;
     private static final int PICK_PLUGIN = 2914;
     private static final String CHANNEL_USERNAME = "CalamusPlugins";
     private JSONArray plugins = new JSONArray();
@@ -62,6 +63,8 @@ public class PluginsActivity extends BaseCGPreferencesEntry {
         items.add(SettingsHelper.asTextDetail(CHANNEL, R.drawable.msg_channel_solar, getString(R.string.CalamusPluginsChannel), "@" + CHANNEL_USERNAME)
                 .slug("pluginsChannel"));
         items.add(UItem.asShadow(null));
+        items.add(UItem.asButton(EXTERA, getString(R.string.CalamusExteraPlugins)));
+        items.add(UItem.asShadow(null));
         items.add(UItem.asButton(DISABLE_ALL, getString(R.string.CalamusPluginsDisableAll)));
         items.add(UItem.asShadow(null));
         if (!error.isEmpty()) items.add(UItem.asShadow(error));
@@ -95,6 +98,8 @@ public class PluginsActivity extends BaseCGPreferencesEntry {
 
         } else if (item.id == CHANNEL) {
             getMessagesController().openByUserName(CHANNEL_USERNAME, this, 1);
+        } else if (item.id == EXTERA) {
+            presentFragment(new ksnxdev.calamus.extera.ui.ExteraPluginsActivity());
         } else if (item.id == DISABLE_ALL) {
             manager().execute("disable_all", "", this::received);
         } else if (item.id >= 100 && item.id - 100 < plugins.length()) {
@@ -196,7 +201,9 @@ public class PluginsActivity extends BaseCGPreferencesEntry {
     public void onActivityResultFragment(int requestCode, int resultCode, Intent data) {
         super.onActivityResultFragment(requestCode, resultCode, data);
         if (requestCode == PICK_PLUGIN && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            manager().reviewPackage(data.getData(), this::reviewReady);
+            if (com.exteragram.messenger.utils.IntentsController.isPluginUri(data.getData())) {
+                presentFragment(new ksnxdev.calamus.extera.ui.ExteraPluginsActivity(data.getData()));
+            } else manager().reviewPackage(data.getData(), this::reviewReady);
         }
     }
 }

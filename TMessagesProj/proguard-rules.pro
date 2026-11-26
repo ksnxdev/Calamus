@@ -207,3 +207,10 @@
 -dontwarn com.huawei.libcore.io.ExternalStorageFileInputStream
 -dontwarn com.huawei.libcore.io.ExternalStorageFileOutputStream
 -dontwarn com.huawei.libcore.io.ExternalStorageRandomAccessFile
+
+-keep class com.exteragram.** { *; }
+-keep class com.chaquo.** { *; }
+-keep class de.robv.android.xposed.** { *; }
+-keep class com.android.dx.** { *; }
+-keep class org.mvel2.** { *; }
+-keep class org.telegram.** { *; }

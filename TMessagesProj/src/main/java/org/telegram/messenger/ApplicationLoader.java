@@ -307,6 +307,7 @@ public class ApplicationLoader extends Application {
         BillingController.getInstance().startConnection();
         ksnxdev.calamus.plugins.TelegramPluginHost.install(applicationContext);
         ksnxdev.calamus.plugins.PluginManager.getInstance(applicationContext).start();
+        ksnxdev.calamus.extera.ExteraPluginManager.startInstalled();
     }
 
     public ApplicationLoader() {

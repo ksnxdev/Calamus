@@ -263,4 +263,14 @@
     <string name="RemindTodayAt">\'Отправить сегодня в\' HH:mm</string>
     <string name="RemindDayAt">\'Отправить\' d MMM \'в\' HH:mm</string>
     <string name="RemindDayYearAt">\'Напомнить\' d MMM yyyy \'в\' HH:mm</string>
+    <string name="CalamusExteraPlugins">Плагины exteraGram</string>
+    <string name="CalamusExteraWarningTitle">Безопасность плагинов exteraGram</string>
+    <string name="CalamusExteraWarning">Плагины exteraGram работают независимо от плагинов Calamus и не имеют изоляции. Мы не ручаемся за безопасность устройства и данных при установке плагинов exteraGram. Проверяйте код при установке плагинов, в которых вы не уверены.</string>
+    <string name="CalamusExteraUnderstand">Понятно</string>
+    <string name="CalamusExteraDisableAll">Отключить все плагины exteraGram</string>
+    <string name="CalamusExteraInstalled">Установленные плагины exteraGram</string>
+    <string name="CalamusExteraEmpty">Плагинов exteraGram пока нет. Выберите файл .plugin.</string>
+    <string name="CalamusExteraAttribution">SDK плагинов exteraGram</string>
+    <string name="CalamusExteraConsentRequired">Сначала откройте раздел плагинов exteraGram и прочитайте предупреждение.</string>
+    <string name="CalamusExteraUnsupported">Это не файл плагина exteraGram с расширением .plugin.</string>
 </resources>

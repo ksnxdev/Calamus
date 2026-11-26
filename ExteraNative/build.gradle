@@ -1,0 +1,21 @@
+apply plugin: 'com.android.library'
+android {
+    namespace 'ksnxdev.calamus.extera.nativehook'
+    compileSdk 36
+    ndkVersion (rootProject.ext.calamusEmulator ? '27.2.12479018' : '29.0.14206865')
+    defaultConfig {
+        minSdk 24
+        externalNativeBuild { cmake { arguments '-DANDROID_STL=c++_shared' } }
+        ndk { abiFilters.addAll(rootProject.ext.calamusEmulator ? ['x86_64'] : ['armeabi-v7a', 'arm64-v8a']) }
+    }
+    buildFeatures { prefab !rootProject.ext.calamusEmulator }
+    externalNativeBuild { cmake { path 'src/main/cpp/CMakeLists.txt'; version '3.22.1' } }
+    packaging.jniLibs.excludes += ['**/libc++_shared.so', '**/libshadowhook.so']
+}
+dependencies {
+    if (!rootProject.ext.calamusEmulator) {
+    implementation 'com.exteragram.hook:hook-core:1.0.0'
+    implementation 'com.exteragram.hook.thirdparty:lsplant:6.4-extera.8'
+    implementation 'com.bytedance.android:shadowhook:2.0.1'
+    }
+}

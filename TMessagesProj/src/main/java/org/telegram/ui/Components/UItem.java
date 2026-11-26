@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class UItem extends AdapterWithDiffUtils.Item {
+    public com.exteragram.messenger.plugins.models.SettingItem settingItem;
 
     public static final int MAX_SPAN_COUNT = -1;
 

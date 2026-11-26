@@ -4271,7 +4271,9 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         });
     }
 
-    public void sendMessage(SendMessageParams sendMessageParams) {
+    public void sendMessage(SendMessageParams originalParams) {
+        final SendMessageParams sendMessageParams = ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady() ? com.exteragram.messenger.plugins.PluginsController.getInstance().executeSendMessageHook(currentAccount, originalParams) : originalParams;
+        if (sendMessageParams == null) return;
         ksnxdev.calamus.plugins.TelegramPluginHost.sending(currentAccount, sendMessageParams);
         final SendMessageChatArguments sendMessageChatArguments = sendMessageParams.sendMessageChatArguments != null ?
                 sendMessageParams.sendMessageChatArguments : SendMessageChatArguments.EMPTY;

@@ -390,17 +390,29 @@ public class ConnectionsManager extends BaseController {
         return requestToken;
     }
 
-    private void sendRequestInternal(TLObject object, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
-        if (ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(currentAccount) && !(object instanceof TLRPC.TL_auth_logOut)) {
+    private void sendRequestInternal(TLObject originalObject, RequestDelegate originalOnComplete, RequestDelegateTimestamp originalOnCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
+        if (ksnxdev.calamus.access.CalamusAccountAccess.isBlocked(currentAccount) && !(originalObject instanceof TLRPC.TL_auth_logOut)) {
             TLRPC.TL_error error = new TLRPC.TL_error(); error.code = 403; error.text = "CALAMUS_ACCESS_RESTRICTED";
             try {
-                if (onComplete != null) onComplete.run(null, error);
-                if (onCompleteTimestamp != null) onCompleteTimestamp.run(null, error, 0L);
+                if (originalOnComplete != null) originalOnComplete.run(null, error);
+                if (originalOnCompleteTimestamp != null) originalOnCompleteTimestamp.run(null, error, 0L);
             } catch (Exception failure) { FileLog.e(failure); }
-            finally { object.freeResources(); }
+            finally { originalObject.freeResources(); }
             ksnxdev.calamus.access.CalamusAccountAccess.accountChanged();
             return;
         }
+        final boolean exteraReady = ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady();
+        final String requestName = originalObject.getClass().getSimpleName();
+        final TLObject object = exteraReady ? com.exteragram.messenger.plugins.PluginsController.getInstance().executePreRequestHook(requestName, currentAccount, originalObject) : originalObject;
+        if (object == null) { originalObject.freeResources(); return; }
+        final RequestDelegate onComplete = !exteraReady || originalOnComplete == null ? originalOnComplete : (response, error) -> {
+            var result = com.exteragram.messenger.plugins.PluginsController.getInstance().executePostRequestHook(requestName, currentAccount, response, error);
+            if (result.response != null || result.error != null) originalOnComplete.run(result.response, result.error);
+        };
+        final RequestDelegateTimestamp onCompleteTimestamp = !exteraReady || originalOnCompleteTimestamp == null ? originalOnCompleteTimestamp : (response, error, time) -> {
+            var result = com.exteragram.messenger.plugins.PluginsController.getInstance().executePostRequestHook(requestName, currentAccount, response, error);
+            if (result.response != null || result.error != null) originalOnCompleteTimestamp.run(result.response, result.error, time);
+        };
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("send request " + object + " with token = " + requestToken);
         }

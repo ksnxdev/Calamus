@@ -45,6 +45,7 @@ public class AboutPreferencesEntry extends BaseCGPreferencesEntry {
     private final int githubRow = 9;
     private final int crowdinRow = 10;
     private final int policyRow = 11;
+    private final int exteraRow = 12;
 
 
     @Override
@@ -111,6 +112,7 @@ public class AboutPreferencesEntry extends BaseCGPreferencesEntry {
         items.add(UItem.asButton(crowdinRow, R.drawable.msg_translate_solar, getString(R.string.CGP_Crowdin), "Crowdin")
                 .slug("crowdin")
         );
+        items.add(UItem.asButton(exteraRow, R.drawable.msg_info, getString(R.string.CalamusExteraAttribution)));
         items.add(UItem.asButton(policyRow, R.drawable.msg_policy_solar, getString(R.string.PrivacyPolicy))
                 .slug("policy")
         );
@@ -131,6 +133,8 @@ public class AboutPreferencesEntry extends BaseCGPreferencesEntry {
             Browser.openUrl(getContext(), Constants.CG_GITHUB_URL);
         } else if (item.id == crowdinRow) {
             Browser.openUrl(getContext(), Constants.CG_CROWDIN_URL);
+        } else if (item.id == exteraRow) {
+            Browser.openUrl(getContext(), "https://github.com/exteraSquad/exteraGram");
         } else if (item.id == policyRow) {
             presentFragment(new ksnxdev.calamus.CalamusPrivacyActivity());
         }

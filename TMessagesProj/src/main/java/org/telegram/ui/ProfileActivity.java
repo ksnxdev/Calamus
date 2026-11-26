@@ -462,6 +462,30 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private ActionBarMenuItem videoCallItem;
     private ActionBarMenuItem editItem;
     private ActionBarMenuItem otherItem;
+    private final android.util.SparseArray<com.exteragram.messenger.plugins.hooks.MenuItemRecord> exteraProfileActions = new android.util.SparseArray<>();
+    private final ArrayList<ActionBarMenuSubItem> exteraProfileItems = new ArrayList<>();
+    private int nextExteraProfileActionId = -985100;
+    private java.util.Map<String, Object> exteraProfileContext() {
+        return com.exteragram.messenger.plugins.utils.MenuContextBuilder.from(this)
+            .withUser(getMessagesController().getUser(userId)).withChat(currentChat).withChatFull(chatInfo).withUserFull(userInfo)
+            .withDialogId(userId != 0 ? userId : -chatId).build();
+    }
+    private void refreshExteraProfileActions() {
+        for (ActionBarMenuSubItem item : exteraProfileItems) {
+            if (item.getParent() instanceof ViewGroup) ((ViewGroup) item.getParent()).removeView(item);
+        }
+        exteraProfileItems.clear(); exteraProfileActions.clear();
+        if (otherItem == null || !ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady()) return;
+        java.util.Map<String, Object> context = exteraProfileContext();
+        for (com.exteragram.messenger.plugins.hooks.MenuItemRecord action : com.exteragram.messenger.plugins.PluginsController.getInstance().getMenuItemsForLocation("profile_action_menu", context)) {
+            if (nextExteraProfileActionId == Integer.MIN_VALUE) nextExteraProfileActionId = -985100;
+            int id = nextExteraProfileActionId--;
+            exteraProfileActions.put(id, action);
+            ActionBarMenuSubItem item = otherItem.addSubItem(id, action.getIconResId() != 0 ? action.getIconResId() : R.drawable.msg_settings, action.getText());
+            if (action.hasLongClick()) item.setOnLongClickListener(v -> { action.executeLongClick(exteraProfileContext()); otherItem.closeSubMenu(); return true; });
+            exteraProfileItems.add(item);
+        }
+    }
     private ActionBarMenuItem searchItem;
     private ActionBarMenuSubItem editColorItem;
     private ActionBarMenuSubItem linkItem;
@@ -2557,6 +2581,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(final int id) {
+                com.exteragram.messenger.plugins.hooks.MenuItemRecord exteraAction = exteraProfileActions.get(id);
+                if (exteraAction != null) { exteraAction.executeClick(exteraProfileContext()); return; }
                 if (getParentActivity() == null) {
                     return;
                 }
@@ -4091,6 +4117,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         otherItem.setSubMenuDelegate(new ActionBarMenuItem.ActionBarSubMenuItemDelegate() {
             @Override
             public void onShowSubMenu() {
+                refreshExteraProfileActions();
                 updateScrimSourceBitmap();
             }
 

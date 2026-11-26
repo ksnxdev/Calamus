@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/exteraSquad/exteraGram",
+  "commit": "b4d852f48f2734a0bee1a74a0939be621612262a",
+  "sdk_version": "1.4.6.5",
+  "integration": "Calamus compatibility host; separate from isolated Calamus plugins"
+}

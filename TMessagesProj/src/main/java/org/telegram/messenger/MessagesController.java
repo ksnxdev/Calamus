@@ -17951,7 +17951,9 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     // must be run from Utilities.stageQueue
-    public void processUpdates(final TLRPC.Updates updates, boolean fromQueue) {
+    public void processUpdates(final TLRPC.Updates originalUpdates, boolean fromQueue) {
+        final TLRPC.Updates updates = ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady() ? com.exteragram.messenger.plugins.PluginsController.getInstance().executeUpdatesHook(originalUpdates.getClass().getSimpleName(), currentAccount, originalUpdates) : originalUpdates;
+        if (updates == null) return;
         ArrayList<Long> needGetChannelsDiff = null;
         boolean needGetDiff = false;
         boolean needReceivedQueue = false;
@@ -18489,7 +18491,15 @@ public class MessagesController extends BaseController implements NotificationCe
         return updated;
     }
 
-    public boolean processUpdateArray(ArrayList<TLRPC.Update> updates, ArrayList<TLRPC.User> usersArr, ArrayList<TLRPC.Chat> chatsArr, boolean fromGetDifference, int date) {
+    public boolean processUpdateArray(ArrayList<TLRPC.Update> originalUpdates, ArrayList<TLRPC.User> usersArr, ArrayList<TLRPC.Chat> chatsArr, boolean fromGetDifference, int date) {
+        final ArrayList<TLRPC.Update> updates;
+        if (originalUpdates != null && ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady()) {
+            updates = new ArrayList<>();
+            for (TLRPC.Update value : originalUpdates) {
+                TLRPC.Update result = com.exteragram.messenger.plugins.PluginsController.getInstance().executeUpdateHook(value.getClass().getSimpleName(), currentAccount, value);
+                if (result != null) updates.add(result);
+            }
+        } else updates = originalUpdates;
         if (updates.isEmpty()) {
             if (usersArr != null || chatsArr != null) {
                 AndroidUtilities.runOnUIThread(() -> {

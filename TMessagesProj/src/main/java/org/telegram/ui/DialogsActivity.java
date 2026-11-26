@@ -13916,6 +13916,14 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
     private void showItemOptions() {
         ItemOptions io = ItemOptions.makeOptions(this, optionsItem);
+        if (ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady()) {
+            java.util.Map<String, Object> context = com.exteragram.messenger.plugins.utils.MenuContextBuilder.from(this).build();
+            for (String location : new String[]{"main_menu", "drawer_menu"}) {
+                for (com.exteragram.messenger.plugins.hooks.MenuItemRecord action : com.exteragram.messenger.plugins.PluginsController.getInstance().getMenuItemsForLocation(location, context)) {
+                    io.add(action.getIconResId() != 0 ? action.getIconResId() : R.drawable.msg_settings, action.getText(), () -> action.executeClick(context));
+                }
+            }
+        }
         io.setColors(getThemedColor(Theme.key_actionBarDefaultTitle), getThemedColor(Theme.key_actionBarDefaultTitle));
         io.setDimAlpha(0x08);
 

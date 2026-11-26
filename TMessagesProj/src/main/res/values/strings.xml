@@ -11244,4 +11244,14 @@
     <string name="RoundVideoComposition">Composition</string>
     <string name="RoundVideoCompositionEnabled">Round video styling</string>
     <string name="RoundVideoCompositionInfo">Disable styling to record a plain square without outside-circle blur, dimming or Telegram overlays.</string>
+    <string name="CalamusExteraPlugins">exteraGram plugins</string>
+    <string name="CalamusExteraWarningTitle">exteraGram plugin safety</string>
+    <string name="CalamusExteraWarning">exteraGram plugins run independently from Calamus plugins and are not isolated. We cannot guarantee the security of your device or data when you install exteraGram plugins. Review the code before installing plugins you are unsure about.</string>
+    <string name="CalamusExteraUnderstand">Understood</string>
+    <string name="CalamusExteraDisableAll">Disable all exteraGram plugins</string>
+    <string name="CalamusExteraInstalled">Installed exteraGram plugins</string>
+    <string name="CalamusExteraEmpty">No exteraGram plugins installed. Choose a .plugin file.</string>
+    <string name="CalamusExteraAttribution">exteraGram plugin SDK</string>
+    <string name="CalamusExteraConsentRequired">Open exteraGram plugins and acknowledge the warning first.</string>
+    <string name="CalamusExteraUnsupported">This file is not an exteraGram .plugin.</string>
 </resources>

@@ -3132,6 +3132,7 @@ public class ChatActivity extends BaseFragment implements
         }
 
         super.onFragmentCreate();
+        ksnxdev.calamus.extera.ExteraPluginManager.getInstance().addListener(exteraMenuRefresh);
 
         if (chatMode == MODE_PINNED) {
             ArrayList<MessageObject> messageObjects = new ArrayList<>();
@@ -3486,6 +3487,7 @@ public class ChatActivity extends BaseFragment implements
     @Override
     public void onFragmentDestroy() {
         calamusArchiveGeneration++; AndroidUtilities.cancelRunOnUIThread(calamusArchiveRefresh);
+        ksnxdev.calamus.extera.ExteraPluginManager.getInstance().removeListener(exteraMenuRefresh);
         super.onFragmentDestroy();
         if (messageMetricsView != null) {
             messageMetricsView.finish();
@@ -3835,6 +3837,11 @@ public class ChatActivity extends BaseFragment implements
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(final int id) {
+                com.exteragram.messenger.plugins.hooks.MenuItemRecord exteraAction = exteraChatActions.get(id);
+                if (exteraAction != null) {
+                    exteraAction.executeClick(exteraMenuContext(null));
+                    return;
+                }
                 org.json.JSONObject pluginAction = calamusChatActionsById.get(id);
                 if (pluginAction != null) {
                     ksnxdev.calamus.plugins.TelegramPluginHost.invokeChatAction(pluginAction, currentAccount, dialog_id);
@@ -26812,7 +26819,25 @@ public class ChatActivity extends BaseFragment implements
     private final SparseArray<org.json.JSONObject> calamusChatActionsById = new SparseArray<>();
     private int nextCalamusChatActionId = -975100;
 
+    private final Runnable exteraMenuRefresh = this::refreshExteraChatActions;
+    private void refreshExteraChatActions() {
+        for (ActionBarMenuSubItem item : exteraChatActionItems) {
+            if (item.getParent() instanceof ViewGroup) ((ViewGroup) item.getParent()).removeView(item);
+        }
+        exteraChatActionItems.clear(); exteraChatActions.clear();
+        if (headerItem == null || isFinished || !ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady()) return;
+        java.util.Map<String, Object> context = exteraMenuContext(null);
+        for (com.exteragram.messenger.plugins.hooks.MenuItemRecord action : com.exteragram.messenger.plugins.PluginsController.getInstance().getMenuItemsForLocation("chat_action_menu", context)) {
+            if (nextExteraChatActionId == Integer.MIN_VALUE) nextExteraChatActionId = -985100;
+            int id = nextExteraChatActionId--;
+            exteraChatActions.put(id, action);
+            ActionBarMenuSubItem item = headerItem.addSubItem(id, action.getIconResId() != 0 ? action.getIconResId() : R.drawable.msg_settings, action.getText());
+            if (action.hasLongClick()) item.setOnLongClickListener(v -> { action.executeLongClick(exteraMenuContext(null)); headerItem.closeSubMenu(); return true; });
+            exteraChatActionItems.add(item);
+        }
+    }
     private void refreshPluginChatActions() {
+        refreshExteraChatActions();
         for (ActionBarMenuSubItem item : calamusChatActionItems) {
             if (item.getParent() instanceof ViewGroup) ((ViewGroup) item.getParent()).removeView(item);
         }
@@ -34223,10 +34248,25 @@ public class ChatActivity extends BaseFragment implements
         MediaController.saveFile(path, getParentActivity(), messageObject.isVideo() ? 1 : 0, null, null);
     }
 
+    private final android.util.SparseArray<com.exteragram.messenger.plugins.hooks.MenuItemRecord> exteraMessageActions = new android.util.SparseArray<>();
+    private final android.util.SparseArray<com.exteragram.messenger.plugins.hooks.MenuItemRecord> exteraChatActions = new android.util.SparseArray<>();
+    private final ArrayList<ActionBarMenuSubItem> exteraChatActionItems = new ArrayList<>();
+    private int nextExteraChatActionId = -985100;
+    private java.util.Map<String, Object> exteraMenuContext(MessageObject message) {
+        return com.exteragram.messenger.plugins.utils.MenuContextBuilder.from(this)
+            .withDialogId(dialog_id).withUser(currentUser).withChat(currentChat)
+            .withEncryptedChat(currentEncryptedChat).withChatFull(chatInfo).withMessage(message).withGroupedMessage(selectedObjectGroup).build();
+    }
+
     private final android.util.SparseArray<org.json.JSONObject> pluginMessageActions = new android.util.SparseArray<>();
 
     public void processSelectedOption(int option) {
         if (selectedObject == null || getParentActivity() == null) {
+            return;
+        }
+        com.exteragram.messenger.plugins.hooks.MenuItemRecord exteraAction = exteraMessageActions.get(option);
+        if (exteraAction != null) {
+            exteraAction.executeClick(exteraMenuContext(selectedObject));
             return;
         }
         org.json.JSONObject pluginAction = pluginMessageActions.get(option);
@@ -47546,6 +47586,14 @@ public class ChatActivity extends BaseFragment implements
         }
 
         CGMessageMenuInjector.INSTANCE.injectJSON(this, false, items, options, icons);
+        exteraMessageActions.clear();
+        if (primaryMessage != null && ksnxdev.calamus.extera.ExteraPluginManager.getInstance().isReady()) {
+            int id = 71000;
+            for (com.exteragram.messenger.plugins.hooks.MenuItemRecord item : com.exteragram.messenger.plugins.PluginsController.getInstance().getMenuItemsForLocation("message_context_menu", exteraMenuContext(primaryMessage))) {
+                exteraMessageActions.put(id, item);
+                items.add(item.getText()); options.add(id++); icons.add(item.getIconResId() != 0 ? item.getIconResId() : R.drawable.msg_settings);
+            }
+        }
         pluginMessageActions.clear();
         if (chatMode == MODE_DEFAULT && primaryMessage != null && ksnxdev.calamus.plugins.TelegramPluginHost.archivable(primaryMessage.messageOwner)) {
             org.json.JSONArray actions = ksnxdev.calamus.plugins.TelegramPluginHost.messageActions(currentAccount, dialog_id);

@@ -1563,6 +1563,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
 
     @SuppressLint("Range")
     private boolean handleIntent(Intent intent, boolean isNew, boolean restore, boolean fromPassword, Browser.Progress progress, boolean rebuildFragments, boolean openedTelegram) {
+        if (com.exteragram.messenger.utils.IntentsController.INSTANCE.handleIntent(intent)) return true;
         if (GiftInfoBottomSheet.handleIntent(intent, progress)) {
             return true;
         }
@@ -6890,6 +6891,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     @Override
     protected void onPause() {
         super.onPause();
+        ksnxdev.calamus.extera.ExteraPluginManager.getInstance().appEvent("app_pause");
         ksnxdev.calamus.plugins.PluginManager.getInstance(this).event("app.background");
         isResumed = false;
         pipActivityHandler.onPause();
@@ -7139,6 +7141,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     @Override
     protected void onResume() {
         super.onResume();
+        ksnxdev.calamus.extera.ExteraPluginManager.getInstance().appEvent("app_resume");
         ksnxdev.calamus.plugins.TelegramPluginHost.refreshAccounts();
         ksnxdev.calamus.plugins.PluginManager.getInstance(this).event("app.foreground");
         isResumed = true;
