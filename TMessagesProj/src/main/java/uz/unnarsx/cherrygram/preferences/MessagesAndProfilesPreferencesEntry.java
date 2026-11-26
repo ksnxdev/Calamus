@@ -188,7 +188,7 @@ public class MessagesAndProfilesPreferencesEntry extends BaseFragment {
                 if (user.premium && UserObject.getProfileEmojiId(user) != 0) {
                     selectedEmoji = CherrygramAppearanceConfig.INSTANCE.getProfileBackgroundEmoji() ? UserObject.getProfileEmojiId(user) : 0;
                 } else {
-                    selectedEmoji = CherrygramAppearanceConfig.INSTANCE.getProfileBackgroundEmoji() ? Constants.CHERRY_EMOJI_ID : 0;
+                    selectedEmoji = 0;
                 }
             } else {
                 selectedEmojiCollectible = null;
@@ -202,7 +202,7 @@ public class MessagesAndProfilesPreferencesEntry extends BaseFragment {
                 if (user.premium && UserObject.getEmojiId(user) != 0) {
                     selectedEmoji = CherrygramAppearanceConfig.INSTANCE.getReplyBackgroundEmoji() ? UserObject.getEmojiId(user) : 0;
                 } else {
-                    selectedEmoji = CherrygramAppearanceConfig.INSTANCE.getReplyBackgroundEmoji() ? Constants.CHERRY_EMOJI_ID : 0;
+                    selectedEmoji = 0;
                 }
             }
             if (selectedEmojiCollectible != null || selectedPeerCollectible != null) {
@@ -237,7 +237,7 @@ public class MessagesAndProfilesPreferencesEntry extends BaseFragment {
                             ThemePreviewMessagesCell messagesCell = messagesCellPreview = new ThemePreviewMessagesCell(
                                     getContext(), parentLayout, user.premium
                                     && UserObject.getEmojiId(getUserConfig().getCurrentUser()) != 0
-                                            ? ThemePreviewMessagesCell.TYPE_PEER_COLOR : ThemePreviewMessagesCell.TYPE_PEER_COLOR_CHERRY
+                                            ? ThemePreviewMessagesCell.TYPE_PEER_COLOR : ThemePreviewMessagesCell.TYPE_PEER_COLOR_CALAMUS
                             );
                             messagesCell.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
                             messagesCell.fragment = MessagesAndProfilesPreferencesEntry.this;
@@ -394,13 +394,13 @@ public class MessagesAndProfilesPreferencesEntry extends BaseFragment {
                                 detailCell.setTextAndValue(getString(R.string.BusinessHoursProfileNowOpen), getString(R.string.BusinessHoursProfile), false);
                             } else if (position == businessLocationPreviewRow) {
                                 detailCell.textView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText, getResourceProvider()));
-                                detailCell.setTextAndValue("Cherrygram, Abu-Dhabi", getString(R.string.BusinessProfileLocation), false);
+                                detailCell.setTextAndValue("Calamus", getString(R.string.BusinessProfileLocation), false);
                             }
                             break;
                         }
                         case VIEW_TYPE_CHANNEL:
                             if (position == channelPreviewRow) {
-                                ((ProfileChannelCell) holder.itemView).setCherry();
+                                ((ProfileChannelCell) holder.itemView).setCalamusPreview();
                             }
                             break;
                     }
@@ -499,7 +499,7 @@ public class MessagesAndProfilesPreferencesEntry extends BaseFragment {
                     if (me.premium && UserObject.getEmojiId(me) != 0) {
                         selectedEmoji = CherrygramAppearanceConfig.INSTANCE.getReplyBackgroundEmoji() ? UserObject.getEmojiId(me) : 0;
                     } else {
-                        selectedEmoji = CherrygramAppearanceConfig.INSTANCE.getReplyBackgroundEmoji() ? Constants.CHERRY_EMOJI_ID : 0;
+                        selectedEmoji = 0;
                     }
 
                     updateMessages();
@@ -609,7 +609,7 @@ public class MessagesAndProfilesPreferencesEntry extends BaseFragment {
                     if (me.premium && UserObject.getProfileEmojiId(me) != 0) {
                         selectedEmoji = CherrygramAppearanceConfig.INSTANCE.getProfileBackgroundEmoji() ? UserObject.getProfileEmojiId(me) : 0;
                     } else {
-                        selectedEmoji = CherrygramAppearanceConfig.INSTANCE.getProfileBackgroundEmoji() ? Constants.CHERRY_EMOJI_ID : 0;
+                        selectedEmoji = 0;
                     }
 
                     updateMessages();

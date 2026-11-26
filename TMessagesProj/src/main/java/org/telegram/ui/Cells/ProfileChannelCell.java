@@ -426,7 +426,7 @@ public class ProfileChannelCell extends FrameLayout implements Theme.Colorable {
     private final boolean isFromGroup;
     private final boolean isFromUser;
 
-    public void setCherry() {
+    public void setCalamusPreview() {
         subscribersView.cancelAnimation();
         subscribersView.setPivotX(0);
         subscribersView.setAlpha(1f);
@@ -441,7 +441,7 @@ public class ProfileChannelCell extends FrameLayout implements Theme.Colorable {
         ArrayList<DialogCell.CustomDialog> dialogs = new ArrayList<>();
 
         DialogCell.CustomDialog customDialog = new DialogCell.CustomDialog();
-        customDialog.name = LocaleController.getString(R.string.CG_AppName) + " \uD83C\uDF52";
+        customDialog.name = LocaleController.getString(R.string.CG_AppName);
         customDialog.message = LocaleController.getString(R.string.CG_FollowChannelInfo);
         customDialog.id = 1390;
         customDialog.unread_count = 0;

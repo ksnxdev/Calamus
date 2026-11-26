@@ -51,7 +51,7 @@ public class ThemePreviewMessagesCell extends LinearLayout {
     public final static int TYPE_REACTIONS_DOUBLE_TAP = 2;
     public final static int TYPE_PEER_COLOR = 3;
     public final static int TYPE_GROUP_PEER_COLOR = 4;
-    public final static int TYPE_PEER_COLOR_CHERRY = 1390;
+    public final static int TYPE_PEER_COLOR_CALAMUS = 1390;
 
     private final Runnable invalidateRunnable = this::invalidate;
 
@@ -164,7 +164,7 @@ public class ThemePreviewMessagesCell extends LinearLayout {
             message1.forceAvatar = true;
             message1.resetLayout();
             message1.eventId = 1;
-        } else if (type == TYPE_PEER_COLOR_CHERRY) {
+        } else if (type == TYPE_PEER_COLOR_CALAMUS) {
             TLRPC.Message message = new TLRPC.TL_message();
             message.message = LocaleController.getString(R.string.UserColorPreview);
             message.reply_to = new TLRPC.TL_messageReplyHeader();
@@ -206,7 +206,7 @@ public class ThemePreviewMessagesCell extends LinearLayout {
                 message1.overrideLinkColor = Constants.REPLY_BACKGROUND_COLOR_ID;
             }
             if (UserObject.getEmojiId(UserConfig.getInstance(UserConfig.selectedAccount).getCurrentUser()) == 0) {
-                message1.overrideLinkEmoji = Constants.CHERRY_EMOJI_ID;
+                message1.overrideLinkEmoji = 0;
             }
         } else if (type == TYPE_REACTIONS_DOUBLE_TAP)  {
             TLRPC.Message message = new TLRPC.TL_message();
