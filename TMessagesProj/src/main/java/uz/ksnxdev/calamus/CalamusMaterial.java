@@ -87,7 +87,8 @@ public final class CalamusMaterial {
         put(colors, onSurface, Theme.key_groupcreate_spanText, Theme.key_chat_botSwitchToInlineText);
         put(colors, container, Theme.key_graySection);
         put(colors, secondary, Theme.key_graySectionText);
-        put(colors, primaryContainer, Theme.key_chat_messagePanelVoiceBackground);
+        put(colors, tonal(seed, 28, 40), Theme.key_chat_messagePanelVoiceBackground);
+        put(colors, 0xffffffff, Theme.key_chat_messagePanelVoicePressed);
         put(colors, onContainer, Theme.key_chat_messagePanelVoiceDuration);
         int fileSecondary = ColorUtils.blendARGB(secondary, onSurface, 0.65f);
         put(colors, onSurface, Theme.key_chat_inReplyMessageText, Theme.key_chat_outReplyMessageText);
@@ -124,6 +125,10 @@ public final class CalamusMaterial {
                 Theme.key_chat_outSentCheck, Theme.key_chat_outSentCheckSelected, Theme.key_chat_outSentCheckRead, Theme.key_chat_outSentCheckReadSelected);
         put(colors, fileSecondary, Theme.key_chat_inTimeText, Theme.key_chat_outTimeText, Theme.key_chat_inTimeSelectedText, Theme.key_chat_outTimeSelectedText);
         colors.put(Theme.key_listSelector, ColorUtils.setAlphaComponent(primary, dark ? 22 : 18));
+    }
+
+    public static int filledActionColor(Theme.ResourcesProvider provider) {
+        return Theme.getColor(isEnabled() ? Theme.key_chat_messagePanelVoiceBackground : Theme.key_chat_messagePanelSend, provider);
     }
 
     public static int panelColor(int color) {

@@ -2505,6 +2505,15 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
 
         public void updateColors() {
+            if (micDrawable != null) {
+                int color = getThemedColor(Theme.key_chat_messagePanelVoicePressed);
+                for (Drawable drawable : new Drawable[]{micDrawable, cameraDrawable, sendDrawable}) {
+                    drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY));
+                }
+                int outlineColor = getThemedColor(Theme.key_glass_defaultIcon);
+                micOutline.setColorFilter(new PorterDuffColorFilter(outlineColor, PorterDuff.Mode.MULTIPLY));
+                cameraOutline.setColorFilter(new PorterDuffColorFilter(outlineColor, PorterDuff.Mode.MULTIPLY));
+            }
             paint.setColor(getThemedColor(Theme.key_chat_messagePanelVoiceBackground));
             tinyWaveDrawable.paint.setColor(ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_messagePanelVoiceBackground), (int) (255 * WaveDrawable.CIRCLE_ALPHA_2)));
             bigWaveDrawable.paint.setColor(ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_messagePanelVoiceBackground), (int) (255 * WaveDrawable.CIRCLE_ALPHA_1)));
@@ -3374,7 +3383,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                     }
 
                     final float r = dpf2(19);
-                    paint.setColor(iOSMessageInputFieldAvailable() ? Color.TRANSPARENT : getThemedColor(Theme.key_chat_messagePanelSend));
+                    paint.setColor(iOSMessageInputFieldAvailable() ? Color.TRANSPARENT : uz.ksnxdev.calamus.CalamusMaterial.filledActionColor(resourcesProvider));
                     final float margin = dpf2(3);
                     final float height = dpf2(38);
                     final float width = dpf2(38);
@@ -15489,6 +15498,8 @@ public class ChatActivityEnterView extends FrameLayout implements
                 drawable = getContext().getResources().getDrawable(resId).mutate();
                 inactiveDrawable = getContext().getResources().getDrawable(resId).mutate();
                 drawableInverse = getContext().getResources().getDrawable(resId).mutate();
+                drawableColor = inactiveDrawableColor = inverseDrawableColor = 0;
+                updateColors();
                 invalidate();
             }
         }
@@ -15641,7 +15652,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
 
         public int getFillColor() {
-            return Theme.getColor(Theme.key_chat_messagePanelSend, resourcesProvider);
+            return uz.ksnxdev.calamus.CalamusMaterial.filledActionColor(resourcesProvider);
         }
 
         public final AnimatedFloat open = new AnimatedFloat(this, 0, 420, CubicBezierInterpolator.EASE_OUT_QUINT);
@@ -15944,18 +15955,27 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
 
         private int drawableColor;
+        private int inactiveDrawableColor;
+        private int inverseDrawableColor;
 
         public void updateColors() {
             int color = isNewDesignSendButton ? Color.WHITE : Theme.getColor(Theme.key_chat_messagePanelSend, resourcesProvider);
             if (color != drawableColor) {
                 drawableColor = color;
                 drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-                int c = Theme.getColor(Theme.key_glass_defaultIcon, resourcesProvider);
-                inactiveDrawable.setColorFilter(new PorterDuffColorFilter(Color.argb(0xb4, Color.red(c), Color.green(c), Color.blue(c)), PorterDuff.Mode.SRC_IN));
-                drawableInverse.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_chat_messagePanelVoicePressed, resourcesProvider), PorterDuff.Mode.SRC_IN));
+            }
+            int c = ColorUtils.setAlphaComponent(Theme.getColor(Theme.key_glass_defaultIcon, resourcesProvider), 0xb4);
+            if (c != inactiveDrawableColor) {
+                inactiveDrawableColor = c;
+                inactiveDrawable.setColorFilter(new PorterDuffColorFilter(c, PorterDuff.Mode.SRC_IN));
+            }
+            int inverseColor = Theme.getColor(Theme.key_chat_messagePanelVoicePressed, resourcesProvider);
+            if (inverseColor != inverseDrawableColor) {
+                inverseDrawableColor = inverseColor;
+                drawableInverse.setColorFilter(new PorterDuffColorFilter(inverseColor, PorterDuff.Mode.SRC_IN));
             }
             if (isNewDesignSendButton) {
-                backgroundPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelSend, resourcesProvider));
+                backgroundPaint.setColor(uz.ksnxdev.calamus.CalamusMaterial.filledActionColor(resourcesProvider));
             } else if (shouldDrawBackground()) {
                 backgroundPaint.setColor(getFillColor());
             } else {
