@@ -44,7 +44,7 @@ public class AppearancePreferencesEntry extends BaseCGPreferencesEntry {
     private final int snowflakesRow = 3;
 
     private final int iconPackRow = 4;
-    private final int oneUISwitchesRow = 5;
+    private final int switchCheckmarksRow = 5;
     private final int disableDividersRow = 6;
 
     private final int foldersRow = 7;
@@ -98,9 +98,9 @@ public class AppearancePreferencesEntry extends BaseCGPreferencesEntry {
                 .setChecked(uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getTranslucentElements())
                 .slug("translucentElements"));
         items.add(UItem.asButton(iconPackRow, getString(R.string.AP_IconReplacements), getIconPackValueText()));
-        items.add(SettingsHelper.asSwitchCG(oneUISwitchesRow, getString(R.string.AP_OneUI_Switch_Style))
-                .setChecked(CherrygramAppearanceConfig.INSTANCE.getOneUI_SwitchStyle())
-                .slug("oneUI_Switches")
+        items.add(SettingsHelper.asSwitchCG(switchCheckmarksRow, getString(R.string.CalamusSwitchCheckmarks))
+                .setChecked(CalamusConfig.INSTANCE.getSwitchCheckmarks())
+                .slug("switchCheckmarks")
         );
         items.add(SettingsHelper.asSwitchCG(disableDividersRow, getString(R.string.AP_DisableDividers))
                 .setChecked(CherrygramAppearanceConfig.INSTANCE.getDisableDividers())
@@ -201,9 +201,9 @@ public class AppearancePreferencesEntry extends BaseCGPreferencesEntry {
 
                 getParentLayout().rebuildAllFragmentViews(false, false);
             });
-        } else if (item.id == oneUISwitchesRow) {
-            CherrygramAppearanceConfig.INSTANCE.setOneUI_SwitchStyle(!CherrygramAppearanceConfig.INSTANCE.getOneUI_SwitchStyle());
-            SettingsHelper.updateCheckState(view, CherrygramAppearanceConfig.INSTANCE.getOneUI_SwitchStyle());
+        } else if (item.id == switchCheckmarksRow) {
+            CalamusConfig.INSTANCE.setSwitchCheckmarks(!CalamusConfig.INSTANCE.getSwitchCheckmarks());
+            SettingsHelper.updateCheckState(view, CalamusConfig.INSTANCE.getSwitchCheckmarks());
 
             updateRows(true);
         } else if (item.id == disableDividersRow) {

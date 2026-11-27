@@ -189,7 +189,6 @@ as configurações do sistema. Esta característica apaga completamente todas as
     <string name="AP_ChangeIcon_Sunset">Pôr do sol</string>
     <string name="AP_ChangeIcon_Sunrise">Nascer do Sol</string>
     <string name="AP_IconReplacement_Solar">Ícones solares por @Design480</string>
-    <string name="AP_OneUI_Switch_Style">Estilo do interrutor OneUI</string>
     <string name="AP_SystemEmoji">Emoji do Sistema</string>
     <string name="AP_ShowPencilIcon">Ícone de lápis para mensagens editadas</string>
     <string name="AP_CenterTitle">Título central</string>

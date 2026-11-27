@@ -42,7 +42,6 @@ object CherrygramAppearanceConfig {
         }
     }
 
-    var oneUI_SwitchStyle by sharedPreferences.boolean("AP_OneUI_SwitchStyle", true)
     var disableDividers by sharedPreferences.boolean("AP_DisableDividers", true)
     /** Appearance finish */
 

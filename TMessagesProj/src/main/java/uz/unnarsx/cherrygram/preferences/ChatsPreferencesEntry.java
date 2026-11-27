@@ -74,7 +74,7 @@ public class ChatsPreferencesEntry extends BaseCGPreferencesEntry {
 
     private final int notificationSoundRow = 28, vibrateInChatsRow = 29;
 
-    private final int iosMessageMenuRow = 30;
+    private final int iosMessageMenuRow = 30, swapStickerAttachButtonsRow = 31;
 
     private boolean expandedHeaderSettingsSection = false;
     private boolean expandedBottomBarSettingsSection = false;
@@ -84,7 +84,7 @@ public class ChatsPreferencesEntry extends BaseCGPreferencesEntry {
     );
 
     private static final Set<String> BOTTOM_BAR_SECTION_SLUGS = Set.of(
-            "iosInputField", "hideSendAs", "hideBottomBar", "recentsCounter"
+            "iosInputField", "swapStickerAttachButtons", "hideSendAs", "hideBottomBar", "recentsCounter"
     );
 
     @Override
@@ -192,6 +192,10 @@ public class ChatsPreferencesEntry extends BaseCGPreferencesEntry {
             items.add(SettingsHelper.asSwitchCG(iOSMessageInputField, getString(R.string.CP_iOSMessageInputField), getString(R.string.CP_iOSMessageInputField_Desc))
                     .setChecked(CherrygramChatsConfig.INSTANCE.getIOSMessageInputField())
                     .slug("iosInputField")
+            );
+            items.add(SettingsHelper.asSwitchCG(swapStickerAttachButtonsRow, getString(R.string.CalamusSwapStickerAttachButtons), getString(R.string.CalamusSwapStickerAttachButtonsDesc))
+                    .setChecked(CherrygramChatsConfig.INSTANCE.getSwapStickerAttachButtons())
+                    .slug("swapStickerAttachButtons")
             );
             items.add(SettingsHelper.asSwitchCG(sendAsChannelButtonRow, getString(R.string.CP_HideSendAsChannel), getString(R.string.CP_HideSendAsChannelDesc))
                     .setChecked(CherrygramChatsConfig.INSTANCE.getHideSendAsChannel())
@@ -372,6 +376,10 @@ public class ChatsPreferencesEntry extends BaseCGPreferencesEntry {
 
             updateRows(true);
 //            showRestartBulletin();
+        } else if (item.id == swapStickerAttachButtonsRow) {
+            CherrygramChatsConfig.INSTANCE.setSwapStickerAttachButtons(!CherrygramChatsConfig.INSTANCE.getSwapStickerAttachButtons());
+            SettingsHelper.updateCheckState(view, CherrygramChatsConfig.INSTANCE.getSwapStickerAttachButtons());
+            updateRows(true);
         } else if (item.id == sendAsChannelButtonRow) {
             CherrygramChatsConfig.INSTANCE.setHideSendAsChannel(!CherrygramChatsConfig.INSTANCE.getHideSendAsChannel());
             SettingsHelper.updateCheckState(view, CherrygramChatsConfig.INSTANCE.getHideSendAsChannel());

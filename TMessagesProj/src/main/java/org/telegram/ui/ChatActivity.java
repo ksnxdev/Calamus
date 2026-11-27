@@ -28129,7 +28129,11 @@ public class ChatActivity extends BaseFragment implements
                 lp.bottomMargin = chatActivityEnterView.getMeasuredHeight();
                 contentView.addView(groupEmojiPackHint, lp);
                 groupEmojiPackHint.setTranslationY(-AndroidUtilities.navigationBarHeight);
-                groupEmojiPackHint.setJointPx(0, chatActivityEnterView.getEmojiButton().getX() + dp(22));
+                int[] buttonPosition = new int[2];
+                int[] contentPosition = new int[2];
+                chatActivityEnterView.getEmojiButton().getLocationInWindow(buttonPosition);
+                contentView.getLocationInWindow(contentPosition);
+                groupEmojiPackHint.setJointPx(0, buttonPosition[0] - contentPosition[0] + chatActivityEnterView.getEmojiButton().getWidth() / 2f);
                 groupEmojiPackHint.show();
             }, 300);
         }

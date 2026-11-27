@@ -12,6 +12,7 @@ object CalamusConfig {
 
     var useSystemColor by prefs.boolean("use_system_color", true)
     var appColor by prefs.int("app_color", 0xff677e6d.toInt())
+    var switchCheckmarks by prefs.boolean("switch_checkmarks", false)
     var material3 by prefs.boolean("material3", true)
     var translucentElements by prefs.boolean("translucent_elements", true)
 }

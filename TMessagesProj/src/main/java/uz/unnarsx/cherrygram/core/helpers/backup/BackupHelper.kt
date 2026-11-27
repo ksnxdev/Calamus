@@ -238,7 +238,7 @@ object BackupHelper {
             "CP_DisablePremStickAutoPlay",
 
             // Appearance
-            "AP_Icon_Replacements1", "AP_OneUI_SwitchStyle", "AP_DisableDividers", "AP_CenterTitle",
+            "AP_Icon_Replacements1", "AP_DisableDividers", "AP_CenterTitle",
             "CP_ShowSeconds", "CP_DisablePremiumStatuses",
             "CP_ReplyBackground", "CP_ReplyCustomColors", "CP_ReplyBackgroundEmoji", "CP_ProfileHidePhoneNumber", "CP_ProfileChannelPreview",
             "AP_ShowID_DC_new", "CP_ProfileBirthDatePreview", "CP_ProfileBusinessPreview", "CP_ProfileBackgroundColor",
@@ -254,7 +254,7 @@ object BackupHelper {
             "CP_Shortcut_Browser", "CP_Admins_Reactions", "CP_Admins_Permissions", "CP_Admins_Administrators",
             "CP_Admins_Members", "CP_Admins_Statistics", "CP_Admins_RecentActions", "CP_UnreadBadgeOnBackButton", "CP_UnreadBadgeOnBackButton_iOS",
             "CP_GlareEffects", "AP_CenterChatTitle_v2", "AP_CenterChatTitle_AdaptiveWidth_v2", "CP_Slider_RecentEmojisAmplifier", "CP_Slider_RecentStickersAmplifier",
-            "CP_DisableSwipeToNext", "CP_iOSMessageInputField", "CP_HideSendAsChannel", "CP_HideMuteUnmuteButton", "CP_HideKeyboardOnScrollIntensity",
+            "CP_DisableSwipeToNext", "CP_iOSMessageInputField", "CP_SwapStickerAttachButtons", "CP_HideSendAsChannel", "CP_HideMuteUnmuteButton", "CP_HideKeyboardOnScrollIntensity",
             "CP_GeminiApiKey", "CP_GeminiModelName", "CP_ShareDrawStoryButton", "CP_UsersDrawShareButton",
             "CP_SupergroupsDrawShareButton", "CP_ChannelsDrawShareButton", "CP_BotsDrawShareButton",
             "CP_StickersDrawShareButton", "CP_ShowSaveForNotifications", "CP_ShowGemini", "CP_ShowReply",

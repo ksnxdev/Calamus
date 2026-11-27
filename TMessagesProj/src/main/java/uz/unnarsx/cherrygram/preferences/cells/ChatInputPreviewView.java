@@ -110,6 +110,7 @@ public class ChatInputPreviewView extends FrameLayout {
                 return false;
             }
         };
+        chatActivityEnterView.setInputButtonsPreview();
         chatActivityEnterView.setClickable(false);
         chatActivityEnterView.setChatInputViewsContainer(chatInputViewsContainer);
         chatActivityEnterView.shouldDrawBackground = false;

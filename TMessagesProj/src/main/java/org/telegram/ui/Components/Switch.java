@@ -41,7 +41,6 @@ import org.telegram.ui.Cells.BaseCell;
 
 import me.vkryl.android.animator.BoolAnimator;
 
-import uz.unnarsx.cherrygram.core.configs.CherrygramAppearanceConfig;
 import uz.unnarsx.cherrygram.core.configs.CherrygramChatsConfig;
 
 public class Switch extends View {
@@ -408,22 +407,12 @@ public class Switch extends View {
         int width = AndroidUtilities.dp(30.5F);
         int thumb;
 
-        if (CherrygramAppearanceConfig.INSTANCE.getOneUI_SwitchStyle()) {
-            thumb = AndroidUtilities.dp(17.5F);
-            x = (getMeasuredWidth() - width) / 2;
-            y = getMeasuredHeight() / 2 - thumb / 2;
+        thumb = AndroidUtilities.dp(20);
+        x = (getMeasuredWidth() - width) / 2;
+        y = (getMeasuredHeight() - AndroidUtilities.dpf2(14)) / 2;
 
-            float start = x + thumb / 2f;
-            float end = x + width - thumb / 2f;
+        tx = x + AndroidUtilities.dp(7) + (int) (AndroidUtilities.dp(17) * progress);
 
-            tx = (int) (start + (end - start) * progress + AndroidUtilities.dp(isChecked ? 2 : 1));
-        } else {
-            thumb = AndroidUtilities.dp(20);
-            x = (getMeasuredWidth() - width) / 2;
-            y = (getMeasuredHeight() - AndroidUtilities.dpf2(14)) / 2;
-
-            tx = x + AndroidUtilities.dp(7) + (int) (AndroidUtilities.dp(17) * progress);
-        }
 
         int ty = getMeasuredHeight() / 2;
 
@@ -498,25 +487,10 @@ public class Switch extends View {
             paint4.setColor(color4);
             paint5.setColor(color5);
 
-            if (CherrygramAppearanceConfig.INSTANCE.getOneUI_SwitchStyle()) {
-                rectF.set(x, y, getMeasuredWidth(), getMeasuredHeight() / 2 + thumb / 2);
-                if (!isChecked) {
-                    canvasToDraw.drawRoundRect(rectF, AndroidUtilities.dpf2(11), AndroidUtilities.dpf2(11), paint4);
-                    canvasToDraw.drawCircle(tx, ty, AndroidUtilities.dpf2(11), paint4);
+            rectF.set(x, y, x + width, y + AndroidUtilities.dpf2(14));
+            canvasToDraw.drawRoundRect(rectF, AndroidUtilities.dpf2(7), AndroidUtilities.dpf2(7), paint);
+            canvasToDraw.drawCircle(tx, ty, AndroidUtilities.dpf2(10), paint);
 
-                    if (Theme.isCurrentThemeDark() || Theme.isCurrentThemeNight()) {
-                        canvasToDraw.drawRoundRect(rectF, AndroidUtilities.dpf2(11), AndroidUtilities.dpf2(11), paint5);
-                        canvasToDraw.drawCircle(tx, ty, AndroidUtilities.dpf2(11), paint5);
-                    }
-
-                }
-                canvasToDraw.drawRoundRect(rectF, AndroidUtilities.dpf2(11), AndroidUtilities.dpf2(11), paint);
-                canvasToDraw.drawCircle(tx, ty, AndroidUtilities.dpf2(11), paint);
-            } else {
-                rectF.set(x, y, x + width, y + AndroidUtilities.dpf2(14));
-                canvasToDraw.drawRoundRect(rectF, AndroidUtilities.dpf2(7), AndroidUtilities.dpf2(7), paint);
-                canvasToDraw.drawCircle(tx, ty, AndroidUtilities.dpf2(10), paint);
-            }
 
             if (a == 0 && rippleDrawable != null) {
                 rippleDrawable.setBounds(tx - AndroidUtilities.dp(18), ty - AndroidUtilities.dp(18), tx + AndroidUtilities.dp(18), ty + AndroidUtilities.dp(18));
@@ -563,11 +537,8 @@ public class Switch extends View {
             alpha = (int) (a1 + (a2 - a1) * colorProgress);
             paint.setColor(((alpha & 0xff) << 24) | ((red & 0xff) << 16) | ((green & 0xff) << 8) | (blue & 0xff));
 
-            if (CherrygramAppearanceConfig.INSTANCE.getOneUI_SwitchStyle()) {
-                canvasToDraw.drawCircle(tx, ty, AndroidUtilities.dp(9.5F), paint3);
-            } else {
-                canvasToDraw.drawCircle(tx, ty, AndroidUtilities.dp(8), paint);
-            }
+            canvasToDraw.drawCircle(tx, ty, AndroidUtilities.dp(8), paint);
+
 
             if (a == 0) {
                 if (iconDrawable != null) {
@@ -666,7 +637,7 @@ public class Switch extends View {
             }
             iconDrawable.setBounds(Math.round(cx) - r, Math.round(cy) - r, Math.round(cx) + r, Math.round(cy) + r);
             iconDrawable.draw(canvas);
-        } else if (p > 0) {
+        } else if (p > 0 && uz.ksnxdev.calamus.CalamusConfig.INSTANCE.getSwitchCheckmarks()) {
             paint2.setColor(androidx.core.graphics.ColorUtils.setAlphaComponent(checked, Math.round(255 * p)));
             canvas.drawLine(cx - AndroidUtilities.dp(4) * scale, cy, cx - AndroidUtilities.dp(1) * scale, cy + AndroidUtilities.dp(3) * scale, paint2);
             canvas.drawLine(cx - AndroidUtilities.dp(1) * scale, cy + AndroidUtilities.dp(3) * scale, cx + AndroidUtilities.dp(5) * scale, cy - AndroidUtilities.dp(3) * scale, paint2);

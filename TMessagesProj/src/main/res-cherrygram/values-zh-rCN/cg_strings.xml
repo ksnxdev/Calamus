@@ -170,7 +170,6 @@
     <string name="AP_ChangeIcon_Sunset">日落</string>
     <string name="AP_ChangeIcon_Sunrise">日出</string>
     <string name="AP_IconReplacement_Solar">Solar 图标</string>
-    <string name="AP_OneUI_Switch_Style">OneUI 开关风格</string>
     <string name="AP_SystemEmoji">系统 Emoji</string>
     <string name="AP_ShowPencilIcon">将消息底部的“已编辑”替换为铅笔图标</string>
     <string name="AP_CenterTitle">标题居中</string>

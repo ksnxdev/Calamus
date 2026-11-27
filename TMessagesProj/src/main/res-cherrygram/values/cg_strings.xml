@@ -240,7 +240,6 @@
     <string name="AP_ChangeIcon_Sunset">Sunset</string>
     <string name="AP_ChangeIcon_Sunrise">Sunrise</string>
     <string name="AP_IconReplacement_Solar">Solar Icons by @Design480</string>
-    <string name="AP_OneUI_Switch_Style">OneUI Switch Style</string>
     <string name="AP_SystemEmoji">System emoji</string>
     <string name="AP_ShowPencilIcon">Pencil Icon for Edited Messages</string>
     <string name="CP_StrokeOnViews">Glare effects</string>
@@ -678,4 +677,7 @@
     <string name="CalamusExternalAdsConsent">Allow third-party advertising for accounts in this app? AdsGram (api.adsgram.ai) receives your Telegram ID, Premium status, language, device model, Android version, screen size, battery and charging status, brightness and timestamps. IP detection also contacts api.ipify.org. These services see your IP address. You can turn this off in Calamus → Privacy and Security.</string>
     <string name="CalamusPluginAllowedAccounts">Allowed accounts</string>
     <string name="CalamusMoreMessageActions">More actions</string>
+    <string name="CalamusSwitchCheckmarks">Checkmarks in switches</string>
+    <string name="CalamusSwapStickerAttachButtons">Swap stickers and attachment buttons</string>
+    <string name="CalamusSwapStickerAttachButtonsDesc">Swap the sticker and attachment buttons in either input panel style.</string>
 </resources>
