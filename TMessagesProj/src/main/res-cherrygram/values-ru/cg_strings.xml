@@ -280,8 +280,8 @@
 
     <string name="CP_Filters_Header">Папки</string>
     <string name="AP_FoldersAtBottom">Показывать папки снизу</string>
-    <string name="AP_FolderNameInHeader">Название папки вместо \"Cherrygram\"</string>
-    <string name="AP_FolderNameInHeader_Desc">Это изменит \"Cherrygram\" в заголовке сверху на название Вашей папки (удобно при отображении иконок вместо названий папок)</string>
+    <string name="AP_FolderNameInHeader">Название папки вместо \"Calamus\"</string>
+    <string name="AP_FolderNameInHeader_Desc">Это изменит \"Calamus\" в заголовке сверху на название Вашей папки (удобно при отображении иконок вместо названий папок)</string>
     <string name="CP_NewTabs_RemoveAllChats">Скрыть папку \"Все чаты\"</string>
     <string name="AP_Tab_Style">Стиль папок</string>
     <string name="AP_Tab_Style_Stroke">Добавить обводку</string>

@@ -155,8 +155,8 @@
     <string name="CP_DisablePremStickAutoPlay">Адключыць аўтапрайграванне Premium стыкераў</string>
     <string name="CP_DisablePremStickAutoPlay_Desc">Premium анімацыя стыкераў не будзе прайграна аўтаматычна (функцыя не будзе працаваць калі Вы выключылі націскі на Premium стыкеры)</string>
     <string name="CP_Filters_Header">Папкі</string>
-    <string name="AP_FolderNameInHeader">Назва папкі заміж \"Cherrygram\"</string>
-    <string name="AP_FolderNameInHeader_Desc">Гэта зменіць \"Cherrygram\" у загалоўку зверху на назву Вашай папкі (зручна пры адлюстраванні іконкаў замест назваў папкаў)</string>
+    <string name="AP_FolderNameInHeader">Назва папкі заміж \"Calamus\"</string>
+    <string name="AP_FolderNameInHeader_Desc">Гэта зменіць \"Calamus\" у загалоўку зверху на назву Вашай папкі (зручна пры адлюстраванні іконкаў замест назваў папкаў)</string>
     <string name="CP_NewTabs_RemoveAllChats">Схаваць ўкладку \"Усе чаты\"</string>
     <string name="AP_Tab_Style">Стыль укладкі</string>
     <string name="AP_Tab_Style_Stroke">Дадаць абвядзенне</string>

@@ -241,8 +241,8 @@
     <string name="CP_DisablePremStickAutoPlay_Desc">Преміум наліпки не відтворюються автоматично (функція не працюватиме, якщо ви вимкнули дотик на преміум наліпках)</string>
     <string name="CP_Filters_Header">Папки</string>
     <string name="AP_FoldersAtBottom">Показувати теки знизу</string>
-    <string name="AP_FolderNameInHeader">Назва папки замість \"Cherrygram\"</string>
-    <string name="AP_FolderNameInHeader_Desc">Ця опція змінить назву \"Cherrygram\" на назву вашої папки в панелі дій (корисно, якщо замість назв папок у вас лише іконки)</string>
+    <string name="AP_FolderNameInHeader">Назва папки замість \"Calamus\"</string>
+    <string name="AP_FolderNameInHeader_Desc">Ця опція змінить назву \"Calamus\" на назву вашої папки в панелі дій (корисно, якщо замість назв папок у вас лише іконки)</string>
     <string name="CP_NewTabs_RemoveAllChats">Приховати вкладку \"Всі чати\"</string>
     <string name="AP_Tab_Style">Стилі папок</string>
     <string name="AP_Tab_Style_Stroke">Додати обведення</string>

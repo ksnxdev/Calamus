@@ -151,8 +151,8 @@
     <string name="CP_DisablePremStickAutoPlay">Deaktiviere Premium-Sticker Auto-Play</string>
     <string name="CP_DisablePremStickAutoPlay_Desc">Premium-Aufkleber-Animation wird nicht automatisch abgespielt (Funktion funktioniert nicht, wenn du Antippen auf Premium-Aufkleber deaktiviert hast)</string>
     <string name="CP_Filters_Header">Ordner</string>
-    <string name="AP_FolderNameInHeader">Ordnername anstatt \"Cherrygram\"</string>
-    <string name="AP_FolderNameInHeader_Desc">Dies ändert \"Cherrygram\" in der Aktionsleiste auf den Namen Ihres Ordners (nützlich, wenn Sie nur Symbole statt Ordnernamen haben)</string>
+    <string name="AP_FolderNameInHeader">Ordnername anstatt \"Calamus\"</string>
+    <string name="AP_FolderNameInHeader_Desc">Dies ändert \"Calamus\" in der Aktionsleiste auf den Namen Ihres Ordners (nützlich, wenn Sie nur Symbole statt Ordnernamen haben)</string>
     <string name="CP_NewTabs_RemoveAllChats">\"Alle Chat\"-Tab ausblenden</string>
     <string name="AP_Tab_Style">Tab style</string>
     <string name="AP_Tab_Style_Stroke">Add stroke</string>

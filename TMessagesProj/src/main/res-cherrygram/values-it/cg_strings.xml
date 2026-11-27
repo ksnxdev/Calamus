@@ -224,8 +224,8 @@
     <string name="CP_DisablePremStickAutoPlay_Desc">L\'animazione degli adesivi Premium non verrà riprodotta automaticamente (la funzione non funzionerà se hai disabilitato i tocchi degli adesivi premium)</string>
     <string name="CP_Filters_Header">Cartelle</string>
     <string name="AP_FoldersAtBottom">Mostra le cartelle in basso</string>
-    <string name="AP_FolderNameInHeader">Nome cartella invece di \"Cherrygram\"</string>
-    <string name="AP_FolderNameInHeader_Desc">Sostituisce il titolo \'Cherrygram\' sulla barra in alto con il nome della cartella corrente (utile se hai solo icone al posto dei nomi delle cartelle)</string>
+    <string name="AP_FolderNameInHeader">Nome cartella invece di \"Calamus\"</string>
+    <string name="AP_FolderNameInHeader_Desc">Sostituisce il titolo \'Calamus\' sulla barra in alto con il nome della cartella corrente (utile se hai solo icone al posto dei nomi delle cartelle)</string>
     <string name="CP_NewTabs_RemoveAllChats">Nascondi la cartella \"Tutte le chat\"</string>
     <string name="AP_Tab_Style">Stili di cartella</string>
     <string name="AP_Tab_Style_Stroke">Aggiungi stroke</string>

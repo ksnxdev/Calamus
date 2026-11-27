@@ -1329,7 +1329,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     childTop = actionBar.getMeasuredHeight();
                 } else if (child instanceof ViewPage) {
                     childTop = 0;
-                } else if (child == topPanelLayout || child == topBubblesFadeView || child == filterTabsView) {
+                } else if (child == topPanelLayout || child == topBubblesFadeView || child == filterTabsView && !foldersAtBottom) {
                     childTop += actionBar.getMeasuredHeight();
                     childTop += searching || searchIsShowed ? dp(SEARCH_FIELD_HEIGHT) : getSearchFieldReservedHeight();
                 } else if (dialogStoriesCell != null && dialogStoriesCell.getPremiumHint() == child) {
@@ -3047,8 +3047,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         BirthdayController.getInstance(currentAccount).check();
-        additionNavigationBarHeight = hasMainTabs ? dp(getMainTabsHeightWithMargins()) : foldersAtBottom && !CherrygramAppearanceConfig.INSTANCE.getShowMainTabs() ? dp(MAIN_TABS_HEIGHT_WITH_MARGINS) : 0;
-        additionFloatingButtonOffset = hasMainTabs || foldersAtBottom && !CherrygramAppearanceConfig.INSTANCE.getShowMainTabs() ? dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN) : 0;
+        additionNavigationBarHeight = hasMainTabs ? dp(getMainTabsHeightWithMargins()) : 0;
+        additionFloatingButtonOffset = hasMainTabs ? dp(DialogsActivity.MAIN_TABS_HEIGHT + DialogsActivity.MAIN_TABS_MARGIN) : 0;
         if (hasMainTabs && uz.ksnxdev.calamus.CalamusMaterial.isEnabled()) {
             additionNavigationBarHeight += dp(8);
             additionFloatingButtonOffset = dp(getMainTabsHeightWithMargins() + 10);
@@ -14493,23 +14493,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             iBlur3Positions.add(iBlur3PositionFolders);
         }
 
-        if (foldersAtBottom) {
-            FoldersHelper.INSTANCE.blur3_InvalidateBlur(
-                    this,
-                    iBlur3Capture, iBlur3PositionActionBar, iBlur3PositionFolders, iBlur3PositionMainTabs, iBlur3Positions,
-                    scrollableViewNoiseSuppressor
-            );
-            if (iBlur3SourceGlassFrosted != null) {
-                iBlur3SourceGlassFrosted.setSize(fragmentView.getMeasuredWidth(), fragmentView.getMeasuredHeight());
-                iBlur3SourceGlassFrosted.updateDisplayListIfNeeded();
-            }
-            if (iBlur3SourceGlass != null) {
-                iBlur3SourceGlass.setSize(fragmentView.getMeasuredWidth(), fragmentView.getMeasuredHeight());
-                iBlur3SourceGlass.updateDisplayListIfNeeded();
-            }
-            return;
-        }
-
         final int additionalList = dp(48);
         final int mainTabBottom = fragmentView.getMeasuredHeight() - navigationBarHeight - dp(DialogsActivity.MAIN_TABS_MARGIN);
         final int mainTabTop = mainTabBottom - dp(DialogsActivity.MAIN_TABS_HEIGHT);
@@ -14517,7 +14500,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         final int actionBarHeight = actionBar.getMeasuredHeight()
             + getSearchFieldReservedHeight()
             + dp(hasStories ? DialogStoriesCell.HEIGHT_IN_DP : 0)
-            + (filterTabsView != null && filterTabsView.getVisibility() == View.VISIBLE ? filterTabsView.getMeasuredHeight() : 0)
+            + (!foldersAtBottom && filterTabsView != null && filterTabsView.getVisibility() == View.VISIBLE ? filterTabsView.getMeasuredHeight() : 0)
             + (topPanelLayout != null && topPanelLayout.getVisibility() == View.VISIBLE ? topPanelLayout.getSumHeightOfAllVisibleChild() : 0)
             + ((int) scrollYOffset);
 
@@ -14542,7 +14525,16 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             hasBottomBlur = true;
         }
 
-        scrollableViewNoiseSuppressor.setupRenderNodes(iBlur3Positions, hasBottomBlur ? 2 : 1);
+        iBlur3Positions.clear();
+        iBlur3Positions.add(iBlur3PositionActionBar);
+        if (hasBottomBlur) iBlur3Positions.add(iBlur3PositionMainTabs);
+        if (foldersAtBottom && filterTabsView != null && filterTabsView.getVisibility() == View.VISIBLE) {
+            iBlur3PositionFolders.set(filterTabsView.getX(), filterTabsView.getY(),
+                    filterTabsView.getX() + filterTabsView.getMeasuredWidth(), filterTabsView.getY() + filterTabsView.getMeasuredHeight());
+            if (!LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS)) iBlur3PositionFolders.inset(0, -dp(48));
+            iBlur3Positions.add(iBlur3PositionFolders);
+        }
+        scrollableViewNoiseSuppressor.setupRenderNodes(iBlur3Positions, iBlur3Positions.size());
         scrollableViewNoiseSuppressor.invalidateResultRenderNodes(iBlur3Capture, fragmentView.getMeasuredWidth(), fragmentView.getMeasuredHeight());
 
         if (iBlur3SourceGlassFrosted != null) {
@@ -14555,7 +14547,21 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
     }
 
+    public void updateBottomFoldersLayout() {
+        if (!foldersAtBottom || filterTabsView == null || !(filterTabsView.getLayoutParams() instanceof FrameLayout.LayoutParams lp)) return;
+        int bottom = calculateBaseListViewPaddingBottom() + dp(4);
+        if (lp.bottomMargin != bottom) {
+            lp.bottomMargin = bottom;
+            filterTabsView.setLayoutParams(lp);
+        }
+        filterTabsView.setTranslationY(0);
+    }
+
     public int calculateListViewPaddingBottom() {
+        return calculateBaseListViewPaddingBottom() + (foldersAtBottom ? FoldersHelper.INSTANCE.getFloatingButtonsOffset(filterTabsView) : 0);
+    }
+
+    private int calculateBaseListViewPaddingBottom() {
         if (commentView != null) {
             return (int) (windowInsetsStateHolder.getAnimatedMaxBottomInset() + dp(9) + chatInputViewsContainer.getInputBubbleHeight() + dp(7) + dp(2));
         } else if (communityId != 0) {

@@ -207,8 +207,8 @@
     <string name="CP_DisablePremStickAutoPlay_Desc">Premium 贴纸动画不会自动播放（开启禁止点击 Premium 功能时此功能无效）</string>
     <string name="CP_Filters_Header">文件夹</string>
     <string name="AP_FoldersAtBottom">在底部显示文件夹</string>
-    <string name="AP_FolderNameInHeader">使用文件夹名称而非 \"Cherrygram\"</string>
-    <string name="AP_FolderNameInHeader_Desc">这会将操作栏中的“Cherrygram”更改为文件夹名称 (开启仅显示图标时效果最佳)</string>
+    <string name="AP_FolderNameInHeader">使用文件夹名称而非 \"Calamus\"</string>
+    <string name="AP_FolderNameInHeader_Desc">这会将操作栏中的“Calamus”更改为文件夹名称 (开启仅显示图标时效果最佳)</string>
     <string name="CP_NewTabs_RemoveAllChats">隐藏所有聊天Tab</string>
     <string name="AP_Tab_Style">Tab 样式</string>
     <string name="AP_Tab_Style_Stroke">添加描边</string>

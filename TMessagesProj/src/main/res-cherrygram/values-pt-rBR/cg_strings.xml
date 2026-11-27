@@ -226,8 +226,8 @@ as configurações do sistema. Esta característica apaga completamente todas as
     <string name="CP_DisablePremStickAutoPlay_Desc">A animação de autocolantes premium não será reproduzida automaticamente (a funcionalidade não funcionará se desativar os toques nos autocolantes premium)</string>
     <string name="CP_Filters_Header">Pastas</string>
     <string name="AP_FoldersAtBottom">Exibir pastas na parte inferior</string>
-    <string name="AP_FolderNameInHeader">Nome da pasta em vez de \"Cherrygram\"</string>
-    <string name="AP_FolderNameInHeader_Desc">Isso vai mudar \"Cherrygram\" na barra de ações para o nome da sua pasta (útil se tem apenas ícones ao invés de nome das pastas)</string>
+    <string name="AP_FolderNameInHeader">Nome da pasta em vez de \"Calamus\"</string>
+    <string name="AP_FolderNameInHeader_Desc">Isso vai mudar \"Calamus\" na barra de ações para o nome da sua pasta (útil se tem apenas ícones ao invés de nome das pastas)</string>
     <string name="CP_NewTabs_RemoveAllChats">Esconder o separador \"Todos os chats\"</string>
     <string name="AP_Tab_Style">Estilo de pestaña</string>
     <string name="AP_Tab_Style_Stroke">Adicionar traço</string>

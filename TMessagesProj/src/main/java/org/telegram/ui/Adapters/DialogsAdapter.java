@@ -1330,6 +1330,8 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                 ((DialogCell) listView.getAttachedScrapChildAt(i)).collapsed = collapsedView;
             }
         }
+        if (listView.isComputingLayout()) listView.post(listView::invalidateItemDecorations);
+        else listView.invalidateItemDecorations();
     }
 
     public static class DialogsPreloader {
@@ -1557,9 +1559,6 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                 height += AndroidUtilities.dp(1000);
             }
 
-            if (CherrygramAppearanceConfig.INSTANCE.getFoldersAtBottom() && CherrygramAppearanceConfig.INSTANCE.getShowMainTabs()) {
-                height += AndroidUtilities.dp(DialogsActivity.MAIN_TABS_HEIGHT);
-            }
             super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
         }
     }

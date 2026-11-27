@@ -6,6 +6,9 @@ import android.graphics.Canvas;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
+import android.view.MotionEvent;
+import android.view.ViewConfiguration;
+import android.graphics.Rect;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import org.telegram.messenger.LocaleController;
@@ -27,6 +30,12 @@ import java.util.ArrayList;
 import uz.unnarsx.cherrygram.core.configs.CherrygramMessagesConfig;
 
 public final class CalamusMessageMenuLayout extends FrameLayout {
+    private final Runnable dismiss;
+    private final ArrayList<View> touchTargets = new ArrayList<>();
+    private boolean outsideGesture;
+    private boolean outsideMoved;
+    private float outsideX, outsideY;
+    private final int touchSlop;
     private final ScrollView scroll;
     private final LinearLayout column;
     private final ScrollView previewScroll;
@@ -49,6 +58,8 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
             ReactionsContainerLayout reactions, ActionBarPopupWindow.ActionBarPopupWindowLayout actions,
             ArrayList<View> extras, Runnable dismiss) {
         super(context);
+        this.dismiss = dismiss;
+        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         setTag("calamus_ios_message_menu");
         outgoing = message.isOutOwner();
         int[] position = new int[2]; original.getLocationOnScreen(position); anchorY = position[1];
@@ -67,6 +78,7 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         column.setPadding(AndroidUtilities.dp(12), 0, AndroidUtilities.dp(12), AndroidUtilities.dp(12));
         scroll.addView(column, new ScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         if (reactions != null) {
+            touchTargets.add(reactions);
             reactions.setTag("calamus_ios_message_reactions");
             reactions.setMirrorX(!outgoing);
             reactions.setPadding(AndroidUtilities.dp(4), AndroidUtilities.dp(4), AndroidUtilities.dp(4), AndroidUtilities.dp(20));
@@ -84,6 +96,7 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         previewHeight = previewParams.height;
         previewScroll.addView(preview, new ScrollView.LayoutParams(previewParams.width, previewHeight));
         column.addView(previewScroll, previewParams);
+        touchTargets.add(previewScroll);
         if (!CherrygramMessagesConfig.INSTANCE.getMsgMenuUnifiedScroll() && CherrygramMessagesConfig.INSTANCE.getMsgMenuAutoScroll()) {
             previewScroll.post(() -> previewScroll.fullScroll(FOCUS_DOWN));
         }
@@ -97,6 +110,8 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
             actionParams.height = Math.min(actions.getMeasuredHeight(), AndroidUtilities.displaySize.y / 2);
         }
         column.addView(actions, actionParams);
+        touchTargets.add(actions);
+        touchTargets.addAll(extras);
         for (View extra : extras) column.addView(extra, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         actionScroll = findScroll(actions);
         if (actionScroll != null) {
@@ -108,6 +123,7 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         }
         moreActions = new TextView(context);
         moreActions.setTag("calamus_ios_message_more_actions");
+        touchTargets.add(moreActions);
         moreActions.setText(LocaleController.getString(R.string.CalamusMoreMessageActions) + " ↓");
         moreActions.setTextSize(14);
         moreActions.setGravity(Gravity.CENTER);
@@ -121,6 +137,33 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         });
         addView(moreActions, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, AndroidUtilities.dp(48)));
         scroll.setOnScrollChangeListener((v, x, y, oldX, oldY) -> updateMoreActions());
+    }
+
+    private boolean isTouchTarget(float x, float y) {
+        Rect bounds = new Rect();
+        for (View target : touchTargets) {
+            if (target.isShown() && target.getGlobalVisibleRect(bounds) && bounds.contains((int) x, (int) y)) return true;
+        }
+        return false;
+    }
+
+    @Override public boolean dispatchTouchEvent(MotionEvent event) {
+        int action = event.getActionMasked();
+        if (action == MotionEvent.ACTION_DOWN) {
+            outsideGesture = !isTouchTarget(event.getRawX(), event.getRawY());
+            outsideMoved = false;
+            outsideX = event.getRawX();
+            outsideY = event.getRawY();
+        }
+        if (outsideGesture) {
+            if (action == MotionEvent.ACTION_MOVE && Math.hypot(event.getRawX() - outsideX, event.getRawY() - outsideY) > touchSlop) outsideMoved = true;
+            if (action == MotionEvent.ACTION_UP) {
+                outsideGesture = false;
+                if (!outsideMoved) dismiss.run();
+            } else if (action == MotionEvent.ACTION_CANCEL) outsideGesture = false;
+            return true;
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     private LinearLayout.LayoutParams previewParams(ImageView view) {

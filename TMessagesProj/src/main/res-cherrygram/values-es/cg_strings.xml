@@ -184,8 +184,8 @@
     <string name="CP_DisablePremStickAutoPlay">Desactivar auto-reproducción de stickers premium</string>
     <string name="CP_DisablePremStickAutoPlay_Desc">La animación premium de stickers no se reproducirá automáticamente (no funcionará si deshabilitas toques en stickers premium)</string>
     <string name="CP_Filters_Header">Carpetas</string>
-    <string name="AP_FolderNameInHeader">Nombre de la carpeta en lugar de \"Cherrygram\"</string>
-    <string name="AP_FolderNameInHeader_Desc">Esto cambiará \"Cherrygram\" en la barra de acción al nombre de tu carpeta (útil si solo tienes iconos en lugar de nombres de carpetas)</string>
+    <string name="AP_FolderNameInHeader">Nombre de la carpeta en lugar de \"Calamus\"</string>
+    <string name="AP_FolderNameInHeader_Desc">Esto cambiará \"Calamus\" en la barra de acción al nombre de tu carpeta (útil si solo tienes iconos en lugar de nombres de carpetas)</string>
     <string name="CP_NewTabs_RemoveAllChats">Ocultar carpeta \"Todos\"</string>
     <string name="AP_Tab_Style">Estilo Tabs (Pestañas)</string>
     <string name="AP_Tab_Style_Stroke">Añadir trazo</string>

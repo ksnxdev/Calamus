@@ -13,6 +13,12 @@ import android.content.Context
 import android.graphics.RectF
 import android.os.Build
 import android.view.ViewGroup
+import android.view.View
+import android.view.Gravity
+import android.widget.FrameLayout
+import org.telegram.messenger.AndroidUtilities
+import org.telegram.ui.Components.blur3.drawable.color.impl.BlurredBackgroundProviderImpl
+import uz.unnarsx.cherrygram.core.configs.CherrygramAppearanceConfig
 import androidx.annotation.RequiresApi
 import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.Components.FilterTabsView
@@ -29,11 +35,14 @@ import org.telegram.ui.DialogsActivity
 object FoldersHelper {
 
     fun moveFoldersToBottom() : Boolean {
-        return false
+        return CherrygramAppearanceConfig.foldersAtBottom
     }
 
     fun getFloatingButtonsOffset(filterTabsView: FilterTabsView?) : Int {
-        return 0
+        val params = filterTabsView?.layoutParams as? FrameLayout.LayoutParams
+        return if (filterTabsView != null && params != null && (params.gravity and Gravity.VERTICAL_GRAVITY_MASK) == Gravity.BOTTOM && filterTabsView.visibility == View.VISIBLE) {
+            (((filterTabsView.measuredHeight.takeIf { it > 0 } ?: AndroidUtilities.dp(50f)) + AndroidUtilities.dp(8f)) * filterTabsView.alpha).toInt()
+        } else 0
     }
 
     fun setupFilterTabs(
@@ -45,7 +54,18 @@ object FoldersHelper {
         iBlur3FactoryFade: BlurredBackgroundDrawableViewFactory,
         inForwardMode: Boolean
     ) {
-
+        val background = iBlur3FactoryLiquidGlass.create(filterTabsView, BlurredBackgroundProviderImpl.topPanel(resourceProvider))
+        background.setRadius(AndroidUtilities.dp(18f).toFloat())
+        background.setPadding(AndroidUtilities.dp(6.666f))
+        filterTabsView.setPadding(0, AndroidUtilities.dp(7f), 0, AndroidUtilities.dp(7f))
+        filterTabsView.setBlurredBackground(background)
+        filterTabsView.setColors(Theme.key_actionBarTabLine, Theme.key_actionBarTabActiveText,
+            Theme.key_actionBarDefaultSubtitle, Theme.key_actionBarTabSelector, Theme.key_dialogBackground)
+        contentView.addView(filterTabsView, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AndroidUtilities.dp(50f), Gravity.BOTTOM).apply {
+            leftMargin = AndroidUtilities.dp(12f)
+            rightMargin = AndroidUtilities.dp(12f)
+            bottomMargin = AndroidUtilities.dp(8f)
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -66,7 +86,7 @@ object FoldersHelper {
         dialogsActivity: DialogsActivity,
         inForwardMode: Boolean,
     ) {
-
+        dialogsActivity.updateBottomFoldersLayout()
     }
 
 }

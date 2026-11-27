@@ -225,8 +225,8 @@
     <string name="CP_DisablePremStickAutoPlay_Desc">Premium 動態貼圖不會自動播放 (開啟禁止點擊 Premium 功能時，此功能為無效)</string>
     <string name="CP_Filters_Header">資料夾</string>
     <string name="AP_FoldersAtBottom">在底部顯示資料夾</string>
-    <string name="AP_FolderNameInHeader">使用資料夾名稱而非「Cherrygram」</string>
-    <string name="AP_FolderNameInHeader_Desc">這會將操作列中的「Cherrygram」變更為資料夾名稱 (開啟僅顯示圖示時效果為最佳)</string>
+    <string name="AP_FolderNameInHeader">使用資料夾名稱而非「Calamus」</string>
+    <string name="AP_FolderNameInHeader_Desc">這會將操作列中的「Calamus」變更為資料夾名稱 (開啟僅顯示圖示時效果為最佳)</string>
     <string name="CP_NewTabs_RemoveAllChats">隱藏所有對話 Tab</string>
     <string name="AP_Tab_Style">Tab 樣式</string>
     <string name="AP_Tab_Style_Stroke">新增筆畫</string>

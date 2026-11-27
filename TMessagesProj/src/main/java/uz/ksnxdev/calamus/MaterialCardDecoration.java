@@ -44,7 +44,7 @@ public final class MaterialCardDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect out, View view, RecyclerView parent, RecyclerView.State state) {
         out.setEmpty();
         if (!(parent instanceof RecyclerListView list) || !isCard(view, list)) return;
-        int horizontal = parent.getAdapter() instanceof MD3ListAdapter ? 0 : AndroidUtilities.dp(16);
+        int horizontal = parent.getAdapter() instanceof MD3ListAdapter || view instanceof DialogCell cell && cell.collapsed ? 0 : AndroidUtilities.dp(16);
         out.set(horizontal, AndroidUtilities.dp(2), horizontal, AndroidUtilities.dp(2));
     }
 

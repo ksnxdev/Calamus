@@ -185,7 +185,7 @@
     <string name="CP_DisablePremStickAutoPlay_Desc">プレミアムステッカーの自動再生を無効化します (プレミアムステッカーのタップを無効化している場合は機能が動作しません)。</string>
     <string name="CP_Filters_Header">フォルダ</string>
     <string name="AP_FolderNameInHeader">フォルダ名を変更</string>
-    <string name="AP_FolderNameInHeader_Desc">これにより、アクションバーの「Cherrygram」がフォルダの名前に変更されます (フォルダ名ではなくアイコンのみがある場合に便利です)</string>
+    <string name="AP_FolderNameInHeader_Desc">これにより、アクションバーの「Calamus」がフォルダの名前に変更されます (フォルダ名ではなくアイコンのみがある場合に便利です)</string>
     <string name="CP_NewTabs_RemoveAllChats">「すべてのチャット」タブを非表示</string>
     <string name="AP_Tab_Style">タブのスタイル</string>
     <string name="AP_Tab_Style_Stroke">ストロークを追加</string>
