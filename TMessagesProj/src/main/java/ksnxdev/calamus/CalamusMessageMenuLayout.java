@@ -41,6 +41,7 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
     private final ScrollView previewScroll;
     private final ScrollView actionScroll;
     private final TextView moreActions;
+    private boolean foregroundOpen;
     private final int previewHeight;
     private final int anchorY;
     private final boolean outgoing;
@@ -137,6 +138,17 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         });
         addView(moreActions, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, AndroidUtilities.dp(48)));
         scroll.setOnScrollChangeListener((v, x, y, oldX, oldY) -> updateMoreActions());
+        if (actions.getSwipeBack() != null) {
+            foregroundOpen = actions.getSwipeBack().isForegroundOpen();
+            actions.getSwipeBack().addOnSwipeBackProgressListener((layout, target, progress) -> {
+                boolean open = target > 0 || progress > 0;
+                if (foregroundOpen != open) {
+                    foregroundOpen = open;
+                    updateMoreActions();
+                    requestLayout();
+                }
+            });
+        }
     }
 
     private boolean isTouchTarget(float x, float y) {
@@ -211,7 +223,7 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
 
     private void updateMoreActions() {
         if (moreActions == null) return;
-        moreActions.setVisibility(scroll.canScrollVertically(1) || actionScroll != null && actionScroll.canScrollVertically(1)
+        moreActions.setVisibility(!foregroundOpen && (scroll.canScrollVertically(1) || actionScroll != null && actionScroll.canScrollVertically(1))
                 ? VISIBLE : INVISIBLE);
     }
 
@@ -231,7 +243,7 @@ public final class CalamusMessageMenuLayout extends FrameLayout {
         boolean overflow = column.getMeasuredHeight() > scroll.getMeasuredHeight()
                 || actionScroll != null && actionScroll.getChildCount() > 0
                     && actionScroll.getChildAt(0).getMeasuredHeight() > actionScroll.getMeasuredHeight();
-        int footer = overflow ? Math.min(AndroidUtilities.dp(52), limit / 4) : 0;
+        int footer = !foregroundOpen && overflow ? Math.min(AndroidUtilities.dp(52), limit / 4) : 0;
         if (footer > 0) scroll.measure(exactWidth, MeasureSpec.makeMeasureSpec(limit - footer, MeasureSpec.AT_MOST));
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) scroll.getLayoutParams();
         params.topMargin = Math.max(topInset, Math.min(anchorY - AndroidUtilities.dp(80), height - scroll.getMeasuredHeight() - footer - bottomInset));
