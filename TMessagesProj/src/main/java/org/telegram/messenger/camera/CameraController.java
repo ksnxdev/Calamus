@@ -168,37 +168,40 @@ public class CameraController implements MediaRecorder.OnInfoListener {
                                 throw new RuntimeException("APP_PAUSED");
                             }
                             Camera camera = Camera.open(cameraInfo.getCameraId());
-                            Camera.Parameters params = camera.getParameters();
+                            try {
+                                Camera.Parameters params = camera.getParameters();
 
-                            List<Camera.Size> list = params.getSupportedPreviewSizes();
-                            for (int a = 0; a < list.size(); a++) {
-                                Camera.Size size = list.get(a);
-//                                if (size.width == 1280 && size.height != 720) {
-//                                    continue;
-//                                }
-                                if (size.height < 2160 && size.width < 2160) {
-                                    cameraInfo.previewSizes.add(new Size(size.width, size.height));
-                                    if (BuildVars.LOGS_ENABLED) {
-                                        FileLog.d("preview size = " + size.width + " " + size.height);
+                                List<Camera.Size> list = params.getSupportedPreviewSizes();
+                                for (int a = 0; a < list.size(); a++) {
+                                    Camera.Size size = list.get(a);
+    //                                if (size.width == 1280 && size.height != 720) {
+    //                                    continue;
+    //                                }
+                                    if (size.height < 2160 && size.width < 2160) {
+                                        cameraInfo.previewSizes.add(new Size(size.width, size.height));
+                                        if (BuildVars.LOGS_ENABLED) {
+                                            FileLog.d("preview size = " + size.width + " " + size.height);
+                                        }
                                     }
                                 }
-                            }
 
-                            list = params.getSupportedPictureSizes();
-                            for (int a = 0; a < list.size(); a++) {
-                                Camera.Size size = list.get(a);
-//                                if (size.width == 1280 && size.height != 720) {
-//                                    continue;
-//                                }
-                                if (!"samsung".equals(Build.MANUFACTURER) || !"jflteuc".equals(Build.PRODUCT) || size.width < 2048) {
-                                    cameraInfo.pictureSizes.add(new Size(size.width, size.height));
-                                    if (BuildVars.LOGS_ENABLED) {
-                                        FileLog.d("picture size = " + size.width + " " + size.height);
+                                list = params.getSupportedPictureSizes();
+                                for (int a = 0; a < list.size(); a++) {
+                                    Camera.Size size = list.get(a);
+    //                                if (size.width == 1280 && size.height != 720) {
+    //                                    continue;
+    //                                }
+                                    if (!"samsung".equals(Build.MANUFACTURER) || !"jflteuc".equals(Build.PRODUCT) || size.width < 2048) {
+                                        cameraInfo.pictureSizes.add(new Size(size.width, size.height));
+                                        if (BuildVars.LOGS_ENABLED) {
+                                            FileLog.d("picture size = " + size.width + " " + size.height);
+                                        }
                                     }
                                 }
-                            }
 
-                            camera.release();
+                            } finally {
+                                camera.release();
+                            }
                             result.add(cameraInfo);
 
                             Collections.sort(cameraInfo.previewSizes, comparator);
