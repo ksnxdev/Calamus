@@ -18,4 +18,4 @@ APK: `TMessagesProj_App/build/outputs/apk/afat/standalone/Calamus-<версия>
 
 Поддержка классических Python-плагинов `.plugin` использует SDK [exteraGram](https://github.com/exteraSquad/exteraGram). Эти плагины выполняются в основном процессе приложения; предупреждение показывается при первом входе в их раздел. Изолированные плагины Calamus `.plug` используют отдельный движок. Плагины, зависящие от внутренних классов или функций exteraGram, которых нет в Calamus, могут требовать адаптации.
 
-Условия заимствованных компонентов: [лицензия exteraGram](EXTERAGRAM_LICENSE) и [дополнительные условия](ADDITIONAL_TERMS.md). Версия исходников SDK и локальные зависимости зафиксированы в `ExteraDependencies/UPSTREAM.json`.
+Условия заимствованных компонентов: [лицензия exteraGram](third_party/exteragram/LICENSE) и [дополнительные условия](ADDITIONAL_TERMS.md). Версия исходников SDK и локальные зависимости зафиксированы в `ExteraDependencies/UPSTREAM.json`.
